@@ -6,7 +6,7 @@ A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service
 
 ## 🧑‍💻 Developer Instructions
 
-### Project Structure
+### 1. Project Structure
 ```
 SynergeioApplication.java            # Main Spring Boot entry point
 src/main/java/za/co/synergio/georgiou
@@ -18,16 +18,16 @@ src/main/java/za/co/synergio/georgiou
 src/main/resources
 ├── templates/                       # Thymeleaf HTML templates
 │   ├── form.html
-│   ├── calendar.html
+│   ├── records.html
 │   └── help.html
 ├── static/css/style.css             # Global styles
 ├── static/js/form.js                # Client-side validation
-├── static/js/calendar.js            # Dynamic calendar view
+├── static/js/records.js            # Dynamic calendar view
 └── application.properties           # Spring config
 
 service_records.csv                  # Generated CSV persistence file
 ```
-### Setting the Path to write the CSV file
+### 2. Setting the Path to write the CSV file
 1. In the folder: /src/main/resources you will find a file: application.properties
 2. Change this line: synergeio.csv.path=/home/nickm/Documents/MyRequirement/service_records.csv
 3. Change this line: synergeio.back.path=/home/nickm/Documents/MyRequirement/service_records.backup
@@ -37,7 +37,8 @@ service_records.csv                  # Generated CSV persistence file
 1. synergeio.csv.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.csv
 2. synergeio.back.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.backup
 
-### Creating and copying the JAR file
+### 3. Creating and copying the JAR file (Using Linux / Mac Shell script)
+For Windows users run the commands manually in Power Shell
 #### Do not build if you have not changed the paths as per previous instruction
 
 **We have created two shell scripts :**
@@ -45,19 +46,24 @@ service_records.csv                  # Generated CSV persistence file
 2. jar-copy.sh This copied the above JAR file as: synergio.jar
 
 
-### Dependencies Installation
+### 4. Running the JAR file you just built
+**Run this command:**
+```sh
+java -jar synergio.jar
+```
+### 5. Dependencies Installation
 ```bash
 ./gradlew build
 ```
 > **Optional:** If front-end assets use any npm packages, run `npm install` inside the project root.
 
-### CSV Persistence
+### 6. CSV Persistence
 - All records are stored in a simple CSV file: `service_records.csv`.
 - The file is auto-created in the working directory if missing.
 - Each row corresponds to one customer record (Date, Customer Name, Vehicle Info, etc.).
 - The `CsvStorageImpl` class handles reading, writing, and appending records.
 
-### Run the Application Locally
+### 7. Run the Application Locally
 ```bash
 ./gradlew bootRun
 ```
@@ -69,7 +75,7 @@ http://localhost:8080/
 
 ## 🚀 Deployment Instructions
 
-### Local JAR Deployment
+### Local JAR Deployment (Or use the developers shell scripts)
 1. Build the executable JAR:
    ```bash
    ./gradlew clean build
