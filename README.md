@@ -27,6 +27,23 @@ src/main/resources
 
 service_records.csv                  # Generated CSV persistence file
 ```
+### Setting the Path to write the CSV file
+1. In the folder: /src/main/resources you will find a file: application.properties
+2. Change this line: synergeio.csv.path=/home/nickm/Documents/MyRequirement/service_records.csv
+3. Change this line: synergeio.back.path=/home/nickm/Documents/MyRequirement/service_records.backup
+
+**Currenly they are set to save on my Linux or Mac machines for windows use:**
+
+1. synergeio.csv.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.csv
+2. synergeio.back.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.backup
+
+### Creating and copying the JAR file
+#### Do not build if you have not changed the paths as per previous instruction
+
+**We have created two shell scripts :**
+1. jar-make.sh This makes the JAR file in build/libs folder as: Synergeío-0.0.1-SNAPSHOT.jar
+2. jar-copy.sh This copied the above JAR file as: synergio.jar
+
 
 ### Dependencies Installation
 ```bash
@@ -91,10 +108,9 @@ No database is required. The application stores everything in a CSV file. Ensure
 - Click **Save Record** to store the entry.
 - A new line will be appended to `service_records.csv`.
 
-### Viewing Records on Calendar
-- Go to the **Calendar** tab.
-- The current month’s days appear; any day with saved records is highlighted.
-- Click a date to view service details for that day.
+### Viewing Records 
+- Go to the **View Records** tab.
+- The newest records appear on top
 
 ### CSV File Updates
 - Each submission immediately updates `service_records.csv`.
