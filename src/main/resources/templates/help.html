@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Help - Synergeio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+	<div class="brand-title">Synergio</div>
+    <h1>Help & Instructions</h1>
+    <nav>
+        <a th:href="@{/}">Form</a> |
+		<a th:href="@{/records}">View Records</a> 
+    </nav>
+</header>
+
+<main>
+    <section>
+        <h2>How to Use</h2>
+        <p><strong>1.</strong> Go to the <em>Form</em> page to enter customer and vehicle details.</p>
+        <p><strong>2.</strong> Click “Save Record” to store the entry in <code>service_records.csv</code>.</p>
+        <p><strong>3.</strong> Go to the <em>View Records</em> to view captured service records.</p>
+        <p><strong>4.</strong> The data can be opened in Excell as a spreadsheet after reformatting the columns</p>
+    </section>
+
+    <section>
+        <h2>File Storage</h2>
+        <p>All service data is stored locally in a file called <code>service_records.csv</code>.</p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>

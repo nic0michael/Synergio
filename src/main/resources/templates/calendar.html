@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Calendar</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/calendar.js}"></script>
+</head>
+<body>
+<header>
+    <h1>Customer Requirements Calendar</h1>
+    <nav>
+        <a th:href="@{/}">Form</a> |
+        <a th:href="@{/calendar}">Calendar</a> |
+        <a th:href="@{/help}">Help</a>
+    </nav>
+</header>
+
+<main>
+    <div id="calendar"></div>
+
+    <div id="eventModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModal">&times;</span>
+            <h3>Service Records for <span id="modalDate"></span></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>

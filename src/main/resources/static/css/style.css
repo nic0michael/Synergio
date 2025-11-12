@@ -1,0 +1,175 @@
+/* Base page styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== HEADER ===== */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #004aad;
+    color: white;
+    padding: 1em 2em;
+    border-bottom: 4px solid #003a8c;
+}
+
+/* Synergio brand name */
+.brand-title {
+    font-weight: 900;              /* very bold */
+    font-size: 1.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Main page title in the center */
+header h1 {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.6em;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Navigation links */
+header nav {
+    font-size: 1em;
+}
+
+header nav a {
+    color: white;
+    margin-left: 0.75em;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+    max-width: 800px;
+    margin: 2em auto;
+    background: white;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== FORM ===== */
+form label {
+    display: block;
+    margin-bottom: 1em;
+    font-weight: 600;
+    color: #333;
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+button {
+    background: #004aad;
+    color: white;
+    border: none;
+    padding: 0.7em 1.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+button:hover {
+    background: #003a8c;
+}
+
+/* ===== CALENDAR ===== */
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.3em;
+    text-align: center;
+}
+
+.day {
+    background: #e6e6e6;
+    padding: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.day:hover {
+    background: #d9e6ff;
+}
+
+.day.has-event {
+    background: #cfe3ff;
+    border: 2px solid #004aad;
+}
+
+/* ===== MODAL ===== */
+.modal {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 1em;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+#closeModal {
+    float: right;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
+
+/* ===== LINK BUTTON STYLE ===== */
+.btn-link {
+    display: inline-block;
+    background: #004aad;
+    color: white;
+    padding: 0.6em 1.2em;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.btn-link:hover {
+    background: #003a8c;
+    transform: translateY(-2px);
+}
+
+.btn-link:active {
+    background: #002d6b;
+    transform: translateY(0);
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Captured Service Records</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            width: 100vw;
+            height: calc(100vh - 120px);
+            padding: 1em;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .record-card {
+            background: white;
+            padding: 1em;
+            margin-bottom: 2em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 6px;
+        }
+        .record-field {
+            margin-bottom: 0.5em;
+        }
+        .record-field span:first-child {
+            font-weight: bold;
+        }
+        button {
+            margin-top: 1em;
+            background: #004aad;
+            color: white;
+            border: none;
+            padding: 0.7em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #003a8c;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+	<div class="brand-title">Synergio</div>
+    <h1>Captured Service Records</h1>
+    <nav>
+        <a th:href="@{/}">Form</a> |
+        <a th:href="@{/help}">Help</a>
+    </nav>
+</header>
+
+<main>
+    <a th:href="@{/}" class="btn-link">Add Records</a>
+    <br><br>
+    <div th:each="record : ${records}" class="record-card">
+        <div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
+        <div class="record-field"><span>Customer Name:</span> <span th:text="${record.customerName}"></span></div>
+        <div class="record-field"><span>Cellphone:</span> <span th:text="${record.cellphone}"></span></div>
+        <div class="record-field"><span>Vehicle Reg #:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
+        <div class="record-field"><span>Audometer:</span> <span th:text="${record.audometerReading}"></span></div>
+        <div class="record-field"><span>VIN:</span> <span th:text="${record.vinNumber}"></span></div>
+        <div class="record-field"><span>Document Type:</span> <span th:text="${record.documentType}"></span></div>
+        <div class="record-field"><span>Requirement Category:</span> <span th:text="${record.requirementCategory}"></span></div>
+        <div class="record-field"><span>Interval:</span> <span th:text="${record.interval}"></span></div>
+        <div class="record-field"><span>Materials:</span> <span th:text="${record.materialsRequired}"></span></div>
+        <div class="record-field"><span>Labour (hrs):</span> <span th:text="${record.labourHours}"></span></div>
+        <div class="record-field"><span>Amount: R</span> <span th:text="${record.amount}"></span></div>
+        <div class="record-field"><span>Breakdown:</span> <span th:text="${record.breakdown}"></span></div>
+    </div>
+
+    <button onclick="window.history.back()">Go Back</button>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>

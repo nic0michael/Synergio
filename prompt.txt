@@ -1,0 +1,458 @@
+This is a java 21 gradle springboot microservice with thymeleaf
+I have this HTML form: form.html:
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Record Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/form.js}"></script>
+</head>
+<body>
+<header>
+    <h1>Synergeio Vehicle Service Record</h1>
+    <nav>
+        <a th:href="@{/}">Form</a> |
+        <a th:href="@{/calendar}">Calendar</a> |
+		<a th:href="@{/records}">View Records</a> | 
+        <a th:href="@{/help}">Help</a>
+    </nav>
+</header>
+
+<main>
+	<a th:href="@{/records}">View Records</a> <br><br>
+	
+    <form th:action="@{/submit}" th:object="${serviceRecord}" method="post" class="service-form">
+        <label>Date:
+            <input type="date" th:field="*{date}" required>
+        </label>
+
+        <label>Customer Name:
+            <input type="text" th:field="*{customerName}" required>
+        </label>
+
+        <label>Cellphone:
+            <input type="tel" th:field="*{cellphone}">
+        </label>
+
+        <label>Vehicle Registration Number:
+            <input type="text" th:field="*{vehicleRegNumber}" required>
+        </label>
+
+        <label>Vehicle Audometer Reading:
+            <input type="text" th:field="*{audometerReading}">
+        </label>
+
+        <label>VIN Number:
+            <input type="text" th:field="*{vinNumber}">
+        </label>
+
+        <label>Document Type:
+            <select th:field="*{documentType}">
+                <option value="Quotation">Quotation</option>
+                <option value="Invoice">Invoice</option>
+            </select>
+        </label>
+
+        <label>Vehicle Requirement Category:
+            <select th:field="*{requirementCategory}">
+                <option value="Oil Change">Oil Change</option>
+                <option value="Service">Service</option>
+                <option value="General / Safety Inspection">General / Safety Inspection</option>
+                <option value="Brake Check">Brake Check</option>
+            </select>
+        </label>
+
+        <label>Interval (Days / Months / KMs):
+            <input type="text" th:field="*{interval}">
+        </label>
+
+        <label>Materials Required:
+            <input type="text" th:field="*{materialsRequired}">
+        </label>
+
+        <label>Labour (hours):
+            <input type="number" min="0" step="0.1" th:field="*{labourHours}">
+        </label>
+
+        <label>Amount:
+            <input type="number" min="0" step="0.01" th:field="*{amount}">
+        </label>
+
+        <label>Breakdown:
+            <textarea th:field="*{breakdown}" rows="3"></textarea>
+        </label>
+
+        <button type="submit">Save Record</button>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>
+
+I have this controller : MvcController.java
+package za.co.synergio.georgiou.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import za.co.synergio.georgiou.model.ServiceRecord;
+import za.co.synergio.georgiou.storage.CsvStorage;
+
+//import javax.validation.Valid;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+
+@Controller
+public class MvcController {
+
+	private final CsvStorage csvStorage;
+
+	@Autowired
+	public MvcController(CsvStorage csvStorage) {
+		this.csvStorage = csvStorage;
+	}
+
+	@GetMapping("/")
+	public String form(Model model) {
+		model.addAttribute("serviceRecord", new ServiceRecord());
+		return "form"; // thymeleaf template src/main/resources/templates/form.html
+	}
+
+	@PostMapping("/submit")
+	public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
+			throws IOException {
+// Basic validation (can be expanded)
+		if (serviceRecord.getDate() == null) {
+			bindingResult.rejectValue("date", "date.empty", "Date is required");
+		}
+		if (serviceRecord.getCustomerName() == null || serviceRecord.getCustomerName().isBlank()) {
+			bindingResult.rejectValue("customerName", "name.empty", "Customer name is required");
+		}
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("serviceRecord", serviceRecord);
+			return "form";
+		}
+
+// Ensure the amount is non-null
+		if (serviceRecord.getAmount() == null)
+			serviceRecord.setAmount(BigDecimal.ZERO);
+
+		csvStorage.save(serviceRecord);
+		return "redirect:/";
+	}
+
+	@GetMapping("/api/records")
+	@ResponseBody
+	public List<ServiceRecord> apiRecords() throws IOException {
+		return csvStorage.readAll();
+	}
+	
+	@GetMapping("/records")
+	public String records(Model model) throws IOException {
+	    List<ServiceRecord> records = csvStorage.readAll();
+	    Collections.reverse(records); // last record first
+	    model.addAttribute("records", records);
+	    return "records";
+	}
+	
+	@GetMapping("/help")
+	public String help() {
+		return "help"; // help.html
+	}
+
+}
+
+I have this service to write two scv files CsvStorageImpl.java
+package za.co.synergio.georgiou.storage;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import za.co.synergio.georgiou.model.ServiceRecord;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Service
+public class CsvStorageImpl implements CsvStorage {
+
+    private static final String HEADER = "Date,Customer Name,Cellphone,Vehicle Registration Number,Vehicle Audometer Reading,VIN Number,Document Type,Vehicle Requirement Category,Interval,Materials Required,Labour (hrs),Amount,Breakdown";
+
+    private final Path csvPath;
+    private final Path backupPath;
+    private final DateTimeFormatter dateFmt = DateTimeFormatter.ISO_LOCAL_DATE;
+
+    public CsvStorageImpl(
+            @Value("${synergeio.csv.path}") String csvPathStr,
+            @Value("${synergeio.back.path}") String backupPathStr
+    ) throws IOException {
+        this.csvPath = Path.of(csvPathStr);
+        this.backupPath = Path.of(backupPathStr);
+
+        createFileIfNotExist(csvPath);
+        createFileIfNotExist(backupPath);
+    }
+
+    private void createFileIfNotExist(Path path) throws IOException {
+        if (Files.notExists(path)) {
+            Files.createFile(path);
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
+                writer.write(HEADER);
+                writer.newLine();
+            }
+        } else if (Files.size(path) == 0) {
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
+                writer.write(HEADER);
+                writer.newLine();
+            }
+        }
+    }
+
+    @Override
+    public synchronized List<ServiceRecord> readAll() throws IOException {
+        List<ServiceRecord> list = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(csvPath, StandardCharsets.UTF_8)) {
+            String line;
+            boolean first = true;
+            while ((line = reader.readLine()) != null) {
+                if (first) { first = false; continue; } // skip header
+                if (line.isBlank()) continue;
+                List<String> cols = parseCsvLine(line);
+                ServiceRecord r = toRecord(cols);
+                list.add(r);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public synchronized void save(ServiceRecord record) throws IOException {
+        String line = serialize(record);
+
+        // Write to main CSV
+        try (BufferedWriter writer = Files.newBufferedWriter(csvPath, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
+            writer.write(line);
+            writer.newLine();
+        }
+
+        // Write to backup CSV
+        try (BufferedWriter writer = Files.newBufferedWriter(backupPath, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
+            writer.write(line);
+            writer.newLine();
+        }
+    }
+
+    // Serialize a ServiceRecord into a single CSV line, quoting the date
+    private String serialize(ServiceRecord r) {
+        String dateStr = r.getDate() != null ? "\"" + r.getDate().format(dateFmt) + "\"" : "";
+
+        String[] parts = new String[] {
+                dateStr,
+                r.getCustomerName(),
+                r.getCellphone(),
+                r.getVehicleRegNumber(),
+                r.getAudometerReading(),
+                r.getVinNumber(),
+                r.getDocumentType(),
+                r.getRequirementCategory(),
+                r.getInterval(),
+                r.getMaterialsRequired(),
+                String.valueOf(r.getLabourHours()),
+                r.getAmount() != null ? r.getAmount().toPlainString() : "",
+                r.getBreakdown()
+        };
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) sb.append(',');
+            sb.append(escape(parts[i] == null ? "" : parts[i]));
+        }
+        return sb.toString();
+    }
+
+    // Basic CSV parser handling quoted fields
+    private List<String> parseCsvLine(String line) {
+        List<String> cols = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (inQuotes) {
+                if (c == '"') {
+                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                        cur.append('"');
+                        i++; // skip escaped quote
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    cur.append(c);
+                }
+            } else {
+                if (c == ',') {
+                    cols.add(cur.toString());
+                    cur.setLength(0);
+                } else if (c == '"') {
+                    inQuotes = true;
+                } else {
+                    cur.append(c);
+                }
+            }
+        }
+        cols.add(cur.toString());
+        return cols;
+    }
+
+    private ServiceRecord toRecord(List<String> cols) {
+        ServiceRecord r = new ServiceRecord();
+        try {
+            if (cols.size() > 0 && !cols.get(0).isBlank())
+                r.setDate(LocalDate.parse(cols.get(0).replace("\"", ""), dateFmt));
+        } catch (Exception ignored) { }
+        if (cols.size() > 1) r.setCustomerName(cols.get(1));
+        if (cols.size() > 2) r.setCellphone(cols.get(2));
+        if (cols.size() > 3) r.setVehicleRegNumber(cols.get(3));
+        if (cols.size() > 4) r.setAudometerReading(cols.get(4));
+        if (cols.size() > 5) r.setVinNumber(cols.get(5));
+        if (cols.size() > 6) r.setDocumentType(cols.get(6));
+        if (cols.size() > 7) r.setRequirementCategory(cols.get(7));
+        if (cols.size() > 8) r.setInterval(cols.get(8));
+        if (cols.size() > 9) r.setMaterialsRequired(cols.get(9));
+        if (cols.size() > 10) {
+            try { r.setLabourHours(Double.parseDouble(cols.get(10))); } catch (Exception e) { r.setLabourHours(0); }
+        }
+        if (cols.size() > 11) {
+            try { r.setAmount(new BigDecimal(cols.get(11))); } catch (Exception e) { r.setAmount(BigDecimal.ZERO); }
+        }
+        if (cols.size() > 12) r.setBreakdown(cols.get(12));
+        return r;
+    }
+
+    // Escape commas and quotes
+    private String escape(String value) {
+        if (value.contains(",") || value.contains("\"")) {
+            value = value.replace("\"", "\"\"");
+            return "\"" + value + "\"";
+        }
+        return value;
+    }
+}
+
+I have this Model: ServiceRecord.java
+package za.co.synergio.georgiou.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public class ServiceRecord {
+    private LocalDate date;
+    private String customerName;
+    private String cellphone;
+    private String vehicleRegNumber;
+    private String audometerReading;
+    private String vinNumber;
+    private String documentType;              // Quotation / Invoice
+    private String requirementCategory;       // Oil Change / Service / etc.
+    private String interval;                  // Days / Months / KMs combined
+    private String materialsRequired;
+    private double labourHours;
+    private BigDecimal amount;
+    private String breakdown;
+
+    public ServiceRecord() {}
+
+    // --- Getters and Setters ---
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCellphone() { return cellphone; }
+    public void setCellphone(String cellphone) { this.cellphone = cellphone; }
+
+    public String getVehicleRegNumber() { return vehicleRegNumber; }
+    public void setVehicleRegNumber(String vehicleRegNumber) { this.vehicleRegNumber = vehicleRegNumber; }
+
+    public String getAudometerReading() { return audometerReading; }
+    public void setAudometerReading(String audometerReading) { this.audometerReading = audometerReading; }
+
+    public String getVinNumber() { return vinNumber; }
+    public void setVinNumber(String vinNumber) { this.vinNumber = vinNumber; }
+
+    public String getDocumentType() { return documentType; }
+    public void setDocumentType(String documentType) { this.documentType = documentType; }
+
+    public String getRequirementCategory() { return requirementCategory; }
+    public void setRequirementCategory(String requirementCategory) { this.requirementCategory = requirementCategory; }
+
+    public String getInterval() { return interval; }
+    public void setInterval(String interval) { this.interval = interval; }
+
+    public String getMaterialsRequired() { return materialsRequired; }
+    public void setMaterialsRequired(String materialsRequired) { this.materialsRequired = materialsRequired; }
+
+    public double getLabourHours() { return labourHours; }
+    public void setLabourHours(double labourHours) { this.labourHours = labourHours; }
+
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+
+    public String getBreakdown() { return breakdown; }
+    public void setBreakdown(String breakdown) { this.breakdown = breakdown; }
+
+    @Override
+    public String toString() {
+        return "ServiceRecord{" +
+                "date=" + date +
+                ", customerName='" + customerName + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", vehicleRegNumber='" + vehicleRegNumber + '\'' +
+                ", audometerReading='" + audometerReading + '\'' +
+                ", vinNumber='" + vinNumber + '\'' +
+                ", documentType='" + documentType + '\'' +
+                ", requirementCategory='" + requirementCategory + '\'' +
+                ", interval='" + interval + '\'' +
+                ", materialsRequired='" + materialsRequired + '\'' +
+                ", labourHours=" + labourHours +
+                ", amount=" + amount +
+                ", breakdown='" + breakdown + '\'' +
+                '}';
+    }
+}
+
+I have form.js
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".service-form");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    const date = form.querySelector("input[name='date']");
+    const name = form.querySelector("input[name='customerName']");
+    if (!date.value || !name.value.trim()) {
+      e.preventDefault();
+      alert("Please fill in required fields: Date and Customer Name");
+    }
+  });
+});

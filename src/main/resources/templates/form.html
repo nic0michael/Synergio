@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Record Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/form.js}"></script>
+</head>
+<body>
+	
+<header>
+	<div class="brand-title">Synergio</div>
+    <h1>Vehicle Service Record</h1>
+    <nav>
+		<a th:href="@{/records}">View Records</a> | 
+        <a th:href="@{/help}">Help</a>
+    </nav>
+</header>
+
+<main>
+	<a th:href="@{/records}" class="btn-link">View Records</a>
+	<br><br>
+	
+    <form th:action="@{/submit}" th:object="${serviceRecord}" method="post" class="service-form">
+        <label>Date:
+			<input type="date" th:field="*{date}" required>		
+        </label>
+
+        <label>Customer Name:
+            <input type="text" th:field="*{customerName}" required>
+        </label>
+
+        <label>Cellphone:
+            <input type="tel" th:field="*{cellphone}">
+        </label>
+
+        <label>Vehicle Registration Number:
+            <input type="text" th:field="*{vehicleRegNumber}" required>
+        </label>
+
+        <label>Vehicle Audometer Reading:
+            <input type="text" th:field="*{audometerReading}">
+        </label>
+
+        <label>VIN Number:
+            <input type="text" th:field="*{vinNumber}">
+        </label>
+
+        <label>Document Type:
+            <select th:field="*{documentType}">
+                <option value="Quotation">Quotation</option>
+                <option value="Invoice">Invoice</option>
+				<option value="Refund (Subject to approval)">Refund (Subject to approval)</option>
+            </select>
+        </label>
+
+        <label>Vehicle Requirement Category:
+            <select th:field="*{requirementCategory}">
+                <option value="Oil Change">Oil Change</option>
+                <option value="Service">Service</option>
+                <option value="General / Safety Inspection">General / Safety Inspection</option>
+                <option value="Brake Check">Brake Check</option>
+				<option value="Repair">Repair</option>
+				<option value="Engine Diagnostics">Engine Diagnostics</option>
+				<option value="Electrical System">Electrical System</option>
+				<option value="Battery Replacement">Battery Replacement</option>
+				<option value="Cooling System / Radiator">Cooling System / Radiator</option>
+				<option value="Transmission / Clutch">Transmission / Clutch</option>
+				<option value="Suspension / Steering">Suspension / Steering</option>
+				<option value="Tire Replacement / Rotation">Tire Replacement / Rotation</option>
+				<option value="Wheel Alignment / Balancing">Wheel Alignment / Balancing</option>
+				<option value="Fuel System">Fuel System</option>
+				<option value="Timing Belt / Chain">Timing Belt / Chain</option>
+				<option value="Lights / Indicators">Lights / Indicators</option>
+				<option value="Wipers / Washer System">Wipers / Washer System</option>
+				<option value="Other">Other</option>
+				
+				
+				
+            </select>
+        </label>
+
+        <label>Interval (Days / Months / KMs):
+            <input type="text" th:field="*{interval}">
+        </label>
+
+        <label>Materials Required:
+            <input type="text" th:field="*{materialsRequired}">
+        </label>
+
+        <label>Labour (hours):
+            <input type="number" min="0" step="0.1" th:field="*{labourHours}">
+        </label>
+
+        <label>Amount:
+            <input type="number" min="0" step="0.01" th:field="*{amount}">
+        </label>
+
+        <label>Breakdown Details:
+            <textarea th:field="*{breakdown}" rows="3"></textarea>
+        </label>
+
+        <button type="submit">Save Record</button>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>

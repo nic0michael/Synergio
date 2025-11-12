@@ -1,0 +1,105 @@
+# Synergeio Vehicle Service Station
+
+A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service records in a CSV file with a simple **Thymeleaf frontend**.
+
+---
+
+## 🧑‍💻 Developer Instructions
+
+### Project Structure
+```
+SynergeioApplication.java            # Main Spring Boot entry point
+src/main/java/za/co/synergio/georgiou
+├── controller/MvcController.java    # Handles HTML and API routes
+├── model/ServiceRecord.java         # POJO for CSV record mapping
+├── storage/CsvStorage.java          # Interface for CSV operations
+├── storage/CsvStorageImpl.java      # Implementation of CSV read/write
+
+src/main/resources
+├── templates/                       # Thymeleaf HTML templates
+│   ├── form.html
+│   ├── calendar.html
+│   └── help.html
+├── static/css/style.css             # Global styles
+├── static/js/form.js                # Client-side validation
+├── static/js/calendar.js            # Dynamic calendar view
+└── application.properties           # Spring config
+
+service_records.csv                  # Generated CSV persistence file
+```
+
+### Dependencies Installation
+```bash
+./gradlew build
+```
+> **Optional:** If front-end assets use any npm packages, run `npm install` inside the project root.
+
+### CSV Persistence
+- All records are stored in a simple CSV file: `service_records.csv`.
+- The file is auto-created in the working directory if missing.
+- Each row corresponds to one customer record (Date, Customer Name, Vehicle Info, etc.).
+- The `CsvStorageImpl` class handles reading, writing, and appending records.
+
+### Run the Application Locally
+```bash
+./gradlew bootRun
+```
+Then open your browser at:
+```
+http://localhost:8080/
+```
+---
+
+## 🚀 Deployment Instructions
+
+### Local JAR Deployment
+1. Build the executable JAR:
+   ```bash
+   ./gradlew clean build
+   ```
+2. Run the JAR file:
+   ```bash
+   java -jar build/libs/synergeio-0.0.1-SNAPSHOT.jar
+   ```
+3. Access the web interface at `http://localhost:8080`.
+
+### Windows or macOS
+- Ensure **Java 21+** is installed and available in your system PATH.
+- On **Windows**, use PowerShell:
+  ```powershell
+  java -jar build\libs\synergeio-0.0.1-SNAPSHOT.jar
+  ```
+- On **macOS/Linux**, use:
+  ```bash
+  java -jar build/libs/synergeio-0.0.1-SNAPSHOT.jar
+  ```
+
+### Environment Setup
+No database is required. The application stores everything in a CSV file. Ensure write permissions are available in the working directory.
+
+---
+
+## 👨‍🏭 User Instructions
+
+### Accessing the Application
+1. Visit `http://localhost:8080` after running the app.
+2. Use the navigation bar to switch between **Form**, **Calendar**, and **Help** pages.
+
+### Submitting Customer Requirements
+- Fill in all required fields on the **Form** page.
+- Select the **Document Type** (Quotation or Invoice) and **Category** (Oil Change, Service, etc.).
+- Click **Save Record** to store the entry.
+- A new line will be appended to `service_records.csv`.
+
+### Viewing Records on Calendar
+- Go to the **Calendar** tab.
+- The current month’s days appear; any day with saved records is highlighted.
+- Click a date to view service details for that day.
+
+### CSV File Updates
+- Each submission immediately updates `service_records.csv`.
+- The file can be opened manually in Excel or any text editor.
+
+---
+
+**© 2025 Synergeio Vehicle Service Station**
