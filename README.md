@@ -8,11 +8,11 @@ A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service
 
 ### 0. Install Java JDK 21
 
-**[Windows Java JDK 21](https://download.oracle.com/java/25/latest/jdk-25_windows-x64_bin.msi)**
+**[Windows Java JDK 21](https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.msi)**
 
-**[Linux Java JDK 21](https://www.oracle.com/africa/java/technologies/downloads/#jdk25-linux)**
+**[Linux Java JDK 21](https://www.oracle.com/africa/java/technologies/downloads/#jdk21-linux)**
 
-**[Mac Java JDK 21](https://www.oracle.com/africa/java/technologies/downloads/#jdk25-mac)**
+**[Mac Java JDK 21](https://www.oracle.com/africa/java/technologies/downloads/#jdk21-mac)**
 
 #### Install Git Bash
 **[Git for Windows/x64 Setup](https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-64-bit.exe)**
