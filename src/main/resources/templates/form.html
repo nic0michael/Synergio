@@ -4,62 +4,111 @@
     <meta charset="UTF-8">
     <title>Service Record Form</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script defer th:src="@{/js/form.js}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2em auto;
+            background: white;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 1em;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.3em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 1.5em;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            padding: 0.8em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003a8c;
+        }
+    </style>
 </head>
 <body>
-	
 <header>
-	<div class="brand-title">Synergio</div>
-    <h1>Vehicle Service Record</h1>
+    <h1>Synergio Service Record Form</h1>
     <nav>
-		<a th:href="@{/records}">View Records</a> | 
-        <a th:href="@{/help}">Help</a>
+        <a th:href="@{/records}" style="color:white;">View Records</a> |
+        <a th:href="@{/help}" style="color:white;">Help</a>
     </nav>
 </header>
 
 <main>
 	<a th:href="@{/records}" class="btn-link">View Records</a>
 	<br><br>
-	
-    <form th:action="@{/submit}" th:object="${serviceRecord}" method="post" class="service-form">
-        <label>Date:
-			<input type="date" th:field="*{date}" required>		
-        </label>
+    <form th:action="@{/submit}" th:object="${serviceRecord}" method="post">
+        <label>Date:</label>
+        <input type="date" th:field="*{date}" required>
 
-        <label>Customer Name:
-            <input type="text" th:field="*{customerName}" required>
-        </label>
+        <label>Service Date:</label>
+        <input type="date" th:field="*{serviceDate}">
 
-        <label>Cellphone:
-            <input type="tel" th:field="*{cellphone}">
-        </label>
 
-        <label>Vehicle Registration Number:
-            <input type="text" th:field="*{vehicleRegNumber}" required>
-        </label>
+		<label>Interval (days):</label>
+		<input type="number" th:field="*{interval}" min="0" value="0" placeholder="e.g. 90">
+		
+        <label>Recurring Date:</label>
+        <input type="date" th:field="*{recurringDate}" readonly>
+		
 
-        <label>Vehicle Audometer Reading:
-            <input type="text" th:field="*{audometerReading}">
-        </label>
+        <label>Customer Name:</label>
+        <input type="text" th:field="*{customerName}" placeholder="Enter customer name" required>
 
-        <label>VIN Number:
-            <input type="text" th:field="*{vinNumber}">
-        </label>
+        <label>Cellphone:</label>
+        <input type="text" th:field="*{cellphone}" placeholder="Enter cellphone number">
 
-        <label>Document Type:
-            <select th:field="*{documentType}">
-                <option value="Quotation">Quotation</option>
-                <option value="Invoice">Invoice</option>
+        <label>Vehicle Reg #:</label>
+        <input type="text" th:field="*{vehicleRegNumber}" placeholder="e.g. CA123456">
+
+        <label>Odometer Reading:</label> <!-- ✅ Fixed spelling -->
+        <input type="text" th:field="*{odometerReading}" placeholder="e.g. 120000">
+
+        <label>VIN Number:</label>
+        <input type="text" th:field="*{vinNumber}" placeholder="Vehicle Identification Number">
+
+
+		<label>Document Type:
+		    <select th:field="*{documentType}">
+		        <option value="Quotation">Quotation</option>
+		        <option value="Invoice">Invoice</option>
 				<option value="Refund (Subject to approval)">Refund (Subject to approval)</option>
-            </select>
-        </label>
+		    </select>
+		</label>
 
-        <label>Vehicle Requirement Category:
-            <select th:field="*{requirementCategory}">
-                <option value="Oil Change">Oil Change</option>
-                <option value="Service">Service</option>
-                <option value="General / Safety Inspection">General / Safety Inspection</option>
-                <option value="Brake Check">Brake Check</option>
+
+		<label>Vehicle Requirement Category:
+		    <select th:field="*{requirementCategory}">
+		        <option value="Oil Change">Oil Change</option>
+		        <option value="Service">Service</option>
+		        <option value="General / Safety Inspection">General / Safety Inspection</option>
+		        <option value="Brake Check">Brake Check</option>
 				<option value="Repair">Repair</option>
 				<option value="Engine Diagnostics">Engine Diagnostics</option>
 				<option value="Electrical System">Electrical System</option>
@@ -74,31 +123,22 @@
 				<option value="Lights / Indicators">Lights / Indicators</option>
 				<option value="Wipers / Washer System">Wipers / Washer System</option>
 				<option value="Other">Other</option>
+							
 				
-				
-				
-            </select>
-        </label>
+		    </select>
+		</label>
 
-        <label>Interval (Days / Months / KMs):
-            <input type="text" th:field="*{interval}">
-        </label>
+        <label>Materials Required:</label>
+        <textarea th:field="*{materialsRequired}" rows="2"></textarea>
 
-        <label>Materials Required:
-            <input type="text" th:field="*{materialsRequired}">
-        </label>
+        <label>Labour Hours:</label>
+        <input type="text" th:field="*{labourHours}" placeholder="e.g. 2.5">
 
-        <label>Labour (hours):
-            <input type="number" min="0" step="0.1" th:field="*{labourHours}">
-        </label>
+        <label>Amount (R):</label>
+        <input type="number" step="0.01" th:field="*{amount}" placeholder="e.g. 350.00">
 
-        <label>Amount:
-            <input type="number" min="0" step="0.01" th:field="*{amount}">
-        </label>
-
-        <label>Breakdown Details:
-            <textarea th:field="*{breakdown}" rows="3"></textarea>
-        </label>
+        <label>Breakdown / Notes:</label>
+        <textarea th:field="*{breakdown}" rows="3"></textarea>
 
         <button type="submit">Save Record</button>
     </form>

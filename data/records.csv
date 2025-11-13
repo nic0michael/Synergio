@@ -1,0 +1,5 @@
+date,customerName,cellphone,vehicleRegNumber,audometerReading,vinNumber,documentType,serviceDate,recurringDate,requirementCategory,interval,materialsRequired,labourHours,amount,breakdown
+"2025-11-13","nico","0825081950","yl 80 KV","1234","tba","Quotation","2025-12-12","2026-11-04","Oil Change",356,"sump plug and oil",1.0,543,"tba"
+"2025-11-13","nico","0825081950","yl 80 KV","1234","tba","Quotation","2025-12-12","2026-11-13","Oil Change",365,"sump plug and oil",1.0,123,"tba"
+"2025-11-13","nico","0825081950","yl 80 KV","1234","tba","Refund (Subject to approval)","2025-11-13",,"Other",0,"broken radio",0.0,123,"returned faulty radio"
+"2025-11-13","nico22","0825081950","yl 80 KV","1234","tba","Quotation","2025-12-12","2026-11-13","Oil Change",365,"oil",1.5,132,"tba"

@@ -1,4 +1,6 @@
 This is a java 21 gradle springboot microservice with thymeleaf
+## Existing code
+
 I have this HTML form: form.html:
 
 <!DOCTYPE html>
@@ -10,22 +12,23 @@ I have this HTML form: form.html:
     <script defer th:src="@{/js/form.js}"></script>
 </head>
 <body>
+	
 <header>
-    <h1>Synergeio Vehicle Service Record</h1>
+	<div class="brand-title">Synergio</div>
+    <h1>Vehicle Service Record</h1>
     <nav>
-        <a th:href="@{/}">Form</a> |
-        <a th:href="@{/calendar}">Calendar</a> |
 		<a th:href="@{/records}">View Records</a> | 
         <a th:href="@{/help}">Help</a>
     </nav>
 </header>
 
 <main>
-	<a th:href="@{/records}">View Records</a> <br><br>
+	<a th:href="@{/records}" class="btn-link">View Records</a>
+	<br><br>
 	
     <form th:action="@{/submit}" th:object="${serviceRecord}" method="post" class="service-form">
         <label>Date:
-            <input type="date" th:field="*{date}" required>
+			<input type="date" th:field="*{date}" required>		
         </label>
 
         <label>Customer Name:
@@ -52,6 +55,7 @@ I have this HTML form: form.html:
             <select th:field="*{documentType}">
                 <option value="Quotation">Quotation</option>
                 <option value="Invoice">Invoice</option>
+				<option value="Refund (Subject to approval)">Refund (Subject to approval)</option>
             </select>
         </label>
 
@@ -61,6 +65,23 @@ I have this HTML form: form.html:
                 <option value="Service">Service</option>
                 <option value="General / Safety Inspection">General / Safety Inspection</option>
                 <option value="Brake Check">Brake Check</option>
+				<option value="Repair">Repair</option>
+				<option value="Engine Diagnostics">Engine Diagnostics</option>
+				<option value="Electrical System">Electrical System</option>
+				<option value="Battery Replacement">Battery Replacement</option>
+				<option value="Cooling System / Radiator">Cooling System / Radiator</option>
+				<option value="Transmission / Clutch">Transmission / Clutch</option>
+				<option value="Suspension / Steering">Suspension / Steering</option>
+				<option value="Tire Replacement / Rotation">Tire Replacement / Rotation</option>
+				<option value="Wheel Alignment / Balancing">Wheel Alignment / Balancing</option>
+				<option value="Fuel System">Fuel System</option>
+				<option value="Timing Belt / Chain">Timing Belt / Chain</option>
+				<option value="Lights / Indicators">Lights / Indicators</option>
+				<option value="Wipers / Washer System">Wipers / Washer System</option>
+				<option value="Other">Other</option>
+				
+				
+				
             </select>
         </label>
 
@@ -80,7 +101,7 @@ I have this HTML form: form.html:
             <input type="number" min="0" step="0.01" th:field="*{amount}">
         </label>
 
-        <label>Breakdown:
+        <label>Breakdown Details:
             <textarea th:field="*{breakdown}" rows="3"></textarea>
         </label>
 
@@ -93,6 +114,7 @@ I have this HTML form: form.html:
 </footer>
 </body>
 </html>
+
 
 I have this controller : MvcController.java
 package za.co.synergio.georgiou.controller;
@@ -110,6 +132,7 @@ import za.co.synergio.georgiou.storage.CsvStorage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,12 +145,20 @@ public class MvcController {
 	public MvcController(CsvStorage csvStorage) {
 		this.csvStorage = csvStorage;
 	}
-
+	
 	@GetMapping("/")
 	public String form(Model model) {
-		model.addAttribute("serviceRecord", new ServiceRecord());
-		return "form"; // thymeleaf template src/main/resources/templates/form.html
+	    // Get the current UTC date (same worldwide)
+	    LocalDate utcDate = LocalDate.now(ZoneOffset.UTC);
+	    
+	    ServiceRecord record = new ServiceRecord();
+	    record.setDate(utcDate);
+	    model.addAttribute("serviceRecord", record);
+	    
+	    return "form";
 	}
+
+
 
 	@PostMapping("/submit")
 	public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
@@ -173,199 +204,16 @@ public class MvcController {
 
 }
 
-I have this service to write two scv files CsvStorageImpl.java
-package za.co.synergio.georgiou.storage;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import za.co.synergio.georgiou.model.ServiceRecord;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-@Service
-public class CsvStorageImpl implements CsvStorage {
-
-    private static final String HEADER = "Date,Customer Name,Cellphone,Vehicle Registration Number,Vehicle Audometer Reading,VIN Number,Document Type,Vehicle Requirement Category,Interval,Materials Required,Labour (hrs),Amount,Breakdown";
-
-    private final Path csvPath;
-    private final Path backupPath;
-    private final DateTimeFormatter dateFmt = DateTimeFormatter.ISO_LOCAL_DATE;
-
-    public CsvStorageImpl(
-            @Value("${synergeio.csv.path}") String csvPathStr,
-            @Value("${synergeio.back.path}") String backupPathStr
-    ) throws IOException {
-        this.csvPath = Path.of(csvPathStr);
-        this.backupPath = Path.of(backupPathStr);
-
-        createFileIfNotExist(csvPath);
-        createFileIfNotExist(backupPath);
-    }
-
-    private void createFileIfNotExist(Path path) throws IOException {
-        if (Files.notExists(path)) {
-            Files.createFile(path);
-            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
-                writer.write(HEADER);
-                writer.newLine();
-            }
-        } else if (Files.size(path) == 0) {
-            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
-                writer.write(HEADER);
-                writer.newLine();
-            }
-        }
-    }
-
-    @Override
-    public synchronized List<ServiceRecord> readAll() throws IOException {
-        List<ServiceRecord> list = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(csvPath, StandardCharsets.UTF_8)) {
-            String line;
-            boolean first = true;
-            while ((line = reader.readLine()) != null) {
-                if (first) { first = false; continue; } // skip header
-                if (line.isBlank()) continue;
-                List<String> cols = parseCsvLine(line);
-                ServiceRecord r = toRecord(cols);
-                list.add(r);
-            }
-        }
-        return list;
-    }
-
-    @Override
-    public synchronized void save(ServiceRecord record) throws IOException {
-        String line = serialize(record);
-
-        // Write to main CSV
-        try (BufferedWriter writer = Files.newBufferedWriter(csvPath, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-            writer.write(line);
-            writer.newLine();
-        }
-
-        // Write to backup CSV
-        try (BufferedWriter writer = Files.newBufferedWriter(backupPath, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-            writer.write(line);
-            writer.newLine();
-        }
-    }
-
-    // Serialize a ServiceRecord into a single CSV line, quoting the date
-    private String serialize(ServiceRecord r) {
-        String dateStr = r.getDate() != null ? "\"" + r.getDate().format(dateFmt) + "\"" : "";
-
-        String[] parts = new String[] {
-                dateStr,
-                r.getCustomerName(),
-                r.getCellphone(),
-                r.getVehicleRegNumber(),
-                r.getAudometerReading(),
-                r.getVinNumber(),
-                r.getDocumentType(),
-                r.getRequirementCategory(),
-                r.getInterval(),
-                r.getMaterialsRequired(),
-                String.valueOf(r.getLabourHours()),
-                r.getAmount() != null ? r.getAmount().toPlainString() : "",
-                r.getBreakdown()
-        };
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < parts.length; i++) {
-            if (i > 0) sb.append(',');
-            sb.append(escape(parts[i] == null ? "" : parts[i]));
-        }
-        return sb.toString();
-    }
-
-    // Basic CSV parser handling quoted fields
-    private List<String> parseCsvLine(String line) {
-        List<String> cols = new ArrayList<>();
-        StringBuilder cur = new StringBuilder();
-        boolean inQuotes = false;
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (inQuotes) {
-                if (c == '"') {
-                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
-                        cur.append('"');
-                        i++; // skip escaped quote
-                    } else {
-                        inQuotes = false;
-                    }
-                } else {
-                    cur.append(c);
-                }
-            } else {
-                if (c == ',') {
-                    cols.add(cur.toString());
-                    cur.setLength(0);
-                } else if (c == '"') {
-                    inQuotes = true;
-                } else {
-                    cur.append(c);
-                }
-            }
-        }
-        cols.add(cur.toString());
-        return cols;
-    }
-
-    private ServiceRecord toRecord(List<String> cols) {
-        ServiceRecord r = new ServiceRecord();
-        try {
-            if (cols.size() > 0 && !cols.get(0).isBlank())
-                r.setDate(LocalDate.parse(cols.get(0).replace("\"", ""), dateFmt));
-        } catch (Exception ignored) { }
-        if (cols.size() > 1) r.setCustomerName(cols.get(1));
-        if (cols.size() > 2) r.setCellphone(cols.get(2));
-        if (cols.size() > 3) r.setVehicleRegNumber(cols.get(3));
-        if (cols.size() > 4) r.setAudometerReading(cols.get(4));
-        if (cols.size() > 5) r.setVinNumber(cols.get(5));
-        if (cols.size() > 6) r.setDocumentType(cols.get(6));
-        if (cols.size() > 7) r.setRequirementCategory(cols.get(7));
-        if (cols.size() > 8) r.setInterval(cols.get(8));
-        if (cols.size() > 9) r.setMaterialsRequired(cols.get(9));
-        if (cols.size() > 10) {
-            try { r.setLabourHours(Double.parseDouble(cols.get(10))); } catch (Exception e) { r.setLabourHours(0); }
-        }
-        if (cols.size() > 11) {
-            try { r.setAmount(new BigDecimal(cols.get(11))); } catch (Exception e) { r.setAmount(BigDecimal.ZERO); }
-        }
-        if (cols.size() > 12) r.setBreakdown(cols.get(12));
-        return r;
-    }
-
-    // Escape commas and quotes
-    private String escape(String value) {
-        if (value.contains(",") || value.contains("\"")) {
-            value = value.replace("\"", "\"\"");
-            return "\"" + value + "\"";
-        }
-        return value;
-    }
-}
-
 I have this Model: ServiceRecord.java
 package za.co.synergio.georgiou.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class ServiceRecord {
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private String customerName;
     private String cellphone;
@@ -442,6 +290,7 @@ public class ServiceRecord {
     }
 }
 
+
 I have form.js
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector(".service-form");
@@ -456,3 +305,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+## Changes needed
+
+Make these two changes after DocumentType add two fields
+private LocalDate serviceDate
+private LocalDate recurringDate
+
+change  private String interval default value =0
+make it numeric  days
+if it is not zero calculate by adding interval to date and put this value in recurringDate
+
+
+synergeio.csv.path=/home/nickm/Documents/NikiforosRequirement/service_records.csv
+synergeio.back.path=/home/nickm/Documents/NikiforosRequirement/service_records.backup
