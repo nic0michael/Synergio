@@ -47,6 +47,9 @@ service_records.csv                  # Generated CSV persistence file
 
 1. synergeio.csv.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.csv
 2. synergeio.back.path=C:\\Users\\nickm\\Documents\\MyRequirement\\service_records.backup
+Like this:
+synergeio.csv.path=C:\\Users\\nico\\Documents\\NikisDocs\\service_records.csv
+synergeio.back.path=C:\Users\\nico\\Documents\\NikisDocs\\service_records.backup
 
 ### 3. Creating and copying the JAR file (Using Linux / Mac Shell script)
 For Windows users run the commands manually in Power Shell
