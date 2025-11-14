@@ -32,7 +32,7 @@ public class CsvStorageImpl implements CsvStorage {
         if (!Files.exists(csvFilePath)) {
             try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath)) {
                 writer.write("date,serviceDate,recurringDate,customerName,cellphone,vehicleRegNumber,odometerReading,vinNumber," +
-                        "documentType,requirementCategory,interval,materialsRequired,labourHours,amount,breakdown");
+                        "documentType,requirementCategory,interval,materialsRequired,labourHours,amount,breakdown,daysLeft");
                 writer.newLine();
             }
         }
@@ -72,6 +72,15 @@ public class CsvStorageImpl implements CsvStorage {
         return records;
     }
 
+    @Override
+    public synchronized List<ServiceRecord> readAllDueIn40Days() throws IOException {
+        List<ServiceRecord> allRecords = readAll();
+        return allRecords.stream()
+                .filter(r -> r.getDaysLeft() < 41)
+                .sorted((r1, r2) -> Integer.compare(r1.getDaysLeft(), r2.getDaysLeft()))
+                .toList();
+    }
+    
     // --- CSV helpers ---
     private String toCsv(ServiceRecord r) {
         return String.join(",",
@@ -89,7 +98,8 @@ public class CsvStorageImpl implements CsvStorage {
                 quote(r.getMaterialsRequired()),
                 String.valueOf(r.getLabourHours()),
                 r.getAmount() != null ? r.getAmount().toPlainString() : "0",
-                quote(r.getBreakdown())
+                quote(r.getBreakdown()),
+                String.valueOf(r.getDaysLeft())  
         );
     }
 
@@ -113,7 +123,9 @@ public class CsvStorageImpl implements CsvStorage {
             r.setMaterialsRequired(parts[11]);
             r.setLabourHours(parseDouble(parts[12]));
             r.setAmount(parseBigDecimal(parts[13]));
-            r.setBreakdown(parts[14]);
+            r.setBreakdown(parts[14]);            
+            r.setDaysLeftl(parseInt(parts[15]));           
+
             return r;
         } catch (Exception e) {
             System.err.println("Failed to parse CSV line: " + e.getMessage());

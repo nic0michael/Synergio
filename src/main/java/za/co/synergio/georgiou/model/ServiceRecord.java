@@ -21,6 +21,7 @@ public class ServiceRecord {
     private String documentType;
     private String requirementCategory;
     private int interval;
+    private int daysLeft;
     private String materialsRequired;
     private double labourHours;
     private BigDecimal amount;
@@ -59,6 +60,11 @@ public class ServiceRecord {
 
     public int getInterval() { return interval; }
     public void setInterval(int interval) { this.interval = interval; }
+    
+
+    public int getDaysLeft() { return daysLeft; }
+    public void setDaysLeftl(int daysLeft) { this.daysLeft = daysLeft; }
+
 
     public String getMaterialsRequired() { return materialsRequired; }
     public void setMaterialsRequired(String materialsRequired) { this.materialsRequired = materialsRequired; }

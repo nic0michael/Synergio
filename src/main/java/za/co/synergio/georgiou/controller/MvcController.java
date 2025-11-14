@@ -51,9 +51,13 @@ public class MvcController {
         if (serviceRecord.getAmount() == null)
             serviceRecord.setAmount(BigDecimal.ZERO);
 
-        if (serviceRecord.getServiceDate() == null)
-            serviceRecord.setServiceDate(serviceRecord.getDate());
-
+        if (serviceRecord.getServiceDate() != null) {
+            LocalDate today = LocalDate.now(ZoneOffset.UTC);
+            int days = (int) today.until(serviceRecord.getServiceDate()).getDays();        	
+            serviceRecord.setDaysLeftl(days);
+        }
+        
+        
         if (serviceRecord.getInterval() > 0 && serviceRecord.getDate() != null) {
             LocalDate recurring = serviceRecord.getDate().plusDays(serviceRecord.getInterval());
             serviceRecord.setRecurringDate(recurring);
@@ -76,9 +80,60 @@ public class MvcController {
         model.addAttribute("records", records);
         return "records";
     }
+    
+    @GetMapping("/40DAYS")
+    public String records40Days(Model model) throws IOException {
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        // Filter records with daysLeft < 41
+        List<ServiceRecord> filtered = allRecords.stream()
+                .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() >0)
+                .toList();
+
+        // Reverse so newest records appear first
+        Collections.reverse(filtered);
+
+        model.addAttribute("records", filtered);
+        return "40days"; 
+    }
+    
+
+    @GetMapping("/10DAYS")
+    public String records10Days(Model model) throws IOException {
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        // Filter records with daysLeft < 41
+        List<ServiceRecord> filtered = allRecords.stream()
+                .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() >0)
+                .toList();
+
+        // Reverse so newest records appear first
+        Collections.reverse(filtered);
+
+        model.addAttribute("records", filtered);
+        return "10days"; 
+    }
+    
+    @GetMapping("/today")
+    public String recordsToday(Model model) throws IOException {
+            List<ServiceRecord> allRecords = csvStorage.readAll();
+            
+            // Filter records with daysLeft < 41
+            List<ServiceRecord> filtered = allRecords.stream()
+                    .filter(r -> r.getDaysLeft() < 2 && r.getDaysLeft() >0)
+                    .toList();
+
+            // Reverse so newest records appear first
+            Collections.reverse(filtered);
+
+            model.addAttribute("records", filtered);
+            return "today"; 
+    }
 
     @GetMapping("/help")
     public String help() {
         return "help";
     }
+    
+
 }

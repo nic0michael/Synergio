@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Captured Service Records</title>
+    <title>Service Records Due in 40 Days</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         html, body {
@@ -46,6 +46,11 @@
         .record-field span:first-child {
             font-weight: bold;
         }
+        /* Highlight daysLeft */
+        .days-left {
+            font-weight: bold;
+            color: #d9534f; /* red */
+        }
         button {
             margin-top: 1em;
             background: #004aad;
@@ -66,29 +71,31 @@
 <body>
 <header>
     <div class="brand-title">Synergio</div>
-    <h1>View Added Service Records:</h1>
+    <h1>Service Records Due TODAY</h1>
     <nav>
         <a th:href="@{/}">Form</a> |
-		<a th:href="@{/40DAYS}" style="color:white;">Due in 40 Days</a> |
+        <a th:href="@{/records}">All Records</a> |
         <a th:href="@{/help}">Help</a>
     </nav>
 </header>
 
-<main>
-    <a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp; &nbsp; 
+<main>    
+	<a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp; &nbsp; 
 	<a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; &nbsp; 	
 	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp; 
-		<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
+	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
     <br><br>
     <div th:each="record : ${records}" class="record-card">
         <div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
         <div class="record-field"><span>Service Date:</span> <span th:text="${record.serviceDate}"></span></div>
-		<div class="record-field"><span>Days Left:</span> <span th:text="${record.daysLeft}"></span></div>
+        <div class="record-field"><span>Days Left:</span> 
+            <span th:text="${record.daysLeft}" class="days-left"></span>
+        </div>
         <div class="record-field"><span>Recurring Date:</span> <span th:text="${record.recurringDate}"></span></div>
         <div class="record-field"><span>Customer Name:</span> <span th:text="${record.customerName}"></span></div>
         <div class="record-field"><span>Cellphone:</span> <span th:text="${record.cellphone}"></span></div>
         <div class="record-field"><span>Vehicle Reg #:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
-        <div class="record-field"><span>Odometer:</span> <span th:text="${record.odometerReading}"></span></div> <!-- ✅ fixed spelling -->
+        <div class="record-field"><span>Odometer:</span> <span th:text="${record.odometerReading}"></span></div>
         <div class="record-field"><span>VIN:</span> <span th:text="${record.vinNumber}"></span></div>
         <div class="record-field"><span>Document Type:</span> <span th:text="${record.documentType}"></span></div>
         <div class="record-field"><span>Requirement Category:</span> <span th:text="${record.requirementCategory}"></span></div>
@@ -103,7 +110,7 @@
 </main>
 
 <footer>
-    <p>&copy; 2025 Synergeio Service Station</p>
+    <p>&copy; 2025 Synergio Service Station</p>
 </footer>
 </body>
 </html>

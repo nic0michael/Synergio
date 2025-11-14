@@ -53,15 +53,19 @@
 </head>
 <body>
 <header>
-    <h1>Synergio Service Record Form</h1>
+    <h1>Add new Service Records</h1>
     <nav>
         <a th:href="@{/records}" style="color:white;">View Records</a> |
+		<a th:href="@{/40DAYS}" style="color:white;">Due in 40 Days</a> |
         <a th:href="@{/help}" style="color:white;">Help</a>
     </nav>
 </header>
 
 <main>
-	<a th:href="@{/records}" class="btn-link">View Records</a>
+	<a th:href="@{/records}" class="btn-link">View Records</a>&nbsp; &nbsp; &nbsp; 	
+	<a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; &nbsp; 
+	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp; 	
+		<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
 	<br><br>
     <form th:action="@{/submit}" th:object="${serviceRecord}" method="post">
         <label>Date:</label>
@@ -69,7 +73,9 @@
 
         <label>Service Date:</label>
         <input type="date" th:field="*{serviceDate}">
-
+		
+		<label>Days Left:</label>
+		<input type="number" th:field="*{daysLeft}" readonly>
 
 		<label>Interval (days):</label>
 		<input type="number" th:field="*{interval}" min="0" value="0" placeholder="e.g. 90">
