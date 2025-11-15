@@ -127,7 +127,7 @@ public class MvcController {
             
             // Filter records with daysLeft < 2
             List<ServiceRecord> filtered = allRecords.stream()
-                    .filter(r -> r.getDaysLeft() < 2 && r.getDaysLeft() >-3)
+                    .filter(r -> r.getDaysLeft() < 1 && r.getDaysLeft() >-4)
                     .toList();
 
             // Reverse so newest records appear first

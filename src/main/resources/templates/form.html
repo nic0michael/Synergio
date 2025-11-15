@@ -102,7 +102,8 @@
 
 		<label>Document Type:
 		    <select th:field="*{documentType}">
-		        <option value="Quotation">Quotation</option>
+		        <option value="Appointment">Appointment</option>
+				<option value="Quotation">Quotation</option>
 		        <option value="Invoice">Invoice</option>
 				<option value="Refund (Subject to approval)">Refund (Subject to approval)</option>
 		    </select>
@@ -112,7 +113,9 @@
 		<label>Vehicle Requirement Category:
 		    <select th:field="*{requirementCategory}">
 		        <option value="Oil Change">Oil Change</option>
-		        <option value="Service">Service</option>
+		        <option value="Minor SService">Minor Service</option>
+				<option value="Service">Service</option>
+				<option value="Major Service">Major Service</option>
 				<option value="Brake fluid change">Brake fluid change</option>				
 		        <option value="General / Safety Inspection">General / Safety Inspection</option>
 		        <option value="Brake Check">Brake Check</option>
@@ -144,8 +147,8 @@
         <label>Amount (R):</label>
         <input type="number" step="0.01" th:field="*{amount}" placeholder="e.g. 350.00">
 
-        <label>Breakdown / Notes:</label>
-        <textarea th:field="*{breakdown}" rows="3"></textarea>
+        <label>Details of Service:</label>
+        <textarea th:field="*{breakdown}" rows="5"></textarea>
 
         <button type="submit">Save Record</button>
     </form>
