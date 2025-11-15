@@ -1,5 +1,98 @@
 This is a java 21 gradle springboot microservice with thymeleaf
 ## Existing code
+I have this Model class:
+package za.co.synergio.georgiou.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+public class ServiceRecord {
+	private int index;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate date;
+	
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate serviceDate;
+	
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate recurringDate;
+	
+    private String customerName;
+    private String cellphone;
+    private String vehicleRegNumber;
+    private String odometerReading;   
+    private String vinNumber;
+    private String documentType;
+    private String requirementCategory;
+    private int interval;
+    private int daysLeft;
+    private String materialsRequired;
+    private double labourHours;
+    private BigDecimal amount;
+    private String breakdown;
+    private int state; //0=active 1=completed 3=deleted
+
+    // --- Getters and Setters ---
+    public int getIndex() { return index; }
+    public void setIndex(int index) { this.index = index; }
+
+    
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public LocalDate getServiceDate() { return serviceDate; }
+    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
+
+    public LocalDate getRecurringDate() { return recurringDate; }
+    public void setRecurringDate(LocalDate recurringDate) { this.recurringDate = recurringDate; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCellphone() { return cellphone; }
+    public void setCellphone(String cellphone) { this.cellphone = cellphone; }
+
+    public String getVehicleRegNumber() { return vehicleRegNumber; }
+    public void setVehicleRegNumber(String vehicleRegNumber) { this.vehicleRegNumber = vehicleRegNumber; }
+
+    public String getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(String odometerReading) { this.odometerReading = odometerReading; }
+
+    public String getVinNumber() { return vinNumber; }
+    public void setVinNumber(String vinNumber) { this.vinNumber = vinNumber; }
+
+    public String getDocumentType() { return documentType; }
+    public void setDocumentType(String documentType) { this.documentType = documentType; }
+
+    public String getRequirementCategory() { return requirementCategory; }
+    public void setRequirementCategory(String requirementCategory) { this.requirementCategory = requirementCategory; }
+
+    public int getInterval() { return interval; }
+    public void setInterval(int interval) { this.interval = interval; }
+    
+
+    public int getDaysLeft() { return daysLeft; }
+    public void setDaysLeftl(int daysLeft) { this.daysLeft = daysLeft; }
+
+
+    public String getMaterialsRequired() { return materialsRequired; }
+    public void setMaterialsRequired(String materialsRequired) { this.materialsRequired = materialsRequired; }
+
+    public double getLabourHours() { return labourHours; }
+    public void setLabourHours(double d) { this.labourHours = d; }
+
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+
+    public String getBreakdown() { return breakdown; }
+    public void setBreakdown(String breakdown) { this.breakdown = breakdown; }
+    
+
+    public int getState() { return state; }
+    public void setState(int state) { this.state = state; }
+}
+
 
 I have this HTML form: form.html:
 
@@ -120,7 +213,6 @@ I have this controller : MvcController.java
 package za.co.synergio.georgiou.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -128,7 +220,6 @@ import org.springframework.web.bind.annotation.*;
 import za.co.synergio.georgiou.model.ServiceRecord;
 import za.co.synergio.georgiou.storage.CsvStorage;
 
-//import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -139,156 +230,126 @@ import java.util.List;
 @Controller
 public class MvcController {
 
-	private final CsvStorage csvStorage;
+    private final CsvStorage csvStorage;
 
-	@Autowired
-	public MvcController(CsvStorage csvStorage) {
-		this.csvStorage = csvStorage;
-	}
-	
-	@GetMapping("/")
-	public String form(Model model) {
-	    // Get the current UTC date (same worldwide)
-	    LocalDate utcDate = LocalDate.now(ZoneOffset.UTC);
-	    
-	    ServiceRecord record = new ServiceRecord();
-	    record.setDate(utcDate);
-	    model.addAttribute("serviceRecord", record);
-	    
-	    return "form";
-	}
-
-
-
-	@PostMapping("/submit")
-	public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
-			throws IOException {
-// Basic validation (can be expanded)
-		if (serviceRecord.getDate() == null) {
-			bindingResult.rejectValue("date", "date.empty", "Date is required");
-		}
-		if (serviceRecord.getCustomerName() == null || serviceRecord.getCustomerName().isBlank()) {
-			bindingResult.rejectValue("customerName", "name.empty", "Customer name is required");
-		}
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("serviceRecord", serviceRecord);
-			return "form";
-		}
-
-// Ensure the amount is non-null
-		if (serviceRecord.getAmount() == null)
-			serviceRecord.setAmount(BigDecimal.ZERO);
-
-		csvStorage.save(serviceRecord);
-		return "redirect:/";
-	}
-
-	@GetMapping("/api/records")
-	@ResponseBody
-	public List<ServiceRecord> apiRecords() throws IOException {
-		return csvStorage.readAll();
-	}
-	
-	@GetMapping("/records")
-	public String records(Model model) throws IOException {
-	    List<ServiceRecord> records = csvStorage.readAll();
-	    Collections.reverse(records); // last record first
-	    model.addAttribute("records", records);
-	    return "records";
-	}
-	
-	@GetMapping("/help")
-	public String help() {
-		return "help"; // help.html
-	}
-
-}
-
-I have this Model: ServiceRecord.java
-package za.co.synergio.georgiou.model;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-public class ServiceRecord {
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate date;
-    private String customerName;
-    private String cellphone;
-    private String vehicleRegNumber;
-    private String audometerReading;
-    private String vinNumber;
-    private String documentType;              // Quotation / Invoice
-    private String requirementCategory;       // Oil Change / Service / etc.
-    private String interval;                  // Days / Months / KMs combined
-    private String materialsRequired;
-    private double labourHours;
-    private BigDecimal amount;
-    private String breakdown;
-
-    public ServiceRecord() {}
-
-    // --- Getters and Setters ---
-    public LocalDate getDate() { return date; }
-    public void setDate(LocalDate date) { this.date = date; }
-
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
-
-    public String getCellphone() { return cellphone; }
-    public void setCellphone(String cellphone) { this.cellphone = cellphone; }
-
-    public String getVehicleRegNumber() { return vehicleRegNumber; }
-    public void setVehicleRegNumber(String vehicleRegNumber) { this.vehicleRegNumber = vehicleRegNumber; }
-
-    public String getAudometerReading() { return audometerReading; }
-    public void setAudometerReading(String audometerReading) { this.audometerReading = audometerReading; }
-
-    public String getVinNumber() { return vinNumber; }
-    public void setVinNumber(String vinNumber) { this.vinNumber = vinNumber; }
-
-    public String getDocumentType() { return documentType; }
-    public void setDocumentType(String documentType) { this.documentType = documentType; }
-
-    public String getRequirementCategory() { return requirementCategory; }
-    public void setRequirementCategory(String requirementCategory) { this.requirementCategory = requirementCategory; }
-
-    public String getInterval() { return interval; }
-    public void setInterval(String interval) { this.interval = interval; }
-
-    public String getMaterialsRequired() { return materialsRequired; }
-    public void setMaterialsRequired(String materialsRequired) { this.materialsRequired = materialsRequired; }
-
-    public double getLabourHours() { return labourHours; }
-    public void setLabourHours(double labourHours) { this.labourHours = labourHours; }
-
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
-
-    public String getBreakdown() { return breakdown; }
-    public void setBreakdown(String breakdown) { this.breakdown = breakdown; }
-
-    @Override
-    public String toString() {
-        return "ServiceRecord{" +
-                "date=" + date +
-                ", customerName='" + customerName + '\'' +
-                ", cellphone='" + cellphone + '\'' +
-                ", vehicleRegNumber='" + vehicleRegNumber + '\'' +
-                ", audometerReading='" + audometerReading + '\'' +
-                ", vinNumber='" + vinNumber + '\'' +
-                ", documentType='" + documentType + '\'' +
-                ", requirementCategory='" + requirementCategory + '\'' +
-                ", interval='" + interval + '\'' +
-                ", materialsRequired='" + materialsRequired + '\'' +
-                ", labourHours=" + labourHours +
-                ", amount=" + amount +
-                ", breakdown='" + breakdown + '\'' +
-                '}';
+    @Autowired
+    public MvcController(CsvStorage csvStorage) {
+        this.csvStorage = csvStorage;
     }
+
+    @GetMapping("/")
+    public String form(Model model) {
+        LocalDate utcDate = LocalDate.now(ZoneOffset.UTC);
+        ServiceRecord record = new ServiceRecord();
+        record.setDate(utcDate);
+        model.addAttribute("serviceRecord", record);
+        return "form";
+    }
+
+    @PostMapping("/submit")
+    public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
+            throws IOException {
+
+        if (serviceRecord.getDate() == null)
+            bindingResult.rejectValue("date", "date.empty", "Date is required");
+        if (serviceRecord.getCustomerName() == null || serviceRecord.getCustomerName().isBlank())
+            bindingResult.rejectValue("customerName", "name.empty", "Customer name is required");
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("serviceRecord", serviceRecord);
+            return "form";
+        }
+
+        if (serviceRecord.getAmount() == null)
+            serviceRecord.setAmount(BigDecimal.ZERO);
+
+        if (serviceRecord.getServiceDate() != null) {
+            LocalDate today = LocalDate.now(ZoneOffset.UTC);
+            int days = (int) today.until(serviceRecord.getServiceDate()).getDays();        	
+            serviceRecord.setDaysLeftl(days);
+        }
+        
+        
+        if (serviceRecord.getInterval() > 0 && serviceRecord.getDate() != null) {
+            LocalDate recurring = serviceRecord.getDate().plusDays(serviceRecord.getInterval());
+            serviceRecord.setRecurringDate(recurring);
+        }
+
+        csvStorage.save(serviceRecord);
+        return "redirect:/";
+    }
+
+    @GetMapping("/api/records")
+    @ResponseBody
+    public List<ServiceRecord> apiRecords() throws IOException {
+        return csvStorage.readAll();
+    }
+
+    @GetMapping("/records")
+    public String records(Model model) throws IOException {
+        List<ServiceRecord> records = csvStorage.readAll();
+        Collections.reverse(records);
+        model.addAttribute("records", records);
+        return "records";
+    }
+    
+    @GetMapping("/40DAYS")
+    public String records40Days(Model model) throws IOException {
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        // Filter records with daysLeft < 41
+        List<ServiceRecord> filtered = allRecords.stream()
+                .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() >0)
+                .toList();
+
+        // Reverse so newest records appear first
+        Collections.reverse(filtered);
+
+        model.addAttribute("records", filtered);
+        return "40days"; 
+    }
+    
+
+    @GetMapping("/10DAYS")
+    public String records10Days(Model model) throws IOException {
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        // Filter records with daysLeft < 41
+        List<ServiceRecord> filtered = allRecords.stream()
+                .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() >0)
+                .toList();
+
+        // Reverse so newest records appear first
+        Collections.reverse(filtered);
+
+        model.addAttribute("records", filtered);
+        return "10days"; 
+    }
+    
+    @GetMapping("/today")
+    public String recordsToday(Model model) throws IOException {
+            List<ServiceRecord> allRecords = csvStorage.readAll();
+            
+            // Filter records with daysLeft < 41
+            List<ServiceRecord> filtered = allRecords.stream()
+                    .filter(r -> r.getDaysLeft() < 2 && r.getDaysLeft() >0)
+                    .toList();
+
+            // Reverse so newest records appear first
+            Collections.reverse(filtered);
+
+            model.addAttribute("records", filtered);
+            return "today"; 
+    }
+
+    @GetMapping("/help")
+    public String help() {
+        return "help";
+    }
+    
+
 }
+
 
 
 I have form.js

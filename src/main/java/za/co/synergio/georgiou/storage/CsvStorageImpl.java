@@ -10,34 +10,58 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class CsvStorageImpl implements CsvStorage {
+	
+	@Value("${synergeio.index.path}") // <-- Spring injects the value here
+    private String indexCounterPath;
 
     private final Path csvFilePath;
     private final Path backupFilePath;
+
+    private static final String CSV_HEADER = String.join(",",
+            "index",
+            "transactionDate",
+            "serviceDate",
+            "recurringDate",
+            "customerName",
+            "cellphone",
+            "vehicleRegNumber",
+            "odometerReading",
+            "vinNumber",
+            "documentType",
+            "requirementCategory",
+            "interval",
+            "daysLeft",
+            "materialsRequired",
+            "labourHours",
+            "amount",
+            "breakdown",
+            "state"
+    );
 
     public CsvStorageImpl(
             @Value("${synergeio.csv.path:data/service_records.csv}") String csvPath,
             @Value("${synergeio.back.path:data/service_records.backup}") String backupPath
     ) throws IOException {
+
         this.csvFilePath = Path.of(csvPath);
         this.backupFilePath = Path.of(backupPath);
 
-        // Ensure parent directories exist
         Files.createDirectories(csvFilePath.getParent());
         Files.createDirectories(backupFilePath.getParent());
 
-        // Create CSV file with header if it doesn't exist
+        // Create file with header if missing
         if (!Files.exists(csvFilePath)) {
             try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath)) {
-                writer.write("date,serviceDate,recurringDate,customerName,cellphone,vehicleRegNumber,odometerReading,vinNumber," +
-                        "documentType,requirementCategory,interval,materialsRequired,labourHours,amount,breakdown,daysLeft");
+                writer.write(CSV_HEADER);
                 writer.newLine();
             }
         }
 
-        // Create backup file if it doesn't exist
+        // Ensure backup file exists
         if (!Files.exists(backupFilePath)) {
             Files.createFile(backupFilePath);
         }
@@ -45,13 +69,13 @@ public class CsvStorageImpl implements CsvStorage {
 
     @Override
     public synchronized void save(ServiceRecord record) throws IOException {
-        // Write to main CSV
+
         try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath, StandardOpenOption.APPEND)) {
-            writer.write(toCsv(record));
+        	record.setIndex(getNextIndex());
+            writer.write(toCsvSave(record));
             writer.newLine();
         }
 
-        // Update backup
         Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -63,75 +87,106 @@ public class CsvStorageImpl implements CsvStorage {
         try (BufferedReader reader = Files.newBufferedReader(csvFilePath)) {
             String line;
             boolean skipHeader = true;
+
             while ((line = reader.readLine()) != null) {
-                if (skipHeader) { skipHeader = false; continue; }
-                ServiceRecord record = fromCsv(line);
-                if (record != null) records.add(record);
+                if (skipHeader) {
+                    skipHeader = false;
+                    continue;
+                }
+                ServiceRecord r = fromCsvRead(line);
+                if (r != null) records.add(r);
             }
         }
+
         return records;
     }
 
     @Override
     public synchronized List<ServiceRecord> readAllDueIn40Days() throws IOException {
-        List<ServiceRecord> allRecords = readAll();
-        return allRecords.stream()
+        return readAll().stream()
                 .filter(r -> r.getDaysLeft() < 41)
-                .sorted((r1, r2) -> Integer.compare(r1.getDaysLeft(), r2.getDaysLeft()))
+                .sorted((a, b) -> Integer.compare(a.getDaysLeft(), b.getDaysLeft()))
                 .toList();
     }
-    
-    // --- CSV helpers ---
-    private String toCsv(ServiceRecord r) {
+
+    // ========================================================================
+    // CSV SERIALIZATION
+    // ========================================================================
+
+    private String toCsvSave(ServiceRecord r) {
         return String.join(",",
+                String.valueOf(r.getIndex()),
                 quote(r.getDate()),
                 quote(r.getServiceDate()),
                 quote(r.getRecurringDate()),
                 quote(r.getCustomerName()),
                 quote(r.getCellphone()),
                 quote(r.getVehicleRegNumber()),
-                quote(r.getOdometerReading()), // fixed spelling
+                quote(r.getOdometerReading()),
                 quote(r.getVinNumber()),
                 quote(r.getDocumentType()),
                 quote(r.getRequirementCategory()),
                 String.valueOf(r.getInterval()),
+                String.valueOf(r.getDaysLeft()),
                 quote(r.getMaterialsRequired()),
                 String.valueOf(r.getLabourHours()),
                 r.getAmount() != null ? r.getAmount().toPlainString() : "0",
                 quote(r.getBreakdown()),
-                String.valueOf(r.getDaysLeft())  
+                String.valueOf(r.getState())
         );
     }
 
-    private ServiceRecord fromCsv(String line) {
+    
+
+    private ServiceRecord fromCsvRead(String line) {
         try {
             String[] parts = parseCsvLine(line);
             if (parts.length < 15) return null;
 
             ServiceRecord r = new ServiceRecord();
-            r.setDate(parseDate(parts[0]));
-            r.setServiceDate(parseDate(parts[1]));
-            r.setRecurringDate(parseDate(parts[2]));
-            r.setCustomerName(parts[3]);
-            r.setCellphone(parts[4]);
-            r.setVehicleRegNumber(parts[5]);
-            r.setOdometerReading(parts[6]);
-            r.setVinNumber(parts[7]);
-            r.setDocumentType(parts[8]);
-            r.setRequirementCategory(parts[9]);
-            r.setInterval(parseInt(parts[10]));
-            r.setMaterialsRequired(parts[11]);
-            r.setLabourHours(parseDouble(parts[12]));
-            r.setAmount(parseBigDecimal(parts[13]));
-            r.setBreakdown(parts[14]);            
-            r.setDaysLeftl(parseInt(parts[15]));           
+ 
+            int i = 0;
+
+            r.setIndex(parseInt(parts[0]));
+            r.setDate(parseDate(parts[1]));
+            r.setServiceDate(parseDate(parts[2]));
+            r.setRecurringDate(parseDate(parts[3]));
+            r.setCustomerName(parts[4]);
+            r.setCellphone(parts[5]);
+            r.setVehicleRegNumber(parts[6]);
+            r.setOdometerReading(parts[7]);
+            r.setVinNumber(parts[8]);
+            r.setDocumentType(parts[9]);
+            r.setRequirementCategory(parts[10]);
+            r.setInterval(parseInt(parts[11]));
+            r.setDaysLeft(parseInt(parts[12]));
+            r.setMaterialsRequired(parts[13]);
+            r.setLabourHours(parseDouble(parts[14]));
+            r.setAmount(parseBigDecimal(parts[15]));
+            r.setBreakdown(parts[16]);
+            r.setStatel(parseInt(parts[17]));    // your model's actual method name                    // FIXED: correct setter
+            LocalDate serviceDate = r.getServiceDate();            
+            LocalDate today = LocalDate.now();
+
+            if (serviceDate != null) {
+                long daysLeft = ChronoUnit.DAYS.between(today, serviceDate); // future date - today
+                r.setDaysLeft((int) daysLeft); // cast to int if your model uses int
+            } else {
+                r.setDaysLeft(0);
+            }
+            
 
             return r;
+
         } catch (Exception e) {
             System.err.println("Failed to parse CSV line: " + e.getMessage());
             return null;
         }
     }
+
+    // ========================================================================
+    // HELPERS
+    // ========================================================================
 
     private String quote(Object value) {
         if (value == null) return "";
@@ -148,19 +203,22 @@ public class CsvStorageImpl implements CsvStorage {
     }
 
     private int parseInt(String value) {
-        try { return Integer.parseInt(value.replace("\"", "")); } catch (Exception e) { return 0; }
+        try { return Integer.parseInt(value.replace("\"", "")); }
+        catch (Exception e) { return 0; }
     }
 
     private double parseDouble(String value) {
-        try { return Double.parseDouble(value.replace("\"", "")); } catch (Exception e) { return 0.0; }
+        try { return Double.parseDouble(value.replace("\"", "")); }
+        catch (Exception e) { return 0.0; }
     }
 
     private BigDecimal parseBigDecimal(String value) {
-        try { return new BigDecimal(value.replace("\"", "")); } catch (Exception e) { return BigDecimal.ZERO; }
+        try { return new BigDecimal(value.replace("\"", "")); }
+        catch (Exception e) { return BigDecimal.ZERO; }
     }
 
     /**
-     * Handles commas and quotes in CSV lines correctly.
+     * Handles commas and quotes correctly in CSV.
      */
     private String[] parseCsvLine(String line) {
         List<String> tokens = new ArrayList<>();
@@ -168,7 +226,8 @@ public class CsvStorageImpl implements CsvStorage {
         boolean inQuotes = false;
 
         for (char c : line.toCharArray()) {
-            if (c == '\"') inQuotes = !inQuotes;
+            if (c == '"')
+                inQuotes = !inQuotes;
             else if (c == ',' && !inQuotes) {
                 tokens.add(sb.toString());
                 sb.setLength(0);
@@ -176,7 +235,42 @@ public class CsvStorageImpl implements CsvStorage {
                 sb.append(c);
             }
         }
+
         tokens.add(sb.toString());
         return tokens.toArray(new String[0]);
     }
+    
+    private int getNextIndex() throws IOException {
+
+        Path indexPath = Path.of(indexCounterPath); 
+
+        // Ensure parent folder exists
+        if (indexPath.getParent() != null) {
+            Files.createDirectories(indexPath.getParent());
+        }
+
+        // If file doesn't exist → create it with initial value 1
+        if (!Files.exists(indexPath)) {
+            Files.writeString(indexPath, "1", StandardOpenOption.CREATE);
+            return 1;
+        }
+
+        // Read current index
+        String content = Files.readString(indexPath).trim();
+
+        int current;
+        try {
+            current = Integer.parseInt(content);
+        } catch (NumberFormatException e) {
+            current = 1; // fallback if file is damaged
+        }
+
+        int next = current + 1;
+
+        // Write incremented value back
+        Files.writeString(indexPath, String.valueOf(next), StandardOpenOption.TRUNCATE_EXISTING);
+
+        return next;
+    }
+
 }

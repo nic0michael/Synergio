@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class MvcController {
         if (serviceRecord.getServiceDate() != null) {
             LocalDate today = LocalDate.now(ZoneOffset.UTC);
             int days = (int) today.until(serviceRecord.getServiceDate()).getDays();        	
-            serviceRecord.setDaysLeftl(days);
+            serviceRecord.setDaysLeft(days);
         }
         
         
@@ -86,12 +87,13 @@ public class MvcController {
         List<ServiceRecord> allRecords = csvStorage.readAll();
         
         // Filter records with daysLeft < 41
-        List<ServiceRecord> filtered = allRecords.stream()
-                .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() >0)
-                .toList();
-
+        List<ServiceRecord> filtered = new ArrayList<>(
+        	    allRecords.stream()
+        	        .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() > 0)
+        	        .toList()
+        	);
         // Reverse so newest records appear first
-        Collections.reverse(filtered);
+//        Collections.reverse(filtered);
 
         model.addAttribute("records", filtered);
         return "40days"; 
@@ -102,25 +104,30 @@ public class MvcController {
     public String records10Days(Model model) throws IOException {
         List<ServiceRecord> allRecords = csvStorage.readAll();
         
-        // Filter records with daysLeft < 41
-        List<ServiceRecord> filtered = allRecords.stream()
-                .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() >0)
-                .toList();
+        // Filter records with daysLeft < 11
+        List<ServiceRecord> filtered = new ArrayList<>(
+        	    allRecords.stream()
+        	        .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() > 0)
+        	        .toList()
+        	);
 
         // Reverse so newest records appear first
-        Collections.reverse(filtered);
+//        Collections.reverse(filtered);
 
         model.addAttribute("records", filtered);
         return "10days"; 
+        
+        
+        
     }
     
     @GetMapping("/today")
     public String recordsToday(Model model) throws IOException {
             List<ServiceRecord> allRecords = csvStorage.readAll();
             
-            // Filter records with daysLeft < 41
+            // Filter records with daysLeft < 2
             List<ServiceRecord> filtered = allRecords.stream()
-                    .filter(r -> r.getDaysLeft() < 2 && r.getDaysLeft() >0)
+                    .filter(r -> r.getDaysLeft() < 2 && r.getDaysLeft() >-3)
                     .toList();
 
             // Reverse so newest records appear first

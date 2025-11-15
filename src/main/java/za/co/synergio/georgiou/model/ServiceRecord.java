@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class ServiceRecord {
+	private int index;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
 	
@@ -13,10 +14,11 @@ public class ServiceRecord {
 	
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate recurringDate;
+	
     private String customerName;
     private String cellphone;
     private String vehicleRegNumber;
-    private String odometerReading;   // ✅ fixed spelling
+    private String odometerReading;   
     private String vinNumber;
     private String documentType;
     private String requirementCategory;
@@ -26,8 +28,13 @@ public class ServiceRecord {
     private double labourHours;
     private BigDecimal amount;
     private String breakdown;
+    private int state; //0=active 1=completed 3=deleted
 
     // --- Getters and Setters ---
+    public int getIndex() { return index; }
+    public void setIndex(int index) { this.index = index; }
+
+    
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
 
@@ -63,7 +70,7 @@ public class ServiceRecord {
     
 
     public int getDaysLeft() { return daysLeft; }
-    public void setDaysLeftl(int daysLeft) { this.daysLeft = daysLeft; }
+    public void setDaysLeft(int daysLeft) { this.daysLeft = daysLeft; }
 
 
     public String getMaterialsRequired() { return materialsRequired; }
@@ -77,4 +84,8 @@ public class ServiceRecord {
 
     public String getBreakdown() { return breakdown; }
     public void setBreakdown(String breakdown) { this.breakdown = breakdown; }
+    
+
+    public int getState() { return state; }
+    public void setStatel(int state) { this.state = state; }
 }
