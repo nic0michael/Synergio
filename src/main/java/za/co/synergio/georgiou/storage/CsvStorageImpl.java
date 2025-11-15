@@ -28,6 +28,8 @@ public class CsvStorageImpl implements CsvStorage {
             "recurringDate",
             "customerName",
             "cellphone",
+            "customerAddress",
+            "vehicleMakeAndModel",
             "vehicleRegNumber",
             "odometerReading",
             "vinNumber",
@@ -55,11 +57,16 @@ public class CsvStorageImpl implements CsvStorage {
 
         // Create file with header if missing
         if (!Files.exists(csvFilePath)) {
-            try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(
+                    csvFilePath,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE
+            )) {
                 writer.write(CSV_HEADER);
                 writer.newLine();
             }
         }
+
 
         // Ensure backup file exists
         if (!Files.exists(backupFilePath)) {
@@ -115,12 +122,15 @@ public class CsvStorageImpl implements CsvStorage {
 
     private String toCsvSave(ServiceRecord r) {
         return String.join(",",
+
                 String.valueOf(r.getIndex()),
                 quote(r.getDate()),
                 quote(r.getServiceDate()),
                 quote(r.getRecurringDate()),
                 quote(r.getCustomerName()),
                 quote(r.getCellphone()),
+                quote(r.getCustomerAddress()),
+                quote(r.getVehicleMakeAnModel()),
                 quote(r.getVehicleRegNumber()),
                 quote(r.getOdometerReading()),
                 quote(r.getVinNumber()),
@@ -140,31 +150,36 @@ public class CsvStorageImpl implements CsvStorage {
 
     private ServiceRecord fromCsvRead(String line) {
         try {
-            String[] parts = parseCsvLine(line);
-            if (parts.length < 15) return null;
 
             ServiceRecord r = new ServiceRecord();
  
-            int i = 0;
 
-            r.setIndex(parseInt(parts[0]));
-            r.setDate(parseDate(parts[1]));
-            r.setServiceDate(parseDate(parts[2]));
-            r.setRecurringDate(parseDate(parts[3]));
-            r.setCustomerName(parts[4]);
-            r.setCellphone(parts[5]);
-            r.setVehicleRegNumber(parts[6]);
-            r.setOdometerReading(parts[7]);
-            r.setVinNumber(parts[8]);
-            r.setDocumentType(parts[9]);
-            r.setRequirementCategory(parts[10]);
-            r.setInterval(parseInt(parts[11]));
-            r.setDaysLeft(parseInt(parts[12]));
-            r.setMaterialsRequired(parts[13]);
-            r.setLabourHours(parseDouble(parts[14]));
-            r.setAmount(parseBigDecimal(parts[15]));
-            r.setBreakdown(parts[16]);
-            r.setStatel(parseInt(parts[17]));    // your model's actual method name                    // FIXED: correct setter
+            String[] part = parseCsvLine(line);
+            if (part.length < 20) return null;
+
+
+            int i = 0;
+            r.setIndex(parseInt(part[i++]));
+            r.setDate(parseDate(part[i++]));
+            r.setServiceDate(parseDate(part[i++]));
+            r.setRecurringDate(parseDate(part[i++]));
+            r.setCustomerName(part[i++]);
+            r.setCellphone(part[i++]);
+            r.setCustomerAddress(part[i++]);
+            r.setVehicleMakeAnModel(part[i++]);
+            r.setVehicleRegNumber(part[i++]);
+            r.setOdometerReading(part[i++]);
+            r.setVinNumber(part[i++]);
+            r.setDocumentType(part[i++]);
+            r.setRequirementCategory(part[i++]);
+            r.setInterval(parseInt(part[i++]));
+            r.setDaysLeft(parseInt(part[i++]));
+            r.setMaterialsRequired(part[i++]);
+            r.setLabourHours(parseDouble(part[i++]));
+            r.setAmount(parseBigDecimal(part[i++]));
+            r.setBreakdown(part[i++]);
+            
+            
             LocalDate serviceDate = r.getServiceDate();            
             LocalDate today = LocalDate.now();
 

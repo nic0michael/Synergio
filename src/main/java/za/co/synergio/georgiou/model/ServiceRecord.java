@@ -29,6 +29,8 @@ public class ServiceRecord {
     private BigDecimal amount;
     private String breakdown;
     private int state; //0=active 1=completed 3=deleted
+    private String customerAddress;
+    private String VehicleMakeAnModel;
 
     // --- Getters and Setters ---
     public int getIndex() { return index; }
@@ -88,4 +90,21 @@ public class ServiceRecord {
 
     public int getState() { return state; }
     public void setStatel(int state) { this.state = state; }
+    
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
+    public String getVehicleMakeAnModel() {
+        return VehicleMakeAnModel;
+    }
+
+    public void setVehicleMakeAnModel(String vehicleMakeAnModel) {
+        VehicleMakeAnModel = vehicleMakeAnModel;
+    }
+
 }

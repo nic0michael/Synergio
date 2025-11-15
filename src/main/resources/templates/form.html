@@ -89,12 +89,20 @@
 
         <label>Cellphone:</label>
         <input type="text" th:field="*{cellphone}" placeholder="Enter cellphone number">
+		
+
+		<label>Custoners Address</label>
+		<textarea th:field="*{customerAddress}" rows="3"></textarea>
 
         <label>Vehicle Reg #:</label>
         <input type="text" th:field="*{vehicleRegNumber}" placeholder="e.g. CA123456">
 
         <label>Odometer Reading:</label> <!-- ✅ Fixed spelling -->
         <input type="text" th:field="*{odometerReading}" placeholder="e.g. 120000">
+		
+
+		<label>Vehicle Make & Model</label>
+		<input type="text" th:field="*{VehicleMakeAnModel}" placeholder="Enter customer name" required>
 
         <label>VIN Number:</label>
         <input type="text" th:field="*{vinNumber}" placeholder="Vehicle Identification Number">
