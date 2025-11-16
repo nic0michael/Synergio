@@ -2,6 +2,8 @@ package za.co.synergio.georgiou.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class ServiceRecord {
@@ -31,6 +33,7 @@ public class ServiceRecord {
     private int state; //0=active 1=completed 3=deleted
     private String customerAddress;
     private String VehicleMakeAnModel;
+    private List<String> jobsToDo;
 
     // --- Getters and Setters ---
     public int getIndex() { return index; }
@@ -105,6 +108,14 @@ public class ServiceRecord {
 
     public void setVehicleMakeAnModel(String vehicleMakeAnModel) {
         VehicleMakeAnModel = vehicleMakeAnModel;
+    }
+
+    public List<String> getJobsToDo() {
+        return jobsToDo;
+    }
+
+    public void setJobsToDo(List<String> jobsToDo) {
+        this.jobsToDo = jobsToDo;
     }
 
 }

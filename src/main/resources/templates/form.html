@@ -74,14 +74,14 @@
         <label>Service Date:</label>
         <input type="date" th:field="*{serviceDate}">
 		
-		<label>Days Left:</label>
-		<input type="number" th:field="*{daysLeft}" readonly>
+		
+		<input type="hidden" th:field="*{daysLeft}">
 
 		<label>Interval (days):</label>
 		<input type="number" th:field="*{interval}" min="0" value="0" placeholder="e.g. 90">
 		
-        <label>Recurring Date:</label>
-        <input type="date" th:field="*{recurringDate}" readonly>
+       
+        <input type="hidden" th:field="*{recurringDate}" readonly>
 		
 
         <label>Customer Name:</label>
@@ -94,18 +94,18 @@
 		<label>Custoners Address</label>
 		<textarea th:field="*{customerAddress}" rows="3"></textarea>
 
-        <label>Vehicle Reg #:</label>
-        <input type="text" th:field="*{vehicleRegNumber}" placeholder="e.g. CA123456">
+        <label>Vehicle Registration Nr:</label>
+        <input type="text" th:field="*{vehicleRegNumber}" placeholder="Enter Registration number">
 
         <label>Odometer Reading:</label> <!-- ✅ Fixed spelling -->
         <input type="text" th:field="*{odometerReading}" placeholder="e.g. 120000">
 		
 
 		<label>Vehicle Make & Model</label>
-		<input type="text" th:field="*{VehicleMakeAnModel}" placeholder="Enter customer name" required>
+		<input type="text" th:field="*{VehicleMakeAnModel}" placeholder="Enter Vehicle Make & Model" required>
 
         <label>VIN Number:</label>
-        <input type="text" th:field="*{vinNumber}" placeholder="Vehicle Identification Number">
+        <input type="text" th:field="*{vinNumber}" placeholder="Vehicle VIN Identification Number">
 
 
 		<label>Document Type:
@@ -120,26 +120,13 @@
 
 		<label>Vehicle Requirement Category:
 		    <select th:field="*{requirementCategory}">
-		        <option value="Oil Change">Oil Change</option>
-		        <option value="Minor SService">Minor Service</option>
+		        <option value="Minor Service">Minor Service</option>
 				<option value="Service">Service</option>
 				<option value="Major Service">Major Service</option>
-				<option value="Brake fluid change">Brake fluid change</option>				
 		        <option value="General / Safety Inspection">General / Safety Inspection</option>
 		        <option value="Brake Check">Brake Check</option>
 				<option value="Repair">Repair</option>
-				<option value="Engine Diagnostics">Engine Diagnostics</option>
-				<option value="Electrical System">Electrical System</option>
-				<option value="Battery Replacement">Battery Replacement</option>
-				<option value="Cooling System / Radiator">Cooling System / Radiator</option>
-				<option value="Transmission / Clutch">Transmission / Clutch</option>
-				<option value="Suspension / Steering">Suspension / Steering</option>
-				<option value="Tire Replacement / Rotation">Tire Replacement / Rotation</option>
-				<option value="Wheel Alignment / Balancing">Wheel Alignment / Balancing</option>
-				<option value="Fuel System">Fuel System</option>
-				<option value="Timing Belt / Chain">Timing Belt / Chain</option>
-				<option value="Lights / Indicators">Lights / Indicators</option>
-				<option value="Wipers / Washer System">Wipers / Washer System</option>
+				<option value="Diagnostics">Diagnostics</option>
 				<option value="Other">Other</option>
 							
 				
@@ -150,13 +137,43 @@
         <textarea th:field="*{materialsRequired}" rows="2"></textarea>
 
         <label>Labour Hours:</label>
-        <input type="text" th:field="*{labourHours}" placeholder="e.g. 2.5">
+        <input type="text" th:field="*{labourHours}" placeholder="Labour hours">
 
-        <label>Amount (R):</label>
-        <input type="number" step="0.01" th:field="*{amount}" placeholder="e.g. 350.00">
+		
+		<label>Jobs To Do:</label>
+		<div style="padding-left: 1em;">
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Annual oil change"> Annual oil change</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Anti freeze"> Anti freeze</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Carburetor oil topup"> Carburetor oil topup</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Differential"> Differential</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Gearbox filter and oil"> Gearbox filter and oil</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Ignition Points and timing"> Ignition Points and timing</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Spark plugs"> Spark plugs</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Oil change"> Oil change</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Replace sump plug"> Replace sump plug</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Brake fluid change"> Brake fluid change</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="General / Safety Inspection"> General / Safety Inspection</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Brake Check"> Brake Check</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Repair (See details)"> Repair (See details)</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Engine Diagnostics"> Engine Diagnostics</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Electrical System"> Electrical System</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Battery Replacement"> Battery Replacement</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Cooling System / Radiator"> Cooling System / Radiator</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Transmission / Clutch"> Transmission / Clutch</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Suspension / Steering"> Suspension / Steering</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Tire Replacement / Rotation"> Tire Replacement / Rotation</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Wheel Alignment / Balancing"> Wheel Alignment / Balancing</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Fuel System"> Fuel System</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Timing Belt / Chain"> Timing Belt / Chain</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Lights / Indicators"> Lights / Indicators</label>
+		    <label><input type="checkbox" th:field="*{jobsToDo}" value="Wipers / Washer System"> Wipers / Washer System</label>
+		</div>
 
         <label>Details of Service:</label>
-        <textarea th:field="*{breakdown}" rows="5"></textarea>
+        <textarea th:field="*{breakdown}" rows="5"></textarea>		
+
+		<label>Amount (R):</label>
+		<input type="number" step="0.01" th:field="*{amount}" placeholder="Amount">
 
         <button type="submit">Save Record</button>
     </form>

@@ -131,7 +131,7 @@ public class MvcController {
                     .toList();
 
             // Reverse so newest records appear first
-            Collections.reverse(filtered);
+//            Collections.reverse(filtered);
 
             model.addAttribute("records", filtered);
             return "today"; 

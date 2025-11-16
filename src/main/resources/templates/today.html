@@ -86,6 +86,7 @@
 	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
     <br><br>
     <div th:each="record : ${records}" class="record-card">
+	<div class="record-field"><span>Index:</span> <span th:text="${record.index}"></span></div>
         <div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
         <div class="record-field"><span>Service Date:</span> <span th:text="${record.serviceDate}"></span></div>
         <div class="record-field"><span>Days Left:</span> 
@@ -94,17 +95,32 @@
         <div class="record-field"><span>Recurring Date:</span> <span th:text="${record.recurringDate}"></span></div>
         <div class="record-field"><span>Customer Name:</span> <span th:text="${record.customerName}"></span></div>
         <div class="record-field"><span>Cellphone:</span> <span th:text="${record.cellphone}"></span></div>
-        <div class="record-field"><span>Vehicle Reg #:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
+        <div class="record-field"><span>Vehicle Registration:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
+		<div class="record-field"><span>Vehicle Make & Model:</span> <span th:text="${record.vehicleMakeAnModel}"></span></div>
         <div class="record-field"><span>Odometer:</span> <span th:text="${record.odometerReading}"></span></div>
-        <div class="record-field"><span>VIN:</span> <span th:text="${record.vinNumber}"></span></div>
         <div class="record-field"><span>Document Type:</span> <span th:text="${record.documentType}"></span></div>
         <div class="record-field"><span>Requirement Category:</span> <span th:text="${record.requirementCategory}"></span></div>
         <div class="record-field"><span>Interval (days):</span> <span th:text="${record.interval}"></span></div>
         <div class="record-field"><span>Materials:</span> <span th:text="${record.materialsRequired}"></span></div>
         <div class="record-field"><span>Labour (hrs):</span> <span th:text="${record.labourHours}"></span></div>
-        <div class="record-field"><span>Amount: R</span> <span th:text="${record.amount}"></span></div>
         <div class="record-field"><span>Breakdown:</span> <span th:text="${record.breakdown}"></span></div>
+
+		<div class="record-field">
+		    <span>Jobs To Do:</span>
+		    <ul>
+		        <li th:each="job : ${record.jobsToDo}" th:text="${job}"></li>
+		    </ul>
+		</div>
+		<div class="record-field"><span>Amount: R</span> <span th:text="${record.amount}"></span></div>
+		<!-- Edit button -->
+		<div class="record-field">
+		    <a th:href="@{/edit(index=${record.index})}">
+		        <button>Edit</button>
+		    </a>
+		</div>
+		
     </div>
+
 
 	<a th:href="@{/}" class="btn-link">Add Records</a>
 </main>

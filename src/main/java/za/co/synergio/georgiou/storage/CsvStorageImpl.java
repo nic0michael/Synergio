@@ -41,21 +41,25 @@ public class CsvStorageImpl implements CsvStorage {
             "labourHours",
             "amount",
             "breakdown",
+            "jobsToDo",
             "state"
     );
 
+    
+
     public CsvStorageImpl(
-            @Value("${synergeio.csv.path:data/service_records.csv}") String csvPath,
-            @Value("${synergeio.back.path:data/service_records.backup}") String backupPath
+            @Value("${synergeio.csv.path}") String csvPath,
+            @Value("${synergeio.back.path}") String backupPath
     ) throws IOException {
 
         this.csvFilePath = Path.of(csvPath);
         this.backupFilePath = Path.of(backupPath);
 
+        // Ensure parent folders exist
         Files.createDirectories(csvFilePath.getParent());
         Files.createDirectories(backupFilePath.getParent());
 
-        // Create file with header if missing
+        // Create CSV file with header if missing
         if (!Files.exists(csvFilePath)) {
             try (BufferedWriter writer = Files.newBufferedWriter(
                     csvFilePath,
@@ -67,23 +71,61 @@ public class CsvStorageImpl implements CsvStorage {
             }
         }
 
-
         // Ensure backup file exists
         if (!Files.exists(backupFilePath)) {
             Files.createFile(backupFilePath);
         }
     }
+//    
+//    public CsvStorageImpl(
+//            @Value("${synergeio.csv.path:data/service_records.csv}") String csvPath,
+//            @Value("${synergeio.back.path:data/service_records.backup}") String backupPath
+//    ) throws IOException {
+//
+//        this.csvFilePath = Path.of(csvPath);
+//        this.backupFilePath = Path.of(backupPath);
+//
+//        Files.createDirectories(csvFilePath.getParent());
+//        Files.createDirectories(backupFilePath.getParent());
+//
+//        // Create file with header if missing
+//        if (!Files.exists(csvFilePath)) {
+//            try (BufferedWriter writer = Files.newBufferedWriter(
+//                    csvFilePath,
+//                    StandardOpenOption.CREATE,
+//                    StandardOpenOption.WRITE
+//            )) {
+//                writer.write(CSV_HEADER);
+//                writer.newLine();
+//            }
+//        }
+//
+//
+//        // Ensure backup file exists
+//        if (!Files.exists(backupFilePath)) {
+//            Files.createFile(backupFilePath);
+//        }
+//    }
 
     @Override
     public synchronized void save(ServiceRecord record) throws IOException {
 
-        try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath, StandardOpenOption.APPEND)) {
-        	record.setIndex(getNextIndex());
-            writer.write(toCsvSave(record));
-            writer.newLine();
-        }
-
-        Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+    	try (BufferedWriter writer = Files.newBufferedWriter(
+    	        csvFilePath,
+    	        StandardOpenOption.CREATE,   // create if missing
+    	        StandardOpenOption.APPEND    // append if exists
+    	)) {
+    	    record.setIndex(getNextIndex());
+    	    writer.write(toCsvSave(record));
+    	    writer.newLine();
+    	}
+//        try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath, StandardOpenOption.APPEND)) {
+//        	record.setIndex(getNextIndex());
+//            writer.write(toCsvSave(record));
+//            writer.newLine();
+//        }
+//
+//        Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Override
@@ -142,6 +184,9 @@ public class CsvStorageImpl implements CsvStorage {
                 String.valueOf(r.getLabourHours()),
                 r.getAmount() != null ? r.getAmount().toPlainString() : "0",
                 quote(r.getBreakdown()),
+                quote(String.join(";", 
+                        r.getJobsToDo() == null ? List.of() : r.getJobsToDo()
+                )),
                 String.valueOf(r.getState())
         );
     }
@@ -179,6 +224,17 @@ public class CsvStorageImpl implements CsvStorage {
             r.setAmount(parseBigDecimal(part[i++]));
             r.setBreakdown(part[i++]);
             
+
+            
+            if (i < part.length) {
+                String raw = part[i++];
+                if (raw != null && !raw.isBlank()) {
+                    String[] items = raw.split(";");
+                    r.setJobsToDo(List.of(items));
+                } else {
+                    r.setJobsToDo(new ArrayList<>());
+                }
+            }
             
             LocalDate serviceDate = r.getServiceDate();            
             LocalDate today = LocalDate.now();
@@ -189,7 +245,8 @@ public class CsvStorageImpl implements CsvStorage {
             } else {
                 r.setDaysLeft(0);
             }
-            
+
+            r.setStatel(parseInt(part[i++]));
 
             return r;
 
@@ -206,9 +263,14 @@ public class CsvStorageImpl implements CsvStorage {
     private String quote(Object value) {
         if (value == null) return "";
         String s = value.toString();
-        if (s.contains(",") || s.contains("\"")) {
+
+        // Escape newlines
+        s = s.replace("\n", "\\n");
+
+        if (s.contains(",") || s.contains("\"") || s.contains("\n")) {
             s = "\"" + s.replace("\"", "\"\"") + "\"";
         }
+
         return s;
     }
 
