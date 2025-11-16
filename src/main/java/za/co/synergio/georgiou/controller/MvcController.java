@@ -34,6 +34,29 @@ public class MvcController {
         model.addAttribute("serviceRecord", record);
         return "form";
     }
+    
+
+    @GetMapping("/edit")
+    public String edit(@RequestParam("index") int index, Model model) throws IOException {
+        // Read all records
+        List<ServiceRecord> records = csvStorage.readAll();
+
+        // Find the record with the given index
+        ServiceRecord record = records.stream()
+                .filter(r -> r.getIndex() == index)
+                .findFirst()
+                .orElse(null);
+
+        if (record == null) {
+            // Record not found, create a blank one or redirect
+            record = new ServiceRecord();
+            record.setDate(LocalDate.now(ZoneOffset.UTC));
+        }
+
+        model.addAttribute("serviceRecord", record);
+        return "form";
+    }
+
 
     @PostMapping("/submit")
     public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
