@@ -7,7 +7,7 @@ body {
 }
 
 /* ===== HEADER ===== */
-header {
+/* header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,6 +15,41 @@ header {
     color: white;
     padding: 1em 2em;
     border-bottom: 4px solid #003a8c;
+}
+*/
+
+
+/* ===== HEADER ===== */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /* Banner background */
+    background-image: url('/image/5feef327-1118-443d-ad96-05be3e311635.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    height: 190px;
+    color: white;
+    padding: 0 2em;
+    border-bottom: 4px solid #003a8c;
+
+    position: relative;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 0;
+}
+
+header * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Synergio brand name */
