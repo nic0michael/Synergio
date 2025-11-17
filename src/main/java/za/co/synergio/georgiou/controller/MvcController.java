@@ -16,8 +16,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class MvcController {
+	
+	private static final Logger log = LoggerFactory.getLogger(MvcController.class);
 
     private final CsvStorage csvStorage;
 
@@ -28,6 +33,7 @@ public class MvcController {
 
     @GetMapping("/")
     public String form(Model model) {
+    	log.info("form method called");
         LocalDate utcDate = LocalDate.now(ZoneOffset.UTC);
         ServiceRecord record = new ServiceRecord();
         record.setDate(utcDate);
@@ -36,31 +42,102 @@ public class MvcController {
     }
     
 
-    @GetMapping("/edit")
+    
+    @GetMapping("/completeRecord")
+    public String completeRecord(@RequestParam("index") int index) {
+        log.info("completeRecord called index: "+index);
+        return "redirect:/records"; 
+    }
+    
+    @GetMapping("/deleteRecord")
+    public String deleteRecord(@RequestParam("index") int index) {
+    	log.info("deleteRecord called for index: " + index);
+        return "redirect:/records"; 
+    }
+    
+    @GetMapping("/editRecord")
     public String edit(@RequestParam("index") int index, Model model) throws IOException {
-        // Read all records
+        log.info("form edit called");
         List<ServiceRecord> records = csvStorage.readAll();
-
-        // Find the record with the given index
         ServiceRecord record = records.stream()
                 .filter(r -> r.getIndex() == index)
                 .findFirst()
                 .orElse(null);
 
         if (record == null) {
-            // Record not found, create a blank one or redirect
             record = new ServiceRecord();
             record.setDate(LocalDate.now(ZoneOffset.UTC));
+        } else {
+        	record.setIndex(index);
         }
+        log.info("Record:\n"+record.toString());
 
         model.addAttribute("serviceRecord", record);
-        return "form";
+        return "edit";
     }
+
+
+//    @GetMapping("/edit")
+//    public String edit(@RequestParam("index") int index, Model model) throws IOException {
+//    	log.info("form edit called");
+//        // Read all records
+//        List<ServiceRecord> records = csvStorage.readAll();
+//
+//        // Find the record with the given index
+//        ServiceRecord record = records.stream()
+//                .filter(r -> r.getIndex() == index)
+//                .findFirst()
+//                .orElse(null);
+//
+//        if (record == null) {
+//            // Record not found, create a blank one or redirect
+//            record = new ServiceRecord();
+//            record.setDate(LocalDate.now(ZoneOffset.UTC));
+//        }
+//
+//        model.addAttribute("serviceRecord", record);
+//        return "form";
+//    }
+    
+    @PostMapping("/update")
+    public String update(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model) throws IOException {
+    	log.info("update method called Record: \n"+serviceRecord.toString());
+
+        if (serviceRecord.getDate() == null)
+            bindingResult.rejectValue("date", "date.empty", "Date is required");
+        if (serviceRecord.getCustomerName() == null || serviceRecord.getCustomerName().isBlank())
+            bindingResult.rejectValue("customerName", "name.empty", "Customer name is required");
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("serviceRecord", serviceRecord);
+            return "form";
+        }
+
+        if (serviceRecord.getAmount() == null)
+            serviceRecord.setAmount(BigDecimal.ZERO);
+
+        if (serviceRecord.getServiceDate() != null) {
+            LocalDate today = LocalDate.now(ZoneOffset.UTC);
+            int days = (int) today.until(serviceRecord.getServiceDate()).getDays();
+            serviceRecord.setDaysLeft(days);
+        }
+
+        if (serviceRecord.getInterval() > 0 && serviceRecord.getDate() != null) {
+            LocalDate recurring = serviceRecord.getDate().plusDays(serviceRecord.getInterval());
+            serviceRecord.setRecurringDate(recurring);
+        }
+
+        csvStorage.update(serviceRecord); // <-- call the update method
+
+        return "redirect:/";
+    }
+
 
 
     @PostMapping("/submit")
     public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
             throws IOException {
+    	log.info("submit method called");
 
         if (serviceRecord.getDate() == null)
             bindingResult.rejectValue("date", "date.empty", "Date is required");
@@ -94,19 +171,22 @@ public class MvcController {
     @GetMapping("/api/records")
     @ResponseBody
     public List<ServiceRecord> apiRecords() throws IOException {
+    	log.info("apiRecords method called");
         return csvStorage.readAll();
     }
 
     @GetMapping("/records")
     public String records(Model model) throws IOException {
+    	log.info("records method called");
         List<ServiceRecord> records = csvStorage.readAll();
-        Collections.reverse(records);
+//        Collections.reverse(records);
         model.addAttribute("records", records);
         return "records";
     }
     
     @GetMapping("/40DAYS")
     public String records40Days(Model model) throws IOException {
+    	log.info("40days method called");
         List<ServiceRecord> allRecords = csvStorage.readAll();
         
         // Filter records with daysLeft < 41
@@ -125,6 +205,7 @@ public class MvcController {
 
     @GetMapping("/10DAYS")
     public String records10Days(Model model) throws IOException {
+    	log.info("10days method called");
         List<ServiceRecord> allRecords = csvStorage.readAll();
         
         // Filter records with daysLeft < 11
@@ -146,6 +227,7 @@ public class MvcController {
     
     @GetMapping("/today")
     public String recordsToday(Model model) throws IOException {
+    	log.info("today method called");
             List<ServiceRecord> allRecords = csvStorage.readAll();
             
             // Filter records with daysLeft < 2
@@ -162,6 +244,7 @@ public class MvcController {
 
     @GetMapping("/help")
     public String help() {
+    	log.info("help method called");
         return "help";
     }
     

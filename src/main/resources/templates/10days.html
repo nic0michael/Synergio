@@ -86,7 +86,9 @@
 	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
     <br><br>
     <div th:each="record : ${records}" class="record-card">
-	<div class="record-field"><span>Index:</span> <span th:text="${record.index}"></span></div>
+
+		<div class="record-field"><span>Action taken:</span> <span th:text="${record.state}"></span></div>
+		<div class="record-field"><span>Index:</span> <span th:text="${record.index}"></span></div>
 		<div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
         <div class="record-field"><span>Service Date:</span> <span th:text="${record.serviceDate}"></span></div>
         <div class="record-field"><span>Days Left:</span> 
@@ -115,7 +117,7 @@
 		<div class="record-field"><span>Amount: R</span> <span th:text="${record.amount}"></span></div>
 		<!-- Edit button -->
 		<div class="record-field">
-		    <a th:href="@{/edit(index=${record.index})}">
+		    <a th:href="@{/editRecord(index=${record.index})}">
 		        <button>Edit</button>
 		    </a>
 		</div>

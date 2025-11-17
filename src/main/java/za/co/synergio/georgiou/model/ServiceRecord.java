@@ -32,10 +32,12 @@ public class ServiceRecord {
     private String breakdown;
     private int state; //0=active 1=completed 3=deleted
     private String customerAddress;
-    private String VehicleMakeAnModel;
+    private String vehicleMakeAnModel;
     private List<String> jobsToDo;
 
     // --- Getters and Setters ---
+    
+    
     public int getIndex() { return index; }
     public void setIndex(int index) { this.index = index; }
 
@@ -103,12 +105,13 @@ public class ServiceRecord {
     }
 
     public String getVehicleMakeAnModel() {
-        return VehicleMakeAnModel;
+        return vehicleMakeAnModel;
+    }
+    
+    public void setVehicleMakeAnModel(String vehicleMakeAnModel) {
+        this.vehicleMakeAnModel = vehicleMakeAnModel;
     }
 
-    public void setVehicleMakeAnModel(String vehicleMakeAnModel) {
-        VehicleMakeAnModel = vehicleMakeAnModel;
-    }
 
     public List<String> getJobsToDo() {
         return jobsToDo;
@@ -117,5 +120,33 @@ public class ServiceRecord {
     public void setJobsToDo(List<String> jobsToDo) {
         this.jobsToDo = jobsToDo;
     }
+    
+    @Override
+    public String toString() {
+        return "ServiceRecord{" +
+                "index=" + index +
+                ", date=" + date +
+                ", serviceDate=" + serviceDate +
+                ", recurringDate=" + recurringDate +
+                ", customerName='" + customerName + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", vehicleRegNumber='" + vehicleRegNumber + '\'' +
+                ", odometerReading='" + odometerReading + '\'' +
+                ", vinNumber='" + vinNumber + '\'' +
+                ", documentType='" + documentType + '\'' +
+                ", requirementCategory='" + requirementCategory + '\'' +
+                ", interval=" + interval +
+                ", daysLeft=" + daysLeft +
+                ", materialsRequired='" + materialsRequired + '\'' +
+                ", labourHours=" + labourHours +
+                ", amount=" + amount +
+                ", breakdown='" + breakdown + '\'' +
+                ", state=" + state +
+                ", customerAddress='" + customerAddress + '\'' +
+                ", vehicleMakeAnModel='" + vehicleMakeAnModel + '\'' +
+                ", jobsToDo=" + (jobsToDo != null ? String.join(", ", jobsToDo) : "[]") +
+                '}';
+    }
+
 
 }

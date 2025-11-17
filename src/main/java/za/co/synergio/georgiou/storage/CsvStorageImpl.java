@@ -15,11 +15,26 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class CsvStorageImpl implements CsvStorage {
 	
-	@Value("${synergeio.index.path}") // <-- Spring injects the value here
-    private String indexCounterPath;
+	@Value("${synergeio.folder.path}")
+	private String folderPath;
 
-    private final Path csvFilePath;
-    private final Path backupFilePath;
+	@Value("${synergeio.csv.file}")
+	private String csvFileName;
+
+	@Value("${synergeio.back.file}")
+	private String backupFileName;
+
+	@Value("${synergeio.index.file}")
+	private String indexFileName;
+	
+
+
+	private Path csvFilePath;
+	private Path backupFilePath;
+	private Path indexCounterPath;
+	
+	
+	
 
     private static final String CSV_HEADER = String.join(",",
             "index",
@@ -48,12 +63,21 @@ public class CsvStorageImpl implements CsvStorage {
     
 
     public CsvStorageImpl(
-            @Value("${synergeio.csv.path}") String csvPath,
-            @Value("${synergeio.back.path}") String backupPath
+            @Value("${synergeio.folder.path}") String folderPath,
+            @Value("${synergeio.csv.file}") String csvFileName,
+            @Value("${synergeio.back.file}") String backupFileName,
+            @Value("${synergeio.index.file}") String indexFileName
     ) throws IOException {
 
-        this.csvFilePath = Path.of(csvPath);
-        this.backupFilePath = Path.of(backupPath);
+
+        this.folderPath = folderPath;
+        this.csvFileName = csvFileName;
+        this.backupFileName = backupFileName;
+        this.indexFileName = indexFileName;        
+
+        csvFilePath = Path.of(folderPath + csvFileName);
+        backupFilePath = Path.of(folderPath + backupFileName);
+        indexCounterPath = Path.of(folderPath + indexFileName);
 
         // Ensure parent folders exist
         Files.createDirectories(csvFilePath.getParent());
@@ -127,6 +151,43 @@ public class CsvStorageImpl implements CsvStorage {
 //
 //        Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
     }
+    
+    @Override
+    public synchronized void update(ServiceRecord record) throws IOException {
+        // Step 1: Read all existing records
+        List<ServiceRecord> records = readAll();
+
+        boolean found = false;
+        for (int i = 0; i < records.size(); i++) {
+            if (records.get(i).getIndex() == record.getIndex()) {
+                // Replace the record with the updated one
+                records.set(i, record);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            throw new IOException("Record with index " + record.getIndex() + " not found");
+        }
+
+        // Step 2: Backup the current CSV
+        Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Step 3: Rewrite the CSV file with updated records
+        try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            // Write header first
+            writer.write(CSV_HEADER);
+            writer.newLine();
+
+            // Write all records
+            for (ServiceRecord r : records) {
+                writer.write(toCsvSave(r));
+                writer.newLine();
+            }
+        }
+    }
+
 
     @Override
     public synchronized List<ServiceRecord> readAll() throws IOException {
@@ -319,7 +380,7 @@ public class CsvStorageImpl implements CsvStorage {
     
     private int getNextIndex() throws IOException {
 
-        Path indexPath = Path.of(indexCounterPath); 
+    	Path indexPath = indexCounterPath;
 
         // Ensure parent folder exists
         if (indexPath.getParent() != null) {

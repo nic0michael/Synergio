@@ -80,7 +80,10 @@
 	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp; 
 		<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
     <br><br>
-    <div th:each="record : ${records}" class="record-card">
+    <div th:each="record : ${records}" class="record-card">	
+		
+		<div class="record-field"><span>Action taken:</span> <span th:text="${record.state}"></span></div>
+		<div class="record-field"><span>Index:</span> <span th:text="${record.index}"></span></div>
         <div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
         <div class="record-field"><span>Service Date:</span> <span th:text="${record.serviceDate}"></span></div>
 		<div class="record-field"><span>Days Left:</span> <span th:text="${record.daysLeft}"></span></div>
@@ -89,6 +92,7 @@
 		<div class="record-field"><span>Customer Address:</span> <span th:text="${record.customerAddress}"></span></div>
         <div class="record-field"><span>Cellphone:</span> <span th:text="${record.cellphone}"></span></div>
         <div class="record-field"><span>Vehicle Reg #:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
+		<div class="record-field"><span>Vehicle Make & Model:</span> <span th:text="${record.vehicleMakeAnModel}"></span></div>
         <div class="record-field"><span>Odometer:</span> <span th:text="${record.odometerReading}"></span></div> <!-- ✅ fixed spelling -->
         <div class="record-field"><span>VIN:</span> <span th:text="${record.vinNumber}"></span></div>
         <div class="record-field"><span>Document Type:</span> <span th:text="${record.documentType}"></span></div>
@@ -108,9 +112,15 @@
 
 		<!-- Edit button -->
 		<div class="record-field">
-		    <a th:href="@{/edit(index=${record.index})}">
+		    <a th:href="@{/editRecord(index=${record.index})}">
 		        <button>Edit</button>
-		    </a>
+		    </a> &nbsp;&nbsp;
+			<a th:href="@{/completeRecord(index=${record.index})}">
+				<button>Complete</button>
+			</a> &nbsp;&nbsp;			
+			<a th:href="@{/deleteRecord(index=${record.index})}">
+				<button>Delete</button>
+			</a> 
 		</div>
     </div>
 	<a th:href="@{/}" class="btn-link">Add Records</a>

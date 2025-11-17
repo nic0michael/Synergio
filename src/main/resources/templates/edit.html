@@ -67,15 +67,29 @@
 	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp; 	
 		<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
 	<br><br>
-    <form th:action="@{/submit}" th:object="${serviceRecord}" method="post">
+	<form th:action="@{/update}" th:object="${serviceRecord}" method="post">	
+				
+		<label>Action Taken:</label>
+		<select th:field="*{state}" disabled>
+		    <option value="0">Active</option>
+		    <option value="1">Completed</option>
+		    <option value="3">Deleted</option>
+		</select>
+		
+		<label>Index</label>
+		<input type="text" th:field="*{index}" readonly>
+		
         <label>Date:</label>
         <input type="date" th:field="*{date}" required>
 
         <label>Service Date:</label>
         <input type="date" th:field="*{serviceDate}">
 		
+		<label>Days left:</label>
+		<input type="text" th:field="*{daysLeft}" readonly>
+
 		
-		<input type="hidden" th:field="*{daysLeft}">
+		
 
 		<label>Interval (days):</label>
 		<input type="number" th:field="*{interval}" min="0" value="0" placeholder="e.g. 90">
@@ -174,8 +188,11 @@
 
 		<label>Amount (R):</label>
 		<input type="number" step="0.01" th:field="*{amount}" placeholder="Amount">
+		
+		
+		
 
-        <!--button type="submit">Save Record</button -->
+        <button type="submit">Save Record</button>
     </form>
 </main>
 
