@@ -52,7 +52,7 @@ public class ServiceRecord {
     public void setRecurringDate(LocalDate recurringDate) { this.recurringDate = recurringDate; }
 
     public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public void setCustomerName(String customerName) { this.customerName = replaceCommaWithSemicolon(customerName); }
 
     public String getCellphone() { return cellphone; }
     public void setCellphone(String cellphone) { this.cellphone = cellphone; }
@@ -64,7 +64,7 @@ public class ServiceRecord {
     public void setOdometerReading(String odometerReading) { this.odometerReading = odometerReading; }
 
     public String getVinNumber() { return vinNumber; }
-    public void setVinNumber(String vinNumber) { this.vinNumber = vinNumber; }
+    public void setVinNumber(String vinNumber) { this.vinNumber = replaceCommaWithSemicolon(vinNumber); }
 
     public String getDocumentType() { return documentType; }
     public void setDocumentType(String documentType) { this.documentType = documentType; }
@@ -101,7 +101,7 @@ public class ServiceRecord {
     }
 
     public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
+        this.customerAddress = replaceCommaWithSemicolon(customerAddress);
     }
 
     public String getVehicleMakeAnModel() {
@@ -109,7 +109,7 @@ public class ServiceRecord {
     }
     
     public void setVehicleMakeAnModel(String vehicleMakeAnModel) {
-        this.vehicleMakeAnModel = vehicleMakeAnModel;
+        this.vehicleMakeAnModel = replaceCommaWithSemicolon(vehicleMakeAnModel);
     }
 
 
@@ -125,6 +125,7 @@ public class ServiceRecord {
     public String toString() {
         return "ServiceRecord{" +
                 "index=" + index +
+                ", state=" + state +
                 ", date=" + date +
                 ", serviceDate=" + serviceDate +
                 ", recurringDate=" + recurringDate +
@@ -141,12 +142,18 @@ public class ServiceRecord {
                 ", labourHours=" + labourHours +
                 ", amount=" + amount +
                 ", breakdown='" + breakdown + '\'' +
-                ", state=" + state +
                 ", customerAddress='" + customerAddress + '\'' +
                 ", vehicleMakeAnModel='" + vehicleMakeAnModel + '\'' +
                 ", jobsToDo=" + (jobsToDo != null ? String.join(", ", jobsToDo) : "[]") +
                 '}';
     }
 
+
+    public static String replaceCommaWithSemicolon(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace(",", ";");
+    }
 
 }

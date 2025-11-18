@@ -1,7 +1,11 @@
 package za.co.synergio.georgiou.storage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import za.co.synergio.georgiou.controller.MvcController;
 import za.co.synergio.georgiou.model.ServiceRecord;
 
 import java.io.*;
@@ -14,6 +18,8 @@ import java.time.temporal.ChronoUnit;
 
 @Component
 public class CsvStorageImpl implements CsvStorage {
+	
+	private static final Logger log = LoggerFactory.getLogger(CsvStorageImpl.class);
 	
 	@Value("${synergeio.folder.path}")
 	private String folderPath;
@@ -133,6 +139,7 @@ public class CsvStorageImpl implements CsvStorage {
 
     @Override
     public synchronized void save(ServiceRecord record) throws IOException {
+    	log.info("Writing file to " + csvFilePath);
 
     	try (BufferedWriter writer = Files.newBufferedWriter(
     	        csvFilePath,
@@ -154,43 +161,45 @@ public class CsvStorageImpl implements CsvStorage {
     
     @Override
     public synchronized void update(ServiceRecord record) throws IOException {
-        // Step 1: Read all existing records
+    	log.info("called method update with record: \n" + record);
+
         List<ServiceRecord> records = readAll();
+        List<ServiceRecord> newRecords = new ArrayList<>();
 
-        boolean found = false;
-        for (int i = 0; i < records.size(); i++) {
-            if (records.get(i).getIndex() == record.getIndex()) {
+        for (ServiceRecord serviceRecord : records) {	
+            if (serviceRecord.getIndex() == record.getIndex()) {
                 // Replace the record with the updated one
-                records.set(i, record);
-                found = true;
-                break;
-            }
+                log.info("Found file index:"+ record.getIndex());
+                newRecords.add(record);
+            } else {
+            	newRecords.add(serviceRecord);
+            }            
         }
 
-        if (!found) {
-            throw new IOException("Record with index " + record.getIndex() + " not found");
-        }
 
-        // Step 2: Backup the current CSV
         Files.copy(csvFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+        log.info("Made file backup");
 
-        // Step 3: Rewrite the CSV file with updated records
         try (BufferedWriter writer = Files.newBufferedWriter(csvFilePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             // Write header first
             writer.write(CSV_HEADER);
             writer.newLine();
 
             // Write all records
-            for (ServiceRecord r : records) {
+            for (ServiceRecord r : newRecords) {
+            	log.info("Record:"+r.getIndex()+" State" +r.getState());
                 writer.write(toCsvSave(r));
                 writer.newLine();
             }
+            log.info("saved records");
         }
     }
 
 
     @Override
     public synchronized List<ServiceRecord> readAll() throws IOException {
+
+    	log.info("Reading file " + csvFilePath);
         List<ServiceRecord> records = new ArrayList<>();
         if (!Files.exists(csvFilePath)) return records;
 

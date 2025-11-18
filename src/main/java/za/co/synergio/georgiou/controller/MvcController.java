@@ -40,21 +40,7 @@ public class MvcController {
         model.addAttribute("serviceRecord", record);
         return "form";
     }
-    
 
-    
-    @GetMapping("/completeRecord")
-    public String completeRecord(@RequestParam("index") int index) {
-        log.info("completeRecord called index: "+index);
-        return "redirect:/records"; 
-    }
-    
-    @GetMapping("/deleteRecord")
-    public String deleteRecord(@RequestParam("index") int index) {
-    	log.info("deleteRecord called for index: " + index);
-        return "redirect:/records"; 
-    }
-    
     @GetMapping("/editRecord")
     public String edit(@RequestParam("index") int index, Model model) throws IOException {
         log.info("form edit called");
@@ -75,29 +61,63 @@ public class MvcController {
         model.addAttribute("serviceRecord", record);
         return "edit";
     }
+    
+    
+    @GetMapping("/activateRecord") 
+    public String activateRecord(@RequestParam("index") int index)  throws IOException {
+    	log.info("deleteRecord called for index: " + index);
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        for (ServiceRecord serviceRecord : allRecords) {
+			if(serviceRecord.getIndex()== index) {
+				serviceRecord.setStatel(0);
+				log.info("Found and update record "+index + "\n"+serviceRecord);
+				csvStorage.update(serviceRecord);
+                break;
+			}
+		}
+    	
+        return "redirect:/records"; 
+    }
+    
+    
+    @GetMapping("/completeRecord") 
+    public String completeRecord(@RequestParam("index") int index)  throws IOException {
+    	log.info("deleteRecord called for index: " + index);
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        for (ServiceRecord serviceRecord : allRecords) {
+			if(serviceRecord.getIndex()== index) {
+				serviceRecord.setStatel(1);
+				log.info("Found and update record "+index + "\n"+serviceRecord);
+				csvStorage.update(serviceRecord);
+                break;
+			}
+		}
+    	
+        return "redirect:/records"; 
+    }
+    
+    
+    @GetMapping("/deleteRecord") 
+    public String deleteRecord(@RequestParam("index") int index)  throws IOException {
+    	log.info("deleteRecord called for index: " + index);
+        List<ServiceRecord> allRecords = csvStorage.readAll();
+        
+        for (ServiceRecord serviceRecord : allRecords) {
+			if(serviceRecord.getIndex()== index) {
+				serviceRecord.setStatel(3);
+				log.info("Found and update record "+index + "\n"+serviceRecord);
+				csvStorage.update(serviceRecord);
+                break;
+			}
+		}
+    	
+        return "redirect:/records"; 
+    }
+    
 
 
-//    @GetMapping("/edit")
-//    public String edit(@RequestParam("index") int index, Model model) throws IOException {
-//    	log.info("form edit called");
-//        // Read all records
-//        List<ServiceRecord> records = csvStorage.readAll();
-//
-//        // Find the record with the given index
-//        ServiceRecord record = records.stream()
-//                .filter(r -> r.getIndex() == index)
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (record == null) {
-//            // Record not found, create a blank one or redirect
-//            record = new ServiceRecord();
-//            record.setDate(LocalDate.now(ZoneOffset.UTC));
-//        }
-//
-//        model.addAttribute("serviceRecord", record);
-//        return "form";
-//    }
     
     @PostMapping("/update")
     public String update(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model) throws IOException {
