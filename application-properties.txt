@@ -1,3 +1,8 @@
+Create a file: application.properties
+
+Put this in the file: (use a folder in your windows Documents folder)
+
+
 spring.application.name=Synergeio
 server.port=8088
 

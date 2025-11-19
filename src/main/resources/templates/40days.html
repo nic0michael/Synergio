@@ -87,7 +87,14 @@
     <br><br>
     <div th:each="record : ${records}" class="record-card">
 
-		<div class="record-field"><span>Action taken:</span> <span th:text="${record.state}"></span></div>
+		<div class="record-field">
+		    <label>Action Taken:</label>
+		    <select disabled>
+		        <option value="0" th:selected="${record.state == 0}">Active</option>
+		        <option value="1" th:selected="${record.state == 1}">Completed</option>
+		        <option value="3" th:selected="${record.state == 3}">Deleted</option>
+		    </select>
+		</div>
 		<div class="record-field"><span>Index:</span> <span th:text="${record.index}"></span></div>
         <div class="record-field"><span>Date:</span> <span th:text="${record.date}"></span></div>
         <div class="record-field"><span>Service Date:</span> <span th:text="${record.serviceDate}"></span></div>

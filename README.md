@@ -17,7 +17,7 @@ A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service
 spring.application.name=Synergeio
 server.port=8088
 
-synergeio.folder.path=C:/Users/nickm/Documents/Synergeio/
+synergeio.folder.path=C:\\Users\\nico\\Documents\\NikisDocs\\
 synergeio.csv.file=service_records.csv
 synergeio.back.file=service_records.backup
 synergeio.index.file=index.counter
