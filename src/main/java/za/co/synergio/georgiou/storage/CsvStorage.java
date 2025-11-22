@@ -13,4 +13,6 @@ public interface CsvStorage {
 	void update(ServiceRecord record) throws IOException;
 	
 	List<ServiceRecord> readAllDueIn40Days() throws IOException;
+
+	void publish() throws IOException;
 }

@@ -33,14 +33,14 @@ public class CsvStorageImpl implements CsvStorage {
 	@Value("${synergeio.index.file}")
 	private String indexFileName;
 	
-
-
+	@Value("${synergeio.published.file}")
+	private String publishFileName;
+	
 	private Path csvFilePath;
 	private Path backupFilePath;
+	private Path publishedPath;
 	private Path indexCounterPath;
-	
-	
-	
+
 
     private static final String CSV_HEADER = String.join(",",
             "index",
@@ -72,7 +72,9 @@ public class CsvStorageImpl implements CsvStorage {
             @Value("${synergeio.folder.path}") String folderPath,
             @Value("${synergeio.csv.file}") String csvFileName,
             @Value("${synergeio.back.file}") String backupFileName,
+            @Value("${synergeio.published.file}") String publishFileName,
             @Value("${synergeio.index.file}") String indexFileName
+            
     ) throws IOException {
 
 
@@ -84,6 +86,7 @@ public class CsvStorageImpl implements CsvStorage {
         csvFilePath = Path.of(folderPath + csvFileName);
         backupFilePath = Path.of(folderPath + backupFileName);
         indexCounterPath = Path.of(folderPath + indexFileName);
+        publishedPath = Path.of(folderPath + publishFileName);
 
         // Ensure parent folders exist
         Files.createDirectories(csvFilePath.getParent());
@@ -194,6 +197,27 @@ public class CsvStorageImpl implements CsvStorage {
             log.info("saved records");
         }
     }
+    
+
+	@Override
+	public void publish() throws IOException {
+        log.info("To Publish Records: "+ publishedPath);
+        
+
+        try (BufferedWriter writer = Files.newBufferedWriter(publishedPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            
+        	List<ServiceRecord> records = readAll();
+            writer.write(CSV_HEADER);
+            writer.newLine();
+
+            for (ServiceRecord r : records) {
+            	log.info("Record:"+r.getIndex()+" State" +r.getState());
+                writer.write(toCsvSave(r));
+                writer.newLine();
+            }
+            log.info("Published records");
+        }
+	}
 
 
     @Override
@@ -419,5 +443,6 @@ public class CsvStorageImpl implements CsvStorage {
 
         return next;
     }
+
 
 }

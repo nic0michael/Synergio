@@ -153,6 +153,14 @@ public class MvcController {
     }
 
 
+    @GetMapping("/publish") 
+    public String publish(Model model) throws IOException {
+    	log.info("records method called");
+        csvStorage.publish();
+        return "redirect:/";
+    }
+    
+    
 
     @PostMapping("/submit")
     public String submit(@ModelAttribute ServiceRecord serviceRecord, BindingResult bindingResult, Model model)
