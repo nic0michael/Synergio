@@ -20,6 +20,7 @@ public class ServiceRecord {
     private String customerName;
     private String cellphone;
     private String vehicleRegNumber;
+    private String colour;
     private String odometerReading;   
     private String vinNumber;
     private String documentType;
@@ -58,7 +59,10 @@ public class ServiceRecord {
     public void setCellphone(String cellphone) { this.cellphone = cellphone; }
 
     public String getVehicleRegNumber() { return vehicleRegNumber; }
-    public void setVehicleRegNumber(String vehicleRegNumber) { this.vehicleRegNumber = vehicleRegNumber; }
+    public void setVehicleRegNumber(String vehicleRegNumber) { this.vehicleRegNumber = vehicleRegNumber; }  
+
+    public String getColour() { return colour; }
+    public void setColour(String colour) { this.colour = colour; }
 
     public String getOdometerReading() { return odometerReading; }
     public void setOdometerReading(String odometerReading) { this.odometerReading = odometerReading; }

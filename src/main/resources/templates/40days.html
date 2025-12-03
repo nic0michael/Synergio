@@ -80,11 +80,10 @@
 </header>
 
 <main>    
-	<a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp; &nbsp; 
-	<a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; &nbsp;
-	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp;  	
-	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
-    <br><br>
+	<a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp;
+	<a th:href="@{/records}" class="btn-link">View All Records</a>&nbsp; 
+	<a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; 
+	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp;     <br><br>
     <div th:each="record : ${records}" class="record-card">
 
 		<div class="record-field">
@@ -105,6 +104,9 @@
         <div class="record-field"><span>Customer Name:</span> <span th:text="${record.customerName}"></span></div>
         <div class="record-field"><span>Cellphone:</span> <span th:text="${record.cellphone}"></span></div>
 		<div class="record-field"><span>Vehicle Registration:</span> <span th:text="${record.vehicleRegNumber}"></span></div>
+
+
+		<div class="record-field"><span>Colour:</span> <span th:text="${record.colour}"></span></div>
 		<div class="record-field"><span>Vehicle Make & Model:</span> <span th:text="${record.vehicleMakeAnModel}"></span></div>
         <div class="record-field"><span>Odometer:</span> <span th:text="${record.odometerReading}"></span></div>
         <div class="record-field"><span>Document Type:</span> <span th:text="${record.documentType}"></span></div>

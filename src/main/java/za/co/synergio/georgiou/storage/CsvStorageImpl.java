@@ -42,7 +42,7 @@ public class CsvStorageImpl implements CsvStorage {
 	private Path indexCounterPath;
 
 
-    private static final String CSV_HEADER = String.join(",",
+	private static final String CSV_HEADER = String.join(",",
             "index",
             "transactionDate",
             "serviceDate",
@@ -52,6 +52,7 @@ public class CsvStorageImpl implements CsvStorage {
             "customerAddress",
             "vehicleMakeAndModel",
             "vehicleRegNumber",
+            "colour",               
             "odometerReading",
             "vinNumber",
             "documentType",
@@ -65,6 +66,7 @@ public class CsvStorageImpl implements CsvStorage {
             "jobsToDo",
             "state"
     );
+
 
     
 
@@ -268,6 +270,7 @@ public class CsvStorageImpl implements CsvStorage {
                 quote(r.getCustomerAddress()),
                 quote(r.getVehicleMakeAnModel()),
                 quote(r.getVehicleRegNumber()),
+                quote(r.getColour()),           
                 quote(r.getOdometerReading()),
                 quote(r.getVinNumber()),
                 quote(r.getDocumentType()),
@@ -307,6 +310,7 @@ public class CsvStorageImpl implements CsvStorage {
             r.setCustomerAddress(part[i++]);
             r.setVehicleMakeAnModel(part[i++]);
             r.setVehicleRegNumber(part[i++]);
+            r.setColour(part[i++]);  
             r.setOdometerReading(part[i++]);
             r.setVinNumber(part[i++]);
             r.setDocumentType(part[i++]);
