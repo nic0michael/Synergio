@@ -943,7 +943,22 @@ public String records(Model model) throws IOException {
 
 ---
 
+### 2.8 add Select methods to MvcController
 
+#### 2.6.1 for Customer
+- The method should return an array with options and values
+   1. the options should be Customer Names: customerName
+   2. the values should be index numbers : index
+   3. the method name should be listCustomerOptions
+
+#### 2.6.2 for CustomerVehicle
+- The method should return an array with options and values
+   String vehicleOption = customerName+" "+vehicleRegNumber+" "+vehicleMakeAnModel+" "+colour;
+   1. the options should be CustomerVehicles: vehicleOption
+   2. the values should be index numbers:  index
+   3. the method name should be listVehicleOptions
+
+---
 
 **Document Version:** 1.0  
 **Created:** December 4, 2025  

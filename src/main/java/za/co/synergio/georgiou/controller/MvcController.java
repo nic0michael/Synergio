@@ -16,7 +16,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -336,6 +338,44 @@ public class MvcController {
         List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
         model.addAttribute("vehicles", vehicles);
         return "recordsOfVehicles";
+    }
+
+    @GetMapping("/listCustomerOptions")
+    @ResponseBody
+    public List<Map<String, String>> listCustomerOptions() throws IOException {
+        log.info("listCustomerOptions method called");
+        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Map<String, String>> options = new ArrayList<>();
+        
+        for (Customer customer : customers) {
+            Map<String, String> option = new HashMap<>();
+            option.put("option", customer.getCustomerName());
+            option.put("value", String.valueOf(customer.getIndex()));
+            options.add(option);
+        }
+        
+        return options;
+    }
+
+    @GetMapping("/listVehicleOptions")
+    @ResponseBody
+    public List<Map<String, String>> listVehicleOptions() throws IOException {
+        log.info("listVehicleOptions method called");
+        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        List<Map<String, String>> options = new ArrayList<>();
+        
+        for (CustomerVehicle vehicle : vehicles) {
+            String vehicleOption = vehicle.getCustomerName() + " " + 
+                                   vehicle.getVehicleRegNumber() + " " + 
+                                   vehicle.getVehicleMakeAnModel() + " " + 
+                                   vehicle.getColour();
+            Map<String, String> option = new HashMap<>();
+            option.put("option", vehicleOption);
+            option.put("value", String.valueOf(vehicle.getIndex()));
+            options.add(option);
+        }
+        
+        return options;
     }
 
 }
