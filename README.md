@@ -276,12 +276,45 @@ synergeio.back.path=C:\\Users\\nico\\Documents\\NikisDocs\\service_records.backu
 
 ## **3. Creating and Copying the JAR File**
 
-Scripts provided for Linux/Mac:
+### **Windows (PowerShell)**
+
+Use the provided PowerShell scripts:
+
+* **jar-make.ps1** – builds the JAR using Gradle
+* **jar-copy.ps1** – copies and renames it to `synergeio.jar`
+
+**Build the application:**
+```powershell
+.\jar-make.ps1
+```
+
+**Prepare for deployment:**
+```powershell
+.\jar-copy.ps1
+```
+
+**Prerequisites:**
+- Windows PowerShell 5.1 or higher (included in Windows 10/11)
+- Java Development Kit (JDK) 17 or higher
+- Gradle wrapper included (gradlew.bat)
+
+**Troubleshooting:**
+- If build fails, verify Java version: `java -version`
+- If JAR not found, ensure jar-make.ps1 completed successfully
+- Port in use: Change `server.port` in application.properties
+
+### **Linux/macOS (Bash)**
+
+Use the provided bash scripts:
 
 * **jar-make.sh** – builds the JAR
 * **jar-copy.sh** – copies and renames it to `synergeio.jar`
 
-Windows users run commands manually.
+**Build and prepare:**
+```bash
+./jar-make.sh
+./jar-copy.sh
+```
 
 ---
 

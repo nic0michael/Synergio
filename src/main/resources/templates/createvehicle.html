@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Vehicle - Synergeio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2em auto;
+            background: white;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 1em;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.3em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 1.5em;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            padding: 0.8em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003a8c;
+        }
+        .cancel-link {
+            margin-left: 1em;
+            color: #004aad;
+            text-decoration: none;
+        }
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Create New Vehicle</h1>
+    <nav>
+        <a th:href="@{/}" style="color:white;">Home</a> |
+        <a th:href="@{/records}" style="color:white;">Service Records</a> |
+        <a th:href="@{/help}" style="color:white;">Help</a>
+    </nav>
+</header>
+
+<main>
+    <form method="post" action="/saveVehicle" th:object="${customerVehicle}">
+        
+        <input type="hidden" th:field="*{index}" />
+        
+        <label for="date">Date:</label>
+        <input type="date" id="date" th:field="*{date}" />
+        
+        <label for="customerName">Customer Name: <span style="color:red;">*</span></label>
+        <input type="text" id="customerName" th:field="*{customerName}" required />
+        
+        <label for="cellphone">Cellphone:</label>
+        <input type="tel" id="cellphone" th:field="*{cellphone}" />
+        
+        <label for="customerAddress">Customer Address:</label>
+        <textarea id="customerAddress" th:field="*{customerAddress}" rows="2"></textarea>
+        
+        <label for="vehicleRegNumber">Vehicle Registration Number:</label>
+        <input type="text" id="vehicleRegNumber" th:field="*{vehicleRegNumber}" />
+        
+        <label for="vehicleMakeAnModel">Vehicle Make and Model:</label>
+        <input type="text" id="vehicleMakeAnModel" th:field="*{vehicleMakeAnModel}" />
+        
+        <label for="colour">Colour:</label>
+        <input type="text" id="colour" th:field="*{colour}" />
+        
+        <label for="vinNumber">VIN Number:</label>
+        <input type="text" id="vinNumber" th:field="*{vinNumber}" />
+        
+        <div>
+            <button type="submit">Save Vehicle</button>
+            <a href="/" class="cancel-link">Cancel</a>
+        </div>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Vehicle Service Station</p>
+</footer>
+</body>
+</html>

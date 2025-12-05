@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Records</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            width: 100vw;
+            height: calc(100vh - 120px);
+            padding: 1em;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .record-card {
+            background: white;
+            padding: 1em;
+            margin-bottom: 2em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 6px;
+        }
+        .record-field {
+            margin-bottom: 0.5em;
+        }
+        .record-field span:first-child {
+            font-weight: bold;
+        }
+        button {
+            margin-top: 1em;
+            background: #004aad;
+            color: white;
+            border: none;
+            padding: 0.7em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #003a8c;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="brand-title">Synergio</div>
+    <h1>All Vehicle Records</h1>
+    <nav>
+        <a th:href="@{/}">Home</a> |
+        <a th:href="@{/records}">Service Records</a> |
+        <a th:href="@{/customerRecords}">Customer Records</a> |
+        <a th:href="@{/help}">Help</a>
+    </nav>
+</header>
+
+<main>
+    <a th:href="@{/}" class="btn-link">Home</a> &nbsp; &nbsp;
+    <a th:href="@{/createvehicle}" class="btn-link">Add Vehicle</a> &nbsp; &nbsp;
+    <a th:href="@{/customerRecords}" class="btn-link">Customer Records</a> &nbsp; &nbsp;
+    <br><br>
+
+    <div th:each="vehicle : ${vehicles}" class="record-card">
+        <div class="record-field">
+            <label>State:</label>
+            <select disabled>
+                <option value="0" th:selected="${vehicle.state == 0}">Active</option>
+                <option value="1" th:selected="${vehicle.state == 1}">Inactive</option>
+                <option value="3" th:selected="${vehicle.state == 3}">Deleted</option>
+            </select>
+        </div>
+
+        <div class="record-field"><span>Index:</span> <span th:text="${vehicle.index}"></span></div>
+        <div class="record-field"><span>Date:</span> <span th:text="${vehicle.date}"></span></div>
+        <div class="record-field"><span>Customer Name:</span> <span th:text="${vehicle.customerName}"></span></div>
+        <div class="record-field"><span>Cellphone:</span> <span th:text="${vehicle.cellphone}"></span></div>
+        <div class="record-field"><span>Address:</span> <span th:text="${vehicle.customerAddress}"></span></div>
+        <div class="record-field"><span>Vehicle Reg #:</span> <span th:text="${vehicle.vehicleRegNumber}"></span></div>
+        <div class="record-field"><span>Make & Model:</span> <span th:text="${vehicle.vehicleMakeAnModel}"></span></div>
+        <div class="record-field"><span>Colour:</span> <span th:text="${vehicle.colour}"></span></div>
+        <div class="record-field"><span>VIN:</span> <span th:text="${vehicle.vinNumber}"></span></div>
+
+        <div class="record-field">
+            <a th:href="@{/editvehicle(index=${vehicle.index})}">
+                <button>Edit</button>
+            </a>
+        </div>
+    </div>
+
+    <a th:href="@{/}" class="btn-link">Home</a> &nbsp; &nbsp;
+    <a th:href="@{/createvehicle}" class="btn-link">Add Vehicle</a> &nbsp; &nbsp;
+    <a th:href="@{/customerRecords}" class="btn-link">Customer Records</a> &nbsp; &nbsp;
+</main>
+
+<footer>
+    <p>&copy; 2025 Synergeio Service Station</p>
+</footer>
+</body>
+</html>

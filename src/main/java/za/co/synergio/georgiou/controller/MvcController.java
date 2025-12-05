@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.synergio.georgiou.model.Customer;
+import za.co.synergio.georgiou.model.CustomerVehicle;
 import za.co.synergio.georgiou.model.ServiceRecord;
 import za.co.synergio.georgiou.storage.CsvStorage;
 
@@ -276,5 +278,64 @@ public class MvcController {
         return "help";
     }
     
+    @GetMapping("/createcustomer")
+    public String createCustomer(Model model) {
+        log.info("createCustomer method called");
+        Customer customer = new Customer();
+        model.addAttribute("customer", customer);
+        return "createcustomer";
+    }
+    
+    @GetMapping("/editcustomer")
+    public String editCustomer(Model model) {
+        log.info("editCustomer method called");
+        Customer customer = new Customer();
+        model.addAttribute("customer", customer);
+        return "editcustomer";
+    }
+    
+    @PostMapping("/saveCustomer")
+    public String saveCustomer(@ModelAttribute Customer customer) {
+        log.info("saveCustomer method called");
+        return "redirect:/";
+    }
+    
+    @GetMapping("/createvehicle")
+    public String createVehicle(Model model) {
+        log.info("createVehicle method called");
+        CustomerVehicle vehicle = new CustomerVehicle();
+        model.addAttribute("customerVehicle", vehicle);
+        return "createvehicle";
+    }
+    
+    @GetMapping("/editvehicle")
+    public String editVehicle(Model model) {
+        log.info("editVehicle method called");
+        CustomerVehicle vehicle = new CustomerVehicle();
+        model.addAttribute("customerVehicle", vehicle);
+        return "editvehicle";
+    }
+    
+    @PostMapping("/saveVehicle")
+    public String saveVehicle(@ModelAttribute CustomerVehicle vehicle) {
+        log.info("saveVehicle method called");
+        return "redirect:/";
+    }
+
+    @GetMapping("/customerRecords")
+    public String customerRecords(Model model) throws IOException {
+        log.info("customerRecords method called");
+        List<Customer> customers = csvStorage.readAllCustomers();
+        model.addAttribute("customers", customers);
+        return "recordsOfCustomers";
+    }
+
+    @GetMapping("/vehicleRecords")
+    public String vehicleRecords(Model model) throws IOException {
+        log.info("vehicleRecords method called");
+        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        model.addAttribute("vehicles", vehicles);
+        return "recordsOfVehicles";
+    }
 
 }

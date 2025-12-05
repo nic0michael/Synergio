@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import za.co.synergio.georgiou.controller.MvcController;
+import za.co.synergio.georgiou.model.Customer;
+import za.co.synergio.georgiou.model.CustomerVehicle;
 import za.co.synergio.georgiou.model.ServiceRecord;
 
 import java.io.*;
@@ -36,10 +37,18 @@ public class CsvStorageImpl implements CsvStorage {
 	@Value("${synergeio.published.file}")
 	private String publishFileName;
 	
+	@Value("${synergeio.customers.file}")
+	private String customersFileName;
+	
+	@Value("${synergeio.customer_vehicles.file}")
+	private String customerVehiclesFileName;
+	
 	private Path csvFilePath;
 	private Path backupFilePath;
 	private Path publishedPath;
 	private Path indexCounterPath;
+	private Path customersFilePath;
+	private Path customerVehiclesFilePath;
 
 
 	private static final String CSV_HEADER = String.join(",",
@@ -67,6 +76,28 @@ public class CsvStorageImpl implements CsvStorage {
             "state"
     );
 
+	private static final String CUST_CSV_HEADER = String.join(",",
+            "index",
+            "date",
+            "customerName",
+            "cellphone",
+            "customerAddress",
+            "state"
+    );
+
+	private static final String VEH_CSV_HEADER = String.join(",",
+            "index",
+            "date",
+            "customerName",
+            "cellphone",
+            "customerAddress",
+            "vehicleRegNumber",
+            "vehicleMakeAnModel",
+            "colour",
+            "vinNumber",
+            "state"
+    );
+
 
     
 
@@ -75,7 +106,9 @@ public class CsvStorageImpl implements CsvStorage {
             @Value("${synergeio.csv.file}") String csvFileName,
             @Value("${synergeio.back.file}") String backupFileName,
             @Value("${synergeio.published.file}") String publishFileName,
-            @Value("${synergeio.index.file}") String indexFileName
+            @Value("${synergeio.index.file}") String indexFileName,
+            @Value("${synergeio.customers.file}") String customersFileName,
+            @Value("${synergeio.customer_vehicles.file}") String customerVehiclesFileName
             
     ) throws IOException {
 
@@ -83,12 +116,16 @@ public class CsvStorageImpl implements CsvStorage {
         this.folderPath = folderPath;
         this.csvFileName = csvFileName;
         this.backupFileName = backupFileName;
-        this.indexFileName = indexFileName;        
+        this.indexFileName = indexFileName;
+        this.customersFileName = customersFileName;
+        this.customerVehiclesFileName = customerVehiclesFileName;
 
         csvFilePath = Path.of(folderPath + csvFileName);
         backupFilePath = Path.of(folderPath + backupFileName);
         indexCounterPath = Path.of(folderPath + indexFileName);
         publishedPath = Path.of(folderPath + publishFileName);
+        customersFilePath = Path.of(folderPath + customersFileName);
+        customerVehiclesFilePath = Path.of(folderPath + customerVehiclesFileName);
 
         // Ensure parent folders exist
         Files.createDirectories(csvFilePath.getParent());
@@ -102,6 +139,30 @@ public class CsvStorageImpl implements CsvStorage {
                     StandardOpenOption.WRITE
             )) {
                 writer.write(CSV_HEADER);
+                writer.newLine();
+            }
+        }
+
+        // Create customers CSV file with header if missing
+        if (!Files.exists(customersFilePath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(
+                    customersFilePath,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE
+            )) {
+                writer.write(CUST_CSV_HEADER);
+                writer.newLine();
+            }
+        }
+
+        // Create customer_vehicles CSV file with header if missing
+        if (!Files.exists(customerVehiclesFilePath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(
+                    customerVehiclesFilePath,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE
+            )) {
+                writer.write(VEH_CSV_HEADER);
                 writer.newLine();
             }
         }
@@ -254,6 +315,52 @@ public class CsvStorageImpl implements CsvStorage {
                 .toList();
     }
 
+    @Override
+    public synchronized List<Customer> readAllCustomers() throws IOException {
+        log.info("Reading file " + customersFilePath);
+        List<Customer> customers = new ArrayList<>();
+        if (!Files.exists(customersFilePath)) return customers;
+
+        try (BufferedReader reader = Files.newBufferedReader(customersFilePath)) {
+            String line;
+            boolean skipHeader = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (skipHeader) {
+                    skipHeader = false;
+                    continue;
+                }
+                Customer c = fromCsvReadCustomer(line);
+                if (c != null) customers.add(c);
+            }
+        }
+
+        return customers;
+    }
+
+    @Override
+    public synchronized List<CustomerVehicle> readAllVehicles() throws IOException {
+        log.info("Reading file " + customerVehiclesFilePath);
+        List<CustomerVehicle> vehicles = new ArrayList<>();
+        if (!Files.exists(customerVehiclesFilePath)) return vehicles;
+
+        try (BufferedReader reader = Files.newBufferedReader(customerVehiclesFilePath)) {
+            String line;
+            boolean skipHeader = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (skipHeader) {
+                    skipHeader = false;
+                    continue;
+                }
+                CustomerVehicle v = fromCsvReadVehicle(line);
+                if (v != null) vehicles.add(v);
+            }
+        }
+
+        return vehicles;
+    }
+
     // ========================================================================
     // CSV SERIALIZATION
     // ========================================================================
@@ -286,6 +393,130 @@ public class CsvStorageImpl implements CsvStorage {
                 )),
                 String.valueOf(r.getState())
         );
+    }
+
+    public String toCsvSaveCustomer(Customer c) throws IOException {
+        log.info("CSV serialization completed for customer");
+        return String.join(",",
+                String.valueOf(c.getIndex()),
+                quote(c.getDate()),
+                quote(c.getCustomerName()),
+                quote(c.getCellphone()),
+                quote(c.getCustomerAddress()),
+                String.valueOf(c.getState())
+        );
+    }
+
+    public String toCsvSaveVehicle(CustomerVehicle v) throws IOException {
+        log.info("CSV serialization completed for vehicle");
+        return String.join(",",
+                String.valueOf(v.getIndex()),
+                quote(v.getDate()),
+                quote(v.getCustomerName()),
+                quote(v.getCellphone()),
+                quote(v.getCustomerAddress()),
+                quote(v.getVehicleRegNumber()),
+                quote(v.getVehicleMakeAnModel()),
+                quote(v.getColour()),
+                quote(v.getVinNumber()),
+                String.valueOf(v.getState())
+        );
+    }
+
+    @Override
+    public synchronized void saveCustomer(Customer c) throws IOException {
+        log.info("Writing customer to " + customersFilePath);
+
+        try (BufferedWriter writer = Files.newBufferedWriter(
+                customersFilePath,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND
+        )) {
+            c.setIndex(getNextIndex());
+            writer.write(toCsvSaveCustomer(c));
+            writer.newLine();
+            log.info("Customer saved with index: " + c.getIndex());
+        }
+    }
+
+    @Override
+    public synchronized void saveVehicle(CustomerVehicle v) throws IOException {
+        log.info("Writing vehicle to " + customerVehiclesFilePath);
+
+        try (BufferedWriter writer = Files.newBufferedWriter(
+                customerVehiclesFilePath,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND
+        )) {
+            v.setIndex(getNextIndex());
+            writer.write(toCsvSaveVehicle(v));
+            writer.newLine();
+            log.info("Vehicle saved with index: " + v.getIndex());
+        }
+    }
+
+    @Override
+    public synchronized void updateCustomer(Customer c) throws IOException {
+        log.info("called method updateCustomer with customer: \n" + c);
+
+        List<Customer> customers = readAllCustomers();
+        List<Customer> newCustomers = new ArrayList<>();
+
+        for (Customer customer : customers) {
+            if (customer.getIndex() == c.getIndex()) {
+                log.info("Found customer index: " + c.getIndex());
+                newCustomers.add(c);
+            } else {
+                newCustomers.add(customer);
+            }
+        }
+
+        Files.copy(customersFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+        log.info("Made file backup");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(customersFilePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            writer.write(CUST_CSV_HEADER);
+            writer.newLine();
+
+            for (Customer customer : newCustomers) {
+                log.info("Customer: " + customer.getIndex() + " State: " + customer.getState());
+                writer.write(toCsvSaveCustomer(customer));
+                writer.newLine();
+            }
+            log.info("saved customers");
+        }
+    }
+
+    @Override
+    public synchronized void updateVehicle(CustomerVehicle v) throws IOException {
+        log.info("called method updateVehicle with vehicle: \n" + v);
+
+        List<CustomerVehicle> vehicles = readAllVehicles();
+        List<CustomerVehicle> newVehicles = new ArrayList<>();
+
+        for (CustomerVehicle vehicle : vehicles) {
+            if (vehicle.getIndex() == v.getIndex()) {
+                log.info("Found vehicle index: " + v.getIndex());
+                newVehicles.add(v);
+            } else {
+                newVehicles.add(vehicle);
+            }
+        }
+
+        Files.copy(customerVehiclesFilePath, backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+        log.info("Made file backup");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(customerVehiclesFilePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            writer.write(VEH_CSV_HEADER);
+            writer.newLine();
+
+            for (CustomerVehicle vehicle : newVehicles) {
+                log.info("Vehicle: " + vehicle.getIndex() + " State: " + vehicle.getState());
+                writer.write(toCsvSaveVehicle(vehicle));
+                writer.newLine();
+            }
+            log.info("saved vehicles");
+        }
     }
 
     
@@ -350,6 +581,52 @@ public class CsvStorageImpl implements CsvStorage {
 
         } catch (Exception e) {
             System.err.println("Failed to parse CSV line: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private Customer fromCsvReadCustomer(String line) {
+        try {
+            Customer c = new Customer();
+            String[] part = parseCsvLine(line);
+            if (part.length < 6) return null;
+
+            int i = 0;
+            c.setIndex(parseInt(part[i++]));
+            c.setDate(parseDate(part[i++]));
+            c.setCustomerName(part[i++]);
+            c.setCellphone(part[i++]);
+            c.setCustomerAddress(part[i++]);
+            c.setStatel(parseInt(part[i++]));
+
+            return c;
+        } catch (Exception e) {
+            System.err.println("Failed to parse Customer CSV line: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private CustomerVehicle fromCsvReadVehicle(String line) {
+        try {
+            CustomerVehicle v = new CustomerVehicle();
+            String[] part = parseCsvLine(line);
+            if (part.length < 10) return null;
+
+            int i = 0;
+            v.setIndex(parseInt(part[i++]));
+            v.setDate(parseDate(part[i++]));
+            v.setCustomerName(part[i++]);
+            v.setCellphone(part[i++]);
+            v.setCustomerAddress(part[i++]);
+            v.setVehicleRegNumber(part[i++]);
+            v.setVehicleMakeAnModel(part[i++]);
+            v.setColour(part[i++]);
+            v.setVinNumber(part[i++]);
+            v.setStatel(parseInt(part[i++]));
+
+            return v;
+        } catch (Exception e) {
+            System.err.println("Failed to parse CustomerVehicle CSV line: " + e.getMessage());
             return null;
         }
     }
