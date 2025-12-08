@@ -57,6 +57,32 @@
         .cancel-link:hover {
             text-decoration: underline;
         }
+        select {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.3em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .dropdown-section {
+            background-color: #f0f8ff;
+            padding: 1em;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            border: 1px solid #ccc;
+        }
+        .add-new-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5em;
+        }
+        .add-new-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +96,15 @@
 </header>
 
 <main>
+    <div class="dropdown-section">
+        <h3>Select Existing Customer</h3>
+        <label for="customerDropdown">Choose a customer to edit:</label>
+        <select id="customerDropdown" onchange="onCustomerSelected()">
+            <option value="">-- Select Customer --</option>
+        </select>
+        <button type="button" class="add-new-btn" onclick="window.location.href='/createcustomer'">Add New Customer</button>
+    </div>
+    
     <form method="post" action="/saveCustomer" th:object="${customer}">
         
         <label for="date">Date:</label>
@@ -94,5 +129,49 @@
 <footer>
     <p>&copy; 2025 Synergeio Vehicle Service Station</p>
 </footer>
+
+<script>
+    function loadCustomerOptions() {
+        fetch('/listCustomerOptions')
+            .then(response => response.json())
+            .then(data => {
+                const dropdown = document.getElementById('customerDropdown');
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.value;
+                    option.textContent = item.option;
+                    dropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading customer options:', error));
+    }
+    
+    function onCustomerSelected() {
+        const dropdown = document.getElementById('customerDropdown');
+        const selectedIndex = dropdown.value;
+        
+        if (selectedIndex === '') {
+            return;
+        }
+        
+        fetch('/searchForCustomer?index=' + selectedIndex)
+            .then(response => response.json())
+            .then(customer => {
+                if (customer) {
+                    document.getElementById('customerName').value = customer.customerName || '';
+                    document.getElementById('cellphone').value = customer.cellphone || '';
+                    document.getElementById('customerAddress').value = customer.customerAddress || '';
+                    if (customer.date) {
+                        document.getElementById('date').value = customer.date;
+                    }
+                }
+            })
+            .catch(error => console.error('Error searching for customer:', error));
+    }
+    
+    window.onload = function() {
+        loadCustomerOptions();
+    };
+</script>
 </body>
 </html>
