@@ -991,7 +991,7 @@ public String records(Model model) throws IOException {
 - use this record to replace the customerName input 
 - use this record to replace the customerAddress input 
 - use this record to replace the customeCellphone input
-- next to this dropdowb add a button with lable "Add New Vehicle" linked to /createcustomer
+- next to this dropdown add a button with label "Add New Vehicle" linked to /createcustomer
 
 
 #### 2.11.2 for CustomerVehicle createvehicle.html
@@ -1006,7 +1006,7 @@ public String records(Model model) throws IOException {
 - use this record to replace the vehicleMakeAnModel input 
 - use this record to replace the colour input
 - use this record to replace the vinNumber input
-- next to this dropdowb add a button with lable "Add New Vehicle" linked to /createvehicle
+- next to this dropdown add a button with label "Add New Vehicle" linked to /createvehicle
 
 
 #### 2.11.2.2 for Customer fields
@@ -1018,7 +1018,7 @@ public String records(Model model) throws IOException {
 - use this record to replace the customerName input 
 - use this record to replace the customerAddress input 
 - use this record to replace the customeCellphone input
-- next to this dropdowb add a button with lable "Add New Vehicle" linked to /createcustomer
+- next to this dropdown add a button with label "Add New Vehicle" linked to /createcustomer
 
 
 **Document Version:** 1.0  
