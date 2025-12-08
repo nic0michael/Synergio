@@ -378,4 +378,24 @@ public class MvcController {
         return options;
     }
 
+    @GetMapping("/searchForCustomer")
+    @ResponseBody
+    public Customer searchForCustomer(@RequestParam("index") int index) throws IOException {
+        log.info("searchForCustomer method called with index: " + index);
+        return csvStorage.readAllCustomers().stream()
+            .filter(c -> c.getIndex() == index)
+            .findFirst()
+            .orElse(null);
+    }
+
+    @GetMapping("/searchForCustomerVehicle")
+    @ResponseBody
+    public CustomerVehicle searchForCustomerVehicle(@RequestParam("index") int index) throws IOException {
+        log.info("searchForCustomerVehicle method called with index: " + index);
+        return csvStorage.readAllVehicles().stream()
+            .filter(v -> v.getIndex() == index)
+            .findFirst()
+            .orElse(null);
+    }
+
 }

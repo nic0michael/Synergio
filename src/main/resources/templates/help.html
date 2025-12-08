@@ -17,16 +17,52 @@
 
 <main>
     <section>
-        <h2>How to Use</h2>
-        <p><strong>1.</strong> Go to the <em>Form</em> page to enter customer and vehicle details.</p>
-        <p><strong>2.</strong> Click “Save Record” to store the entry in <code>service_records.csv</code>.</p>
-        <p><strong>3.</strong> Go to the <em>View Records</em> to view captured service records.</p>
-        <p><strong>4.</strong> The data can be opened in Excell as a spreadsheet after reformatting the columns</p>
+        <h2>Service Record Management</h2>
+        <ul>
+            <li><strong>Service Record Form:</strong> Enter new customer and vehicle service details - <a th:href="@{/}">Go to Page</a></li>
+            <li><strong>Edit Service Record:</strong> Modify existing service record details - <a th:href="@{/editRecord(index=1)}">Go to Page</a></li>
+            <li><strong>View All Service Records:</strong> Display complete list of all service records - <a th:href="@{/records}">Go to Page</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Service Record Views by Date</h2>
+        <ul>
+            <li><strong>Due Today:</strong> View service records due today or recently overdue - <a th:href="@{/today}">Go to Page</a></li>
+            <li><strong>Due Within 10 Days:</strong> View service records due in the next 10 days - <a th:href="@{/10DAYS}">Go to Page</a></li>
+            <li><strong>Due Within 40 Days:</strong> View service records due in the next 40 days - <a th:href="@{/40DAYS}">Go to Page</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Customer Management</h2>
+        <ul>
+            <li><strong>Create Customer:</strong> Add a new customer to the system - <a th:href="@{/createcustomer}">Go to Page</a></li>
+            <li><strong>Edit Customer:</strong> Modify existing customer information - <a th:href="@{/editcustomer}">Go to Page</a></li>
+            <li><strong>View Customer Records:</strong> Display all registered customers - <a th:href="@{/customerRecords}">Go to Page</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Vehicle Management</h2>
+        <ul>
+            <li><strong>Create Vehicle:</strong> Add a new vehicle to the system - <a th:href="@{/createvehicle}">Go to Page</a></li>
+            <li><strong>Edit Vehicle:</strong> Modify existing vehicle information - <a th:href="@{/editvehicle}">Go to Page</a></li>
+            <li><strong>View Vehicle Records:</strong> Display all registered vehicles - <a th:href="@{/vehicleRecords}">Go to Page</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Help & Information</h2>
+        <ul>
+            <li><strong>Help Page:</strong> View this help documentation and application guide - <a th:href="@{/help}">Go to Page</a></li>
+        </ul>
     </section>
 
     <section>
         <h2>File Storage</h2>
-        <p>All service data is stored locally in a file called <code>service_records.csv</code>.</p>
+        <p>All service data is stored locally in CSV files: <code>service_records.csv</code>, <code>customers.csv</code>, and <code>vehicles.csv</code>.</p>
+        <p>These files can be opened in Excel as spreadsheets after reformatting the columns.</p>
     </section>
 </main>
 
