@@ -297,8 +297,10 @@ public class MvcController {
     }
     
     @PostMapping("/saveCustomer")
-    public String saveCustomer(@ModelAttribute Customer customer) {
+    public String saveCustomer(@ModelAttribute Customer customer) throws IOException {
         log.info("saveCustomer method called");
+        csvStorage.saveCustomer(customer);
+        log.info("saved Customer");
         return "redirect:/";
     }
     
@@ -319,8 +321,10 @@ public class MvcController {
     }
     
     @PostMapping("/saveVehicle")
-    public String saveVehicle(@ModelAttribute CustomerVehicle vehicle) {
+    public String saveVehicle(@ModelAttribute CustomerVehicle vehicle) throws IOException {
         log.info("saveVehicle method called");
+        csvStorage.saveVehicle(vehicle);
+        log.info("saved Vehicle");
         return "redirect:/";
     }
 
