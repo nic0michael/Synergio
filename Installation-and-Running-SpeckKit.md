@@ -43,7 +43,7 @@ confirn this spec is valid
 
 # 4. Run /constitution
 ```sh
-/constitution add rules in CorporatePolicyV2_0.md to constitution
+/constitution we have renamed CorporatePolicyV2_0.md to CorporateEngineeringPolicyV2_0.md add rules in CorporateEngineeringPolicyV2_0.md  to constitution
 ```
 ---
 
@@ -98,6 +98,7 @@ will only be provided much later and in this implementation
 /plan create a new plan referring only to changes in our Requirements.md and constitution
 do not create anything yet 
 confirn this plan is valid
+you are allowed to get context from Requirements.md
 ```
 ---
 

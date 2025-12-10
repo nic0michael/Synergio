@@ -1032,6 +1032,10 @@ public String records(Model model) throws IOException {
   * "/createvehicle" with lable Add New Vehicle
   * "/vehicleRecords" with label List Vehicles
 
+
+#### 2.12.2 add Profile page 
+- in the help.html page add the profile on the top 
+
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
 **Purpose:** Complete technical specification to rebuild Synergeio Vehicle Service Station  
