@@ -80,10 +80,11 @@
 </header>
 
 <main>    
-	<a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp; &nbsp; 
-	<a th:href="@{/records}" class="btn-link">View All Records</a>&nbsp; &nbsp; &nbsp; 
-	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; &nbsp; 
-	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a>
+	<a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp;  
+	<a th:href="@{/records}" class="btn-link">View All Records</a>&nbsp; &nbsp; 
+	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp; 
+	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a> <br> <br>
+	<a th:href="@{/profile}" class="btn-link">Profile</a>	
     <br><br>
     <div th:each="record : ${records}" class="record-card">
 
@@ -143,7 +144,8 @@
     </div>
 
 
-	<a th:href="@{/}" class="btn-link">Add Records</a>
+	<a th:href="@{/}" class="btn-link">Add Records</a> &nbsp; &nbsp; 
+	<a th:href="@{/profile}" class="btn-link">Profile</a>	
 </main>
 
 <footer>
