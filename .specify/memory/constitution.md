@@ -97,4 +97,4 @@
 4. Logging Standards
 5. Technology Stack Standards
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-04 | **Source**: CorporatePolicyV2_0.md
+**Version**: 1.0.1 | **Ratified**: 2025-12-04 | **Updated**: 2025-12-08 | **Source**: CorporateEngineeringPolicyV2_0.md

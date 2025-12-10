@@ -1021,6 +1021,17 @@ public String records(Model model) throws IOException {
 - next to this dropdown add a button with label "Add New Vehicle" linked to /createcustomer
 
 
+### 2.12 add Profile page
+- in the MvcController create a new REST method /profile
+- use a  @GetMapping
+- it must redirect the user to a html page profile.html
+- generate the page profile.html
+- it must have button links to
+  * "/createcustomer" with lable Add New Customer
+  * "/customerRecords" with label List Customers
+  * "/createvehicle" with lable Add New Vehicle
+  * "/vehicleRecords" with label List Vehicles
+
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
 **Purpose:** Complete technical specification to rebuild Synergeio Vehicle Service Station  

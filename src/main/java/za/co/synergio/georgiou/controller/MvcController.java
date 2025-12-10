@@ -402,4 +402,10 @@ public class MvcController {
             .orElse(null);
     }
 
+    @GetMapping("/profile")
+    public String profile() {
+        log.info("profile method called");
+        return "profile";
+    }
+
 }
