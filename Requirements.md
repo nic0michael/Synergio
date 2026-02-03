@@ -1096,6 +1096,37 @@ DONE
 - in the help.html page add the profile on the top 
 Status:
 DONE
+---
+
+## 3. Latest Requirements
+### 3.1 we need to show the vehicles of a customer
+#### 3.1.1 Retrieve List of Customers Cars from CsvStorageImpl
+In class CsvStorageImpl create a method to retrieve the vechiles of a Customer
+List<CustomerVehicle> getCustomerVehicles(int customerId)
+Status:
+TO DO
+#### 3.1.2 Retrieve List of Customers Cars from MvcController
+In class MvcController create a method to retrieve the vechiles of a Customer
+List<CustomerVehicle> getCustomerVehicles(int customerId)
+This must be a REST method ("/vehicleRecords with a @RequestParam("CustomerId") int CustomerId)  
+this method should call CsvStorageImpl method: getCustomerVehicles and pass CustomerId 
+Status:
+TO DO
+
+#### 3.1.3 Retrieve List of Customers Cars from Webpage 
+Create a new HTML template: getcustvehicles.html
+This page should call  MvcController and get a Dropdown list of customers with message Select Customer
+it should then call MvcController method: getCustomerVehicles and pass the customers Id 
+the MVC controller should redirect to a template displaycustvehicles
+
+create a new HTML template: displaycustvehicles.html
+it then should display a table with these fields:
+    private String vehicleRegNumber;
+    private String vehicleMakeAnModel;
+    private String colour;
+It should display:  private String customerName; on top of this table
+Status:
+TO DO
 
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
