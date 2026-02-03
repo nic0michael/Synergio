@@ -12,6 +12,8 @@
 **Business Context:**
 A lightweight web application for a vehicle service station to track customer vehicles, service appointments, materials, labor, and costs. The system provides urgency-based views to prioritize upcoming services.
 
+Status:
+DONE
 ---
 
 ### 1.2 Technical Stack
@@ -42,6 +44,8 @@ dependencies {
 }
 ```
 
+Status:
+DONE
 ---
 
 ### 1.3 Domain Model Requirements
@@ -90,6 +94,8 @@ dependencies {
 - `toString()` - Comprehensive string representation of all fields
 - `replaceCommaWithSemicolon(String)` - Static utility method for CSV safety
 
+Status:
+DONE
 ---
 
 ### 1.4 Controller Layer Requirements
@@ -180,6 +186,8 @@ dependencies {
 - Log record details for state changes (activate/complete/delete)
 - Log full record toString() for edit and update operations
 
+Status:
+DONE
 ---
 
 ### 1.5 Data Persistence Layer Requirements
@@ -286,6 +294,8 @@ index,transactionDate,serviceDate,recurringDate,customerName,cellphone,customerA
 - **List Parsing:** Split `jobsToDo` field on semicolons
 - **Days Left Recalculation:** Always recalculate on read using `ChronoUnit.DAYS.between(today, serviceDate)`
 
+Status:
+DONE
 ---
 
 ### 1.6 User Interface Requirements
@@ -374,6 +384,8 @@ index,transactionDate,serviceDate,recurringDate,customerName,cellphone,customerA
 - **form.js:** Client-side form validation, date pickers
 - **calendar.js:** Calendar view interactions (if implemented)
 
+Status:
+DONE
 ---
 
 ### 1.7 Configuration Requirements
@@ -423,6 +435,8 @@ synergeio.folder.path=/home/username/Documents/Synergeio/
 - External config takes precedence over bundled config
 - Allows environment-specific configuration without rebuilding
 
+Status:
+DONE
 ---
 
 ### 1.8 Build and Deployment Requirements
@@ -525,6 +539,8 @@ http://localhost:8088/
 - File system write permissions for data directory
 - Port 8088 available (or configure alternative port)
 
+Status:
+DONE
 ---
 
 ### 1.9 Business Rules and Calculations
@@ -593,6 +609,8 @@ http://localhost:8088/
 - Commas replaced with semicolons in: `customerName`, `customerAddress`, `vehicleMakeAnModel`, `vinNumber`
 - Prevents CSV parsing errors
 
+Status:
+DONE
 ---
 
 ### 1.10 Non-Functional Requirements
@@ -650,6 +668,8 @@ log.info("Found and update record " + index + "\n" + serviceRecord);
 log.info("submit method called");
 ```
 
+Status:
+DONE
 ---
 
 ### 1.11 Testing Requirements
@@ -691,6 +711,8 @@ log.info("submit method called");
 - View resolution
 - Redirect behavior
 
+Status:
+DONE
 ---
 
 ### 1.12 Project Structure
@@ -748,6 +770,8 @@ Synergio/
         └── constitution.md                            # Project constitution
 ```
 
+Status:
+DONE
 ---
 
 ### 1.13 Success Criteria
@@ -773,6 +797,8 @@ Synergio/
 - ✅ SLF4J logging provides adequate debugging information
 - ✅ Thread-safe CSV operations via synchronized methods
 
+Status:
+DONE
 ---
 
 ### 1.14 Implementation Guidelines
@@ -807,6 +833,8 @@ This project must be implemented following the principles defined in the project
    - Clear, descriptive class/method/variable names
    - Code readable without comments
 
+Status:
+DONE
 ---
 
 ### 1.15 Glossary
@@ -826,6 +854,8 @@ This project must be implemented following the principles defined in the project
 - **KISS**: Keep It Simple Stupid - principle of simplicity in design
 - **TDD**: Test-Driven Development methodology
 
+Status:
+DONE
 ---
 
 ## 2. New Requirements
@@ -835,8 +865,10 @@ This project must be implemented following the principles defined in the project
  - jar-make.sh
  - jar-copy.sh
 2. Make equilalent Power Shell Scripts with similar names
+Status:
+DONE
 ---
-### 2.1 add REST methods to MvcController.java
+### 2.2 add REST methods to MvcController.java
 #### 2.2.2 Customer fields
 1. add /createcustomer restmethod
  - This should direct request to cretecustomer.html
@@ -846,6 +878,8 @@ This project must be implemented following the principles defined in the project
  - This should direct request to editcustomer.html
  - This form should submit to an empty restmethod saveCustomer
  - Dont create unit tests yet
+Status:
+DONE
 ---
 
 #### 2.2.2 CustomerVehicle fields
@@ -857,6 +891,8 @@ This project must be implemented following the principles defined in the project
  - This should direct request to editvehicle.html
  - This form should submit to an empty restmethod saveCustomer
  - Dont create unit tests yet
+Status:
+DONE
 ---
 
 ### 2.2 Add CSV_HEADER strings in CsvStorageImpl
@@ -869,6 +905,8 @@ private static final String CSV_HEADER = String.join(",",
 #### 2.2.2 for CustomerVehicle
 - call this VEH_CSV_HEADER
 
+Status:
+DONE
 ---
 
 ### 2.3 Add CSV save methods to CsvStorageImpl
@@ -880,6 +918,8 @@ private String toCsvSave(ServiceRecord r) {
 
 #### 2.3.2 for CustomerVehicle
 - call this toCsvSaveVehicle(CustomerVehicle v) 
+Status:
+DONE
 ---
 
 ### 2.4 add save methods
@@ -893,6 +933,8 @@ public synchronized void save(ServiceRecord record) throws IOException {
 - call this saveVehicle(CustomerVehicle v) 
 
 ### 2.4.3 Add these methods to the Interface CsvStorage
+Status:
+DONE
 ---
 
 
@@ -907,6 +949,8 @@ public synchronized void update(ServiceRecord record) throws IOException {
 - call this updateVehicle(CustomerVehicle v) 
 
 ### 2.5.3 Add these methods to the Interface CsvStorage
+Status:
+DONE
 ---
 
 
@@ -927,6 +971,8 @@ public String records(Model model) throws IOException {
    public synchronized List<CustomerVehicle> readAllVehicles() throws IOException {
    2. that then calls HTML page named: vehicles.html
 
+Status:
+DONE
 ---
 
 
@@ -941,6 +987,8 @@ public String records(Model model) throws IOException {
 #### 2.6.2 for CustomerVehicle
 - Rename: vehicles.html to recordsOfVehicles
 
+Status:
+DONE
 ---
 
 ### 2.8 add Select methods to MvcController
@@ -958,6 +1006,8 @@ public String records(Model model) throws IOException {
    2. the values should be index numbers:  index
    3. the method name should be listVehicleOptions
 
+Status:
+DONE
 ---
 ### 2.9 Add to help.html
 #### Add 
@@ -965,6 +1015,9 @@ public String records(Model model) throws IOException {
 - short explanation onle line what they do
 - add a link to each page
 
+Status:
+DONE
+---
 ### 2.10 for getting searched records in MvcController
 
 #### 2.10.1 for searching for a Customer
@@ -979,6 +1032,9 @@ public String records(Model model) throws IOException {
 - this calls CsvStorageImpl method  List<CustomerVehicle> readAllVehicles() to get a list of CustomerVehicles
 - then this iterates through the list to find record with matching index and returns that record
 
+Status:
+DONE
+---
 
 ### 2.11 add list option dropdowns to Edit pages
 
@@ -1020,6 +1076,9 @@ public String records(Model model) throws IOException {
 - use this record to replace the customeCellphone input
 - next to this dropdown add a button with label "Add New Vehicle" linked to /createcustomer
 
+Status:
+DONE
+---
 
 ### 2.12 add Profile page
 - in the MvcController create a new REST method /profile
@@ -1035,8 +1094,14 @@ public String records(Model model) throws IOException {
 
 #### 2.12.2 add Profile page 
 - in the help.html page add the profile on the top 
+Status:
+DONE
 
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
 **Purpose:** Complete technical specification to rebuild Synergeio Vehicle Service Station  
 **Compliance:** Adheres to CorporatePolicyV2_0.md and project constitution
+
+Status:
+DONE
+---

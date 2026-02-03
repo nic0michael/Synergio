@@ -58,8 +58,16 @@ analyze the code and associated files to define a prompt that could be used to b
 place the prompt in Requirements.md
 chapter ## Existing Requirements
 as a requirement that could define and be used to build this project 
+Mark all completed items here with:
+Status: 
+DONE
+
 chapter ## New Requirements 
 will only be provided much later not even at implementation
+Mark all new items here with:
+Status: 
+TO DO
+
 do not create a prompt yet 
 confirn this plan is valid 
 ```
@@ -96,6 +104,7 @@ will only be provided much later and in this implementation
 # 9. Revise plan
 ```sh
 /plan create a new plan referring only to changes in our Requirements.md and constitution
+Check for requirements marked "Status: TO DO" that are now finished, and update them to "Status: DONE"
 do not create anything yet 
 confirn this plan is valid
 you are allowed to get context from Requirements.md

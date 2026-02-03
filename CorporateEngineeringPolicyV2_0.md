@@ -32,7 +32,7 @@ All code must follow clean code principles.
 Methods should be small and focused on a single task.
 Variables and methods should have meaningful names that convey their purpose.
 Avoid code duplication by reusing existing methods and classes where possible.
-Long methods hide classes and should be refactored into smaller methods ot claasses.
+Long methods hide classes and should be refactored into smaller methods ot classes.
 Coments are regarded as dirty code and should never be used to explain bad code.
 OnLy Javadoc comments are allowed.
 Dont modify existing code and write clean code unless instructed to do so
@@ -56,3 +56,16 @@ Follow the conventional commits style for consistency.
 This needs to be reviewed and decided by the AI  Council
 
 **Compliance to this is mandatory unless otherwise instructed**
+
+## 8. Requirement Tracking
+All requirements in `Requirements.md` must be explicitly tracked.
+- Completed or existing requirements must be marked with:
+  ```
+  Status:
+  DONE
+  ```
+- New or pending requirements must be marked with:
+  ```
+  Status:
+  TO DO
+  ```
