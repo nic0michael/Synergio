@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Customer</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            width: 100%;
+            padding: 2em;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #003380;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Select Customer</h1>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/records}">Records</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Select a Customer to View Vehicles</h2>
+        <form th:action="@{/getrequestvehicles}" method="get">
+            <select name="customerId" required>
+                <option value="" disabled selected>Select a customer...</option>
+                <option th:each="customer : ${customers}" 
+                        th:value="${customer.index}" 
+                        th:text="${customer.customerName}">Customer Name</option>
+            </select>
+            <br>
+            <button type="submit">Show Vehicles</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Synergio</p>
+    </footer>
+</body>
+</html>

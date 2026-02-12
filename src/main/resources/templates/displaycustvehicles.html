@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Vehicles</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        main {
+            padding: 2em;
+            width: 80%;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .no-data {
+            text-align: center;
+            color: #666;
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vehicle List</h1>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/getcustvehicles}">Back to Selection</a>
+        </nav>
+    </header>
+    <main>
+        <div th:if="${#lists.isEmpty(vehicles)}" class="no-data">
+            <h3>No vehicles found for this customer.</h3>
+        </div>
+        
+        <table th:unless="${#lists.isEmpty(vehicles)}">
+            <thead>
+                <tr>
+                    <th>Make & Model</th>
+                    <th>Reg Number</th>
+                    <th>VIN</th>
+                    <th>Engine Number</th>
+                    <th>Colour</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="vehicle : ${vehicles}">
+                    <td th:text="${vehicle.vehicleMakeAnModel}">Toyota</td>
+                    <td th:text="${vehicle.vehicleRegNumber}">ABC 123 GP</td>
+                    <td th:text="${vehicle.vinNumber}">VIN123</td>
+                    <td th:text="${vehicle.engineNumber}">ENG456</td>
+                    <td th:text="${vehicle.colour}">White</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Synergio</p>
+    </footer>
+</body>
+</html>

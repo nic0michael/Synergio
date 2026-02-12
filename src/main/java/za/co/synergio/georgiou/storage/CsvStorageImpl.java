@@ -87,6 +87,7 @@ public class CsvStorageImpl implements CsvStorage {
 
 	private static final String VEH_CSV_HEADER = String.join(",",
             "index",
+            "customerId",
             "date",
             "customerName",
             "cellphone",
@@ -411,6 +412,7 @@ public class CsvStorageImpl implements CsvStorage {
         log.info("CSV serialization completed for vehicle");
         return String.join(",",
                 String.valueOf(v.getIndex()),
+                String.valueOf(v.getCustomerId()),
                 quote(v.getDate()),
                 quote(v.getCustomerName()),
                 quote(v.getCellphone()),
@@ -614,6 +616,13 @@ public class CsvStorageImpl implements CsvStorage {
 
             int i = 0;
             v.setIndex(parseInt(part[i++]));
+
+            if (part.length >= 11) {
+                v.setCustomerId(parseInt(part[i++]));
+            } else {
+                v.setCustomerId(0);
+            }
+
             v.setDate(parseDate(part[i++]));
             v.setCustomerName(part[i++]);
             v.setCellphone(part[i++]);
@@ -725,5 +734,11 @@ public class CsvStorageImpl implements CsvStorage {
         return next;
     }
 
+    @Override
+    public synchronized List<CustomerVehicle> getCustomerVehicles(int customerId) throws IOException {
+        return readAllVehicles().stream()
+                .filter(v -> v.getCustomerId() == customerId)
+                .toList();
+    }
 
 }

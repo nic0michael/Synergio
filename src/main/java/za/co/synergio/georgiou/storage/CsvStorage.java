@@ -29,4 +29,6 @@ public interface CsvStorage {
 	void saveVehicle(CustomerVehicle v) throws IOException;
 	
 	void updateVehicle(CustomerVehicle v) throws IOException;
+
+        List<CustomerVehicle> getCustomerVehicles(int customerId) throws IOException;
 }

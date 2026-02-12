@@ -408,4 +408,29 @@ public class MvcController {
         return "profile";
     }
 
+    @GetMapping("/getcustvehicles")
+    public String getCustVehicles(Model model) throws IOException {
+    	log.info("getCustVehicles method called");
+        List<Customer> customers = csvStorage.readAllCustomers();
+        sortCustomersByName(customers);
+        model.addAttribute("customers", customers);
+        return "getcustvehicles"; 
+    }
+
+    private void sortCustomersByName(List<Customer> customers) {
+        Collections.sort(customers, (c1, c2) -> {
+            String n1 = c1.getCustomerName() != null ? c1.getCustomerName() : "";
+            String n2 = c2.getCustomerName() != null ? c2.getCustomerName() : "";
+            return n1.compareToIgnoreCase(n2);
+        });
+    }
+
+    @GetMapping("/getrequestvehicles")
+    public String getRequestVehicles(@RequestParam("customerId") int customerId, Model model) throws IOException {
+    	log.info("getRequestVehicles method called with customerId: " + customerId);
+        List<CustomerVehicle> vehicles = csvStorage.getCustomerVehicles(customerId);
+        model.addAttribute("vehicles", vehicles);
+        return "displaycustvehicles"; 
+    }
+
 }

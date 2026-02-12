@@ -1,3 +1,10 @@
+﻿<!--
+Sync Impact Report:
+- Version change: 1.1.0 -> 1.1.1
+- List of modified principles: Technology Stack Standards (Updated with specifics from CorporateEngineeringPolicyV2_0.md)
+- Added sections: N/A
+- Templates requiring updates:  checked
+-->
 # Synergeio Vehicle Service Station Constitution
 
 ## Core Principles
@@ -47,14 +54,14 @@
 ## Technology Stack Standards
 
 ### Database
-- **Use Microsoft SQL Server unless otherwise specified**
-- CSV-based persistence is acceptable for lightweight applications
-- Database choice must be justified for the use case
+- **Persist to CSV files - Do NOT use a database.** (Override: Project Specific per CorporateEngineeringPolicyV2_0 Section 0)
+- Although general policy prefers MS SQL, this project is explicitly CSV-based.
 
-### Development Language
-- **Use Java unless otherwise specified**
-- Follow Java best practices and conventions
-- Use appropriate Java version for Spring Boot compatibility
+### Development Environment
+- **Project Structure**: Spring Boot Microservice
+- **Language**: Java (OpenJDK 21.0.5 LTS)
+- **Build Tool**: Gradle Project
+- **Frontend**: Thymeleaf with JavaScript
 
 ### Framework Standards
 - Spring Boot is the preferred Java framework for microservices
@@ -63,11 +70,25 @@
 
 ## Development Workflow
 
-### Version Control
-- **Use clear and descriptive commit messages that explain the purpose of changes**
-- Follow conventional commits style for consistency
-- Commit messages must be reviewed and approved by development team
-- Each commit should represent a logical unit of work
+### Version Control & Git Policy
+- **Branches**: The Agent is fully permitted to create new Git branches following the naming convention.
+- **Pushing**: The Agent may commit and push code **only** after the user explicitly permits the action following an /implement command.
+- **Merging**: The Agent is **strictly prohibited** from merging branches into protected branches (e.g., main, develop) unless explicitly instructed.
+- **Commit Messages**: Use clear and descriptive commit messages following conventional commits style.
+
+### Branch Naming Convention (MANDATORY)
+All branches created must strictly follow this structure:
+<branch-type>/<scope-number>/<git-spec-branch-name>/<branch-description>
+- **Branch-type**: eature, ugfix, hotfix, chore.
+- **Scope-number**: Ticket ID (e.g., SCO-0001 or ALPS-7345).
+- **Git-Spec-Branch-Name**: Unique identifier generated during planning (e.g., bc12).
+- **Branch-Description**: Kebab-case description (e.g., generate-new-requirements).
+- **Case**: The final branch name must be entirely in **lowercase**.
+
+### Requirement Tracking
+- All requirements in Requirements.md must be explicitly tracked.
+- Status MUST be marked as DONE for completed requirements.
+- Status MUST be marked as TO DO for new requirements.
 
 ### Code Modification Policy
 - **Do not modify existing code unless explicitly instructed**
@@ -79,10 +100,11 @@
 
 ### Compliance Requirements
 - **Compliance to this constitution is MANDATORY unless otherwise instructed**
-- All code reviews must verify adherence to these principles
-- Constitution supersedes individual preferences or conflicting practices
-- Exceptions must be documented and justified
-- Amendments require team approval and documentation update
+- The constitution is not negotiable.
+- You are not permitted to delete the constitution.
+- Git operations are limited to the User (unless permissions granted).
+- Constitution supersedes individual preferences or conflicting practices.
+- Exceptions must be documented and justified.
 
 ### Enforcement
 - All development work must comply with these standards
@@ -97,4 +119,4 @@
 4. Logging Standards
 5. Technology Stack Standards
 
-**Version**: 1.0.1 | **Ratified**: 2025-12-04 | **Updated**: 2025-12-08 | **Source**: CorporateEngineeringPolicyV2_0.md
+**Version**: 1.1.1 | **Ratified**: 2025-12-04 | **Last Amended**: 2026-02-12

@@ -117,6 +117,7 @@
     <form method="post" action="/saveVehicle" th:object="${customerVehicle}">
         
         <input type="hidden" th:field="*{index}" />
+        <input type="hidden" th:field="*{customerId}" id="customerIdHidden" />
         
         <label for="date">Date:</label>
         <input type="date" id="date" th:field="*{date}" />
@@ -191,6 +192,9 @@
         if (selectedIndex === '') {
             return;
         }
+
+        // Set the hidden customerId field
+        document.getElementById('customerIdHidden').value = selectedIndex;
         
         fetch('/searchForCustomer?index=' + selectedIndex)
             .then(response => response.json())

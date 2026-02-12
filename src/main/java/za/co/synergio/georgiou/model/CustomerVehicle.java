@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class CustomerVehicle {
 	private int index;
+	private int customerId;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
 	
@@ -24,7 +25,9 @@ public class CustomerVehicle {
     public int getIndex() { return index; }
     public void setIndex(int index) { this.index = index; }
 
-    
+    public int getCustomerId() { return customerId; }
+    public void setCustomerId(int customerId) { this.customerId = customerId; }
+
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
 

@@ -1103,20 +1103,23 @@ DONE
 #### 3.1.1 Retrieve List of Customers Cars from CsvStorageImpl
 In class CsvStorageImpl create a method to retrieve the vechiles of a Customer
 List<CustomerVehicle> getCustomerVehicles(int customerId)
+*Note: Existing CSV vehicle records may lack the `customerId` column. The parsing logic MUST default these to `0` (Unassigned) to prevent errors.*
 Status:
-TO DO
+DONE
 #### 3.1.2 Retrieve List of Customers Cars from MvcController
 In class MvcController create a method to retrieve the vechiles of a Customer
 List<CustomerVehicle> getCustomerVehicles(int customerId)
 This must be a REST method ("/vehicleRecords with a @RequestParam("CustomerId") int CustomerId)  
 this method should call CsvStorageImpl method: getCustomerVehicles and pass CustomerId 
 Status:
-TO DO
+DONE
 
 #### 3.1.3 Retrieve List of Customers Cars from Webpage 
 Create a new HTML template: getcustvehicles.html
-This page should call  MvcController and get a Dropdown list of customers with message Select Customer
+This page should call  MvcController and get a Dropdown list of customers with message Select Customer **(Sorted alphabetically A-Z)**.
 it should then call MvcController method: getCustomerVehicles and pass the customers Id 
+**Error Handling**: If the Customer ID is invalid, redirect back to this page with a flash error "Customer not found".
+
 the MVC controller should redirect to a template displaycustvehicles
 
 create a new HTML template: displaycustvehicles.html
@@ -1125,8 +1128,15 @@ it then should display a table with these fields:
     private String vehicleMakeAnModel;
     private String colour;
 It should display:  private String customerName; on top of this table
+**Empty State**: If the customer has no vehicles, display the name and a message "No vehicles found".
 Status:
-TO DO
+DONE
+
+#### 3.1.4 Update Create Vehicle Functionality
+The existing "Create Vehicle" functionality (createvehicle.html) MUST be updated to include a Customer selection dropdown.
+When saving a new vehicle, the selected `customerId` must be persisted to the `CustomerVehicle` CSV record.
+Status:
+DONE
 
 **Document Version:** 1.0  
 **Created:** December 4, 2025  

@@ -1,6 +1,13 @@
 # Corporate Policy
 This should be enforced in the constitution.md
 
+## 0. Tech Stack
+1. Spring Boot Microservice
+2. Thymeleaf with Javascript
+3. persist to CSV files do not use database
+4. Gradle project
+5. Java: openjdk 21.0.5 2024-10-15 LTS 
+
 ## 1. Writing to the Logs
 Before an exception is thrown an error must be logged with appropriate information
 If a method ran successfully an info log must be written with appropriate information

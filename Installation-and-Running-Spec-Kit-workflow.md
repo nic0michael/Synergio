@@ -7,7 +7,7 @@ Step 4: /clarify      → Reviews plan, asks questions, refines understanding
 Step 5: /tasks        → Breaks plan into specific tasks
 Step 6: /implement    → Executes the tasks
 
-You need uv installed if you dont have it in your windows:
+**You need uv installed if you dont have it in your windows:**
 ```sh
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
@@ -31,102 +31,101 @@ specify init prompt-maker --ai copilot --script ps
 ```
 ---
 
-# 3. Run /specify
+==================================================================
+
+# 3. CODE GENERATION : PHASE 1 :REST Backend
+
+DID YOU START A NEW COPILOT CHAT?
+# Run these commands in Agent chat (Claude Sonnette 4.5) in VS Code with this project folder opened there
+
+## 4. Run /constitution (or /speckit.specify )
 ```sh
-/specify we want to create prompt that can be used to generate a file: Requirements.md in a chapter ## 1. Existing Requirements
-for this a Java, Grails, Spring Boot Micoservice project
-with the technical details in the plan do not create the file yet
-do not create a prompt yet 
-confirn this spec is valid
-```
----
+/speckit.constitution if missing create a new and empty constitution 
+Incorporate into the constitution this file:
+corporate-technical-policy.md
+Then incorporate the these files into the constitution:
+git-policy.md
+CorporateEngineeringPolicyV2_0.md
 
-# 4. Run /constitution
+Branch-type: 
+"feature"
+
+Scope-number: 
+"SCO-0001"
+
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution
+```
+
+**ADD THE NEW REQUIREMENTS TO THE REQUIREMENTS FILE**
+
+DID YOU DO THAT?
+
+##  5. Run /specify (or /speckit.specify) Build the high level specification
 ```sh
-/constitution we have renamed CorporatePolicyV2_0.md to CorporateEngineeringPolicyV2_0.md add rules in CorporateEngineeringPolicyV2_0.md  to constitution
-```
----
+/speckit.specify we want to creat the code in this project as specified by Requirements.md 
 
-# 5. Run /plan
+Branch-Description: 
+"Generate-new-requirements"
+
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution
+You can create spec.md file 
+However you are not to create any other documents, files or folders yet
+```
+
+## 6. Run /plan Build the Technical Plan
 ```sh
-/plan add two chapters to the Requirements.md
-1. ## 1. Existing Requirements
-2. ## 2. New Requirements
+/speckit.plan create a plan to be use impliment the Requirements
 
-analyze the code and associated files to define a prompt that could be used to build this project
+The purpose of this plan is to perform any Requirements with status: TO DO in the ProjectRequirements.md as tasks 
 
-place the prompt in Requirements.md
-chapter ## Existing Requirements
-as a requirement that could define and be used to build this project 
-Mark all completed items here with:
-Status: 
-DONE
-
-chapter ## New Requirements 
-will only be provided much later not even at implementation
-Mark all new items here with:
-Status: 
-TO DO
-
-do not create a prompt yet 
-confirn this plan is valid 
+do not create a prompt, tasks, a checklist, or files or update any files yet
+do not show issues about missing changes to files  
+ specified by ProjectRequirements to produce the code yet
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution 
+Confirm this plan is valid  
 ```
----
-
-# 6. Run Clarify
-```sh
-/clarify based on current plan
-```
- ---
-
-# 7. Run /tasks
-```sh
-/tasks generate the tasks to implement this project requirement
-do not generate Requirements.md yet
-```
----
-
-# 8. Run /implement
-This Implements and Runs the code
-```sh
-/implement Now Implement the changes to Requirements.md
-chapter ## New Requirements 
-will only be provided much later and in this implementation
-```
----
-# ======================================================================= #
-# Now we make changes to Requirements.md
-
-**(Or we ask the Agent to make our changes there)**
 
 ---
 
-# 9. Revise plan
+
+## 7. Run Clarify Confirm Plan is not vague, has no issues
 ```sh
-/plan create a new plan referring only to changes in our Requirements.md and constitution
-Check for requirements marked "Status: TO DO" that are now finished, and update them to "Status: DONE"
-do not create anything yet 
-confirn this plan is valid
-you are allowed to get context from Requirements.md
+/speckit.clarify based on current plan and show a brief summary of outstanding issues ignore NFRs
 ```
 ---
 
-# 10. Run Clarify
+## 8. Run /tasks Create the tasks for implementation
 ```sh
-/clarify this revised plan
+/speckit.tasks generate the tasks to implement the new plan 
+ specified by ProjectRequirements to produce a list of requirements to produce
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution 
+do not make changes to: 
+Requirements.md 
+or the code base yet 
 ```
 ---
 
-# 11. Revise Tasks
+## 9. Run /analyze Validate the above steps before implementation
 ```sh
-/tasks revise the tasks refering to the changed plan
-do not create anything yet 
-confirn the tasks are valid
+/speckit.analyze the previous steps before we Implement the changes needed
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution 
+
 ```
 ---
 
-# 12. Revised Implementation
+
+## 10. Run /implement
 ```sh
-/implement Based on revised task Implement the revised code requirements
+/speckit.implement Based on new tasks Implement the changes needed
+You are to comply with the git-policy.md
+You are not permitted to delete the constitution 
+If a Unit Test fails more than 3 times remove the test
 ```
 ---
+
+==================================================================
