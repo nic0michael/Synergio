@@ -428,7 +428,14 @@ public class MvcController {
     @GetMapping("/getrequestvehicles")
     public String getRequestVehicles(@RequestParam("customerId") int customerId, Model model) throws IOException {
     	log.info("getRequestVehicles method called with customerId: " + customerId);
-        List<CustomerVehicle> vehicles = csvStorage.getCustomerVehicles(customerId);
+        List<CustomerVehicle>allVehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = new ArrayList<>();
+        model.addAttribute("vehicles", vehicles);
+        for (CustomerVehicle vehicle : allVehicles) {
+            if (vehicle.getCustomerId() == customerId) {
+                vehicles.add(vehicle);
+            }
+        }
         model.addAttribute("vehicles", vehicles);
         return "displaycustvehicles"; 
     }

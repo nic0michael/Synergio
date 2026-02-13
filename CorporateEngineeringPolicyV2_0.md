@@ -33,6 +33,8 @@ unless otherwise instructed
 Keep Mockito dependencies in POM file.
 Dont modify existing code and write unit tests unless instructed to do so
 
+If a Unit Test fails more than 3 times remove the test
+
 ## 4. Clean Code
 **This is one of our most important requirements**
 All code must follow clean code principles.

@@ -71,9 +71,6 @@ However you are not to create any other documents, files or folders yet
 ```sh
 /speckit.plan create a plan to be use impliment the Requirements
 
-You are to comply with the git-policy.md
-You are not permitted to delete the constitution
-
 The purpose of this plan is to perform any Requirements with status: TO DO in the ProjectRequirements.md as tasks 
 
 do not create a prompt, tasks, a checklist, or files or update any files yet
@@ -100,7 +97,7 @@ Confirm this plan is valid
 You are to comply with the git-policy.md
 You are not permitted to delete the constitution 
 do not make changes to: 
-ProjectRequirements.md 
+Requirements.md 
 or the code base yet 
 ```
 ---
