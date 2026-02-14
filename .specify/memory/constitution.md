@@ -1,122 +1,90 @@
 ﻿<!--
 Sync Impact Report:
-- Version change: 1.1.0 -> 1.1.1
-- List of modified principles: Technology Stack Standards (Updated with specifics from CorporateEngineeringPolicyV2_0.md)
-- Added sections: N/A
-- Templates requiring updates:  checked
+- Version change: 0.0.0 → 1.0.0 (Initial Creation)
+- Added sections: Preamble, Fundamental Principles, Technical Constraints, Workflow & Process, Governance
+- Incorporated files: corporate-technical-policy.md, git-policy.md, CorporateEngineeringPolicyV2_0.md
 -->
-# Synergeio Vehicle Service Station Constitution
 
-## Core Principles
+# Constitution of Project Synergio
 
-### I. Logging Standards (MANDATORY)
-**Before an exception is thrown, an error must be logged with appropriate information.**
-- All methods that return values must write info logs with appropriate information upon successful execution
-- Excludes setter and getter methods
-- Logging provides traceability and debugging capability
-- Use SLF4J logging framework consistently
+**Version:** 1.0.0
+**Date Ratified:** 2026-02-14
+**Last Amended:** 2026-02-14
 
-### II. Simplicity - KISS Philosophy (CRITICAL)
-**Keep It Simple Stupid - This is an important engineering principle that should be practiced.**
-- Avoid over-engineering and unnecessary complexity
-- Focus on solving the problem at hand in the simplest way possible
-- Deliver the simplest solution that works - this produces reliable code
-- Complexity must be justified and documented
-- Prefer straightforward implementations over clever code
+## Preamble
 
-### III. Test-Driven Development (NON-NEGOTIABLE)
-**Code must be developed using Test-Driven Development methodology.**
-- First write a failing Unit Test, then write code to make the test pass
-- Do NOT use Mockito - if mocking is needed, use real mock stub classes
-- Prefer simple unit tests over integration tests where possible
-- Refer to ChamelionTests.md for detailed mock testing guidance using stub classes
-- Keep Mockito dependencies in build files but prefer stub classes
-- Red-Green-Refactor cycle strictly enforced
-- **Do not modify existing code to add tests unless explicitly instructed**
+This constitution establishes the non-negotiable rules, principles, and governance structures for the Synergio codebase. It serves as the supreme agreement for all automated agents and human contributors.
 
-### IV. Clean Code Principles (HIGHEST PRIORITY)
-**All code must follow clean code principles - This is one of our most important requirements.**
-- Methods should be small and focused on a single task
-- Variables and methods must have meaningful names that convey their purpose
-- Avoid code duplication by reusing existing methods and classes
-- Long methods hide classes and should be refactored into smaller methods or classes
-- **Comments are regarded as dirty code and should NEVER be used to explain bad code**
-- **ONLY Javadoc comments are allowed**
-- **Do not modify existing code to apply clean code unless explicitly instructed**
+## 1. Fundamental Principles
 
-### V. Self-Documenting Code (MANDATORY)
-**All code must be self-documenting - This is part of clean code with equal importance.**
-- Class names, method names, and variable names must be clear and descriptive
-- Code should be readable without comments
-- Intent should be obvious from the code structure itself
-- **Do not modify existing code to make it self-documenting unless explicitly instructed**
+### 1.1 Simplicity First
+The implementation MUST strictly adhere to the KISS (Keep It Simple, Stupid) philosophy.
+*   **Rationale:** Simplicity produces reliable code. Over-engineering and unnecessary complexity are PROHIBITED. Focus on the simplest working solution.
 
-## Technology Stack Standards
+### 1.2 Clean Code
+All code MUST follow clean code principles.
+*   **Structure:** Methods MUST be small and focused on a single task.
+*   **Naming:** Variables and methods MUST have meaningful names that convey their purpose.
+*   **Duplication:** Avoid code duplication by reusing existing methods/classes.
+*   **Refactoring:** Long methods MUST be refactored into smaller components.
+*   **Comments:** Comments are considered "dirty code" and are PROHIBITED, except for Javadoc. Code MUST be self-documenting.
+*   **Constraint:** Do NOT modify existing code solely to "clean" it unless explicitly instructed.
 
-### Database
-- **Persist to CSV files - Do NOT use a database.** (Override: Project Specific per CorporateEngineeringPolicyV2_0 Section 0)
-- Although general policy prefers MS SQL, this project is explicitly CSV-based.
+### 1.3 Compliance
+Compliance with this constitution and its incorporated policies is MANDATORY unless explicitly instructed otherwise by a human operator. The constitution itself MUST NOT be deleted.
 
-### Development Environment
-- **Project Structure**: Spring Boot Microservice
-- **Language**: Java (OpenJDK 21.0.5 LTS)
-- **Build Tool**: Gradle Project
-- **Frontend**: Thymeleaf with JavaScript
+## 2. Technical Constraints
 
-### Framework Standards
-- Spring Boot is the preferred Java framework for microservices
-- Follow Spring Boot best practices and conventions
-- Leverage Spring's dependency injection and component model
+### 2.1 Technology Stack
+The project is strictly limited to the following stack:
+*   **Framework:** Spring Boot Microservice
+*   **Frontend:** Thymeleaf with JavaScript
+*   **Persistence:** CSV files (NO databases allowed)
+*   **Build Tool:** Gradle
+*   **Language:** Java (OpenJDK 21.0.5 2024-10-15 LTS) unless otherwise specified.
 
-## Development Workflow
+### 2.2 Data Persistence
+*   **Implementation:** All data MUST be persisted to CSV files.
+*   **Prohibition:** Database usage is explicitly PROHIBITED.
 
-### Version Control & Git Policy
-- **Branches**: The Agent is fully permitted to create new Git branches following the naming convention.
-- **Pushing**: The Agent may commit and push code **only** after the user explicitly permits the action following an /implement command.
-- **Merging**: The Agent is **strictly prohibited** from merging branches into protected branches (e.g., main, develop) unless explicitly instructed.
-- **Commit Messages**: Use clear and descriptive commit messages following conventional commits style.
+### 2.3 Logging & Error Handling
+*   **Before Exception:** An error MUST be logged with appropriate information before throwing an exception.
+*   **Successful Execution:** An info log MUST be written with appropriate information upon successful method execution (especially for methods returning values).
+*   **Exclusion:** Getters and setters are excluded from logging requirements.
 
-### Branch Naming Convention (MANDATORY)
-All branches created must strictly follow this structure:
-<branch-type>/<scope-number>/<git-spec-branch-name>/<branch-description>
-- **Branch-type**: eature, ugfix, hotfix, chore.
-- **Scope-number**: Ticket ID (e.g., SCO-0001 or ALPS-7345).
-- **Git-Spec-Branch-Name**: Unique identifier generated during planning (e.g., bc12).
-- **Branch-Description**: Kebab-case description (e.g., generate-new-requirements).
-- **Case**: The final branch name must be entirely in **lowercase**.
+### 2.4 Testing Methodology
+*   **Constraint:** Test Driven Development (TDD) is expressly PROHIBITED.
 
-### Requirement Tracking
-- All requirements in Requirements.md must be explicitly tracked.
-- Status MUST be marked as DONE for completed requirements.
-- Status MUST be marked as TO DO for new requirements.
+## 3. Workflow & Process
 
-### Code Modification Policy
-- **Do not modify existing code unless explicitly instructed**
-- Respect existing implementations and patterns
-- New features should be additive when possible
-- Refactoring requires explicit approval
+### 3.1 Git Operations
+All operations MUST comply with `git-policy.md`.
+*   **Branch Creation:** PERMITTED.
+*   **Code Pushing:** PROHIBITED unless explicitly permitted by the user following an `/implement` command.
+*   **Merging:** PROHIBITED on protected branches (`main`, `develop`) without explicit user instruction.
 
-## Governance
+### 3.2 Branch Naming Convention
+All branches created by the Agent MUST strictly follow this structure (lowercase):
+`<branch-type>/<scope-number>/<git-spec-branch-name>/<branch-description>`
 
-### Compliance Requirements
-- **Compliance to this constitution is MANDATORY unless otherwise instructed**
-- The constitution is not negotiable.
-- You are not permitted to delete the constitution.
-- Git operations are limited to the User (unless permissions granted).
-- Constitution supersedes individual preferences or conflicting practices.
-- Exceptions must be documented and justified.
+*   **Active Configuration:**
+    *   `branch-type`: feature
+    *   `scope-number`: SCO-0001
+    *   `git-spec-branch-name`: [Generated dynamically by /plan]
+    *   `branch-description`: [Derived from /specify]
 
-### Enforcement
-- All development work must comply with these standards
-- Code that violates these principles may be rejected
-- Quality gates enforce constitution compliance
-- Regular reviews ensure ongoing adherence
+### 3.3 Requirement Tracking
+*   **Completed Requirements:** MUST be marked with `Status: DONE` in `Requirements.md`.
+*   **New/Pending Requirements:** MUST be marked with `Status: TO DO` in `Requirements.md`.
 
-### Priority Order (when principles conflict)
-1. Clean Code & Self-Documenting Code (highest)
-2. Simplicity (KISS)
-3. Test-Driven Development
-4. Logging Standards
-5. Technology Stack Standards
+## 4. Governance
 
-**Version**: 1.1.1 | **Ratified**: 2025-12-04 | **Last Amended**: 2026-02-12
+### 4.1 Amendment Process
+Values and principles defined herein (specifically `branch-type` and `scope-number`) are updated via the `/speckit.constitution` command.
+
+### 4.2 Commit Messages
+*   **Standard:** Conventional Commits style.
+*   **Content:** Messages MUST be clear, descriptive, and explain the purpose of the change.
+
+---
+*Generated by SpecKit Constitution Agent*

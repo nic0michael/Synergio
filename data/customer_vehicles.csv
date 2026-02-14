@@ -1,0 +1,4 @@
+index,customerId,date,customerName,cellphone,customerAddress,vehicleRegNumber,vehicleMakeAnModel,colour,vinNumber,state
+1,1,2024-01-01,John Doe,0821234567,123 Main St,ABC 123 GP,Toyota Corolla,White,VIN1234567890,0
+2,1,2024-01-01,John Doe,0821234567,123 Main St,XYZ 789 GP,Ford Ranger,Blue,VIN0987654321,0
+3,2,2024-01-02,Jane Smith,0827654321,456 Elm St,DEF 456 GP,VW Polo,Red,VIN1122334455,0

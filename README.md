@@ -430,3 +430,20 @@ http://localhost:8080
 
 ---
 
+
+
+## **New REST Endpoints**
+
+The following new endpoints have been added:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /customervehiclesbycust?customerId={id} | Displays all vehicles for the specified customer ID including customer details. |
+| GET | /customerbycust?customerId={id} | Displays details for the specified customer ID. |
+| GET | /customers | Displays a sorted list of customers to select from. |
+
+Example URLs:
+- http://localhost:8088/customervehiclesbycust?customerId=1
+- http://localhost:8088/customerbycust?customerId=1
+- http://localhost:8088/customers
+

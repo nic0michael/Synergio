@@ -22,18 +22,7 @@ Focus on solving the problem at hand in the simplest way possible.
 It is importtant to deliver the simplest solution that works this produces reliable code.
 
 ## 3. Test Driven development
-It is our policy that code is developed by Test Driven Development Methodology
-First write a failing Unit Test then write code to make the test pass.
-We don't want to use Mockito, if mocking is needed for testing use real mock classes
-Where a simple unit test can be written prefer to do that instead of an integration test.
-We have added a document ChamelionTests.md that describes how to do testing in more detail using using Mock Stub Classes.
-refer to that document for ideas how to do mock unit testing
-Where mocking is needed for testing use real mock classes instead of a mocking framework like Mockito.
-unless otherwise instructed
-Keep Mockito dependencies in POM file.
-Dont modify existing code and write unit tests unless instructed to do so
-
-If a Unit Test fails more than 3 times remove the test
+Dont do test driven development
 
 ## 4. Clean Code
 **This is one of our most important requirements**
@@ -53,7 +42,7 @@ Class names, method names and variable names should be clear and descriptive so 
 Dont modify existing code and make it Self Documenting Code unless instructed to do so
 
 ## 5. Database
-Use Microsoft Sequel Database unless otherwise specified
+in this project we dont use databases we use CSV files
 
 ## 6. Development Language
 Use Java unless otherwise specified

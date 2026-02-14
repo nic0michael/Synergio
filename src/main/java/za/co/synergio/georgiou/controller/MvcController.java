@@ -408,6 +408,15 @@ public class MvcController {
         return "profile";
     }
 
+    @GetMapping("/customers")
+    public String getCustomers(Model model) throws IOException {
+        log.info("getCustomers method called");
+        List<Customer> customers = csvStorage.readAllCustomers();
+        sortCustomersByName(customers);
+        model.addAttribute("customers", customers);
+        return "selectacustomer";
+    }
+
     @GetMapping("/getcustvehicles")
     public String getCustVehicles(Model model) throws IOException {
     	log.info("getCustVehicles method called");
@@ -438,6 +447,47 @@ public class MvcController {
         }
         model.addAttribute("vehicles", vehicles);
         return "displaycustvehicles"; 
+    }
+
+    @GetMapping("/customervehiclesbycust")
+    public String getCustomerVehiclesByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
+        log.info("Processing vehicle list request for customerId: " + customerId);
+        List<CustomerVehicle> allVehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = new ArrayList<>();
+        
+        for (CustomerVehicle vehicle : allVehicles) {
+            if (vehicle.getCustomerId() == customerId) {
+                vehicles.add(vehicle);
+            }
+        }
+        model.addAttribute("vehicles", vehicles);
+
+        Customer customer = null;
+        List<Customer> customers = csvStorage.readAllCustomers();
+        for (Customer c : customers) {
+            if (c.getIndex() == customerId) {
+                customer = c;
+                break;
+            }
+        }
+        model.addAttribute("customer", customer);
+
+        return "displaycustvehicles"; 
+    }
+
+    @GetMapping("/customerbycust")
+    public String getCustomerByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
+        log.info("Processing customer detail request for customerId: " + customerId);
+        Customer customer = null;
+        List<Customer> customers = csvStorage.readAllCustomers();
+        for (Customer  cust : customers) {
+            if(cust.getIndex()==customerId){
+               customer = cust;
+               break;
+            }
+        }
+        model.addAttribute("customer", customer);
+        return "displaycustomerbycustomerId";
     }
 
 }

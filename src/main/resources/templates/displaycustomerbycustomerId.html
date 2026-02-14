@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        main {
+            padding: 2em;
+            width: 80%;
+            margin: 0 auto;
+        }
+        .customer-card {
+            background: white;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 2em auto;
+        }
+        .detail-row {
+            margin-bottom: 1em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5em;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+            display: inline-block;
+            width: 150px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Customer Profile</h1>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/getcustvehicles}">Back to Selection</a>
+        </nav>
+    </header>
+    <main>
+        <div th:if="${customer == null}" class="error">
+            <h3>Customer not found.</h3>
+        </div>
+
+        <div th:if="${customer != null}" class="customer-card">
+            <div class="detail-row">
+                <span class="detail-label">Customer ID:</span>
+                <span th:text="${customer.index}">123</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span th:text="${customer.customerName}">John Doe</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Cellphone:</span>
+                <span th:text="${customer.cellphone}">0821234567</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Address:</span>
+                <span th:text="${customer.customerAddress}">123 Street</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Registration Date:</span>
+                <span th:text="${customer.date}">2024-01-01</span>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Synergio</p>
+    </footer>
+</body>
+</html>

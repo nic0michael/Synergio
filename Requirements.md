@@ -1138,6 +1138,68 @@ When saving a new vehicle, the selected `customerId` must be persisted to the `C
 Status:
 DONE
 
+#### 3.1.5 Create two REST methods in MvcController
+you are only permitted to write code to class MvcController now
+
+Create REST method /customervehiclesbycust
+public List<CustomerVehicle> getCustomerVehiclesByCustomer(@RequestParam("customerId") int customerId, Model model) throws Exception {
+use this code here:
+List<CustomerVehicle>allVehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = new ArrayList<>();
+        model.addAttribute("vehicles", vehicles);
+        for (CustomerVehicle vehicle : allVehicles) {
+            if (vehicle.getCustomerId() == customerId) {
+                vehicles.add(vehicle);
+            }
+        }
+        model.addAttribute("vehicles", vehicles);
+        return "displaycustvehicles"; 
+        you can change the return url "displaycustvehicles" if there is a html page that can display this
+
+
+Create REST method /customerbycust
+public List<CustomerVehicle> getCustomerByCustomer(@RequestParam("customerId") int customerId, Model model) throws Exception {
+use this code here:
+
+        Customer customer =null;
+        List<Customer> customers = csvStorage.readAllCustomers();
+        for (Customer  cust : customers) {
+            if(cust.getIndex()==customerId){
+               customer = cust;
+            }
+         
+        model.addAttribute("customer", customer);
+        return "displaycustomerbycustomerId";
+
+
+        you can change the return url "displaycustomerbycustomerId" if there is a html page that can display this
+
+
+
+Status:
+DONE
+---
+
+
+#### 3.1.6 Create a REST method in MvcController
+you are only permitted to write code to class MvcController now
+
+Create REST method /customers
+
+public List<Customer> getCustomers( Model model) throws Exception {
+use this code here:
+        List<Customer> customers = csvStorage.
+        model.addAttribute("customers", customers);
+        return "selectacustomer";
+Create html template "selectacustomer
+with option to chose the customer 
+then redirect to:
+/customervehiclesbycust
+
+Status:
+TO DO
+---
+
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
 **Purpose:** Complete technical specification to rebuild Synergeio Vehicle Service Station  

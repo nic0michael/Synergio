@@ -1,0 +1,34 @@
+openapi: 3.0.0
+info:
+  title: Synergio Customer Selection API
+  version: 1.0.0
+paths:
+  /customers:
+    get:
+      summary: Display customer selection form
+      operationId: getCustomers
+      responses:
+        '200':
+          description: HTML Page with customer dropdown
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<html>...<select>...</select>...</html>"
+  /customervehiclesbycust:
+    get:
+      summary: Display vehicles for a specific customer
+      operationId: getCustomerVehiclesByCustomer
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: HTML Page with vehicle list
+          content:
+            text/html:
+              schema:
+                type: string

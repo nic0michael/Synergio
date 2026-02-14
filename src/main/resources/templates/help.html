@@ -15,10 +15,18 @@
     </nav>
 </header>
 
-<main>
+<main>    
+    <a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp;  
+	<a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; 	
+	<a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp;  
+	<a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a> &nbsp; &nbsp; <br><br>
+	<a th:href="@{/publish}" class="btn-link">Publish All Records</a>&nbsp; &nbsp;
+	<a th:href="@{/profile}" class="btn-link">Profile</a>	&nbsp; &nbsp; 
+	<a th:href="@{/customers}" class="btn-link">Cust Vehicles</a>	&nbsp; &nbsp; 
     <section>
         <h2>Customer and Vehicle Quick Navigation</h2>
         <ul>
+            <li><strong>List A Customers Vehicles:</strong> Select a customer to view their vehicles - <a th:href="@{/customers}">Go to Page</a></li>
             <li><strong>Profile:</strong> Access quick navigation hub for all Customer and Vehicle functions - <a th:href="@{/profile}">Go to Page</a></li>
         </ul>
     </section>

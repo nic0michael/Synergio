@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Select a Customer</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+        header, footer {
+            background-color: #004aad;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2em auto;
+            background: white;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 1em;
+        }
+        select {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.3em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 1.5em;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            padding: 0.8em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003a8c;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .empty-state {
+            color: #666;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Synergeio Vehicle Service Station</h1>
+    <nav>
+        <a th:href="@{/}" style="color: white; margin: 0 10px;">Home</a>
+        <a th:href="@{/records}" style="color: white; margin: 0 10px;">Records</a>
+        <a th:href="@{/help}" style="color: white; margin: 0 10px;">Help</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Select Customer</h2>
+    
+    <div th:if="${customers == null or customers.empty}" class="container">
+        <p class="empty-state">No customers found.</p>
+        <a th:href="@{/createcustomer}" class="button">Create New Customer</a>
+    </div>
+
+    <form th:unless="${customers == null or customers.empty}" th:action="@{/customervehiclesbycust}" method="get">
+        <label for="customerId">Choose a Customer:</label>
+        <select id="customerId" name="customerId" required>
+            <option value="" disabled selected>Select a customer...</option>
+            <option th:each="customer : ${customers}" 
+                    th:value="${customer.index}" 
+                    th:text="${customer.customerName}">Customer Name</option>
+        </select>
+        
+        <button type="submit">View Vehicles</button>
+    </form>
+    
+    <div style="margin-top: 2em; text-align: center;">
+        <a th:href="@{/profile}">Back to Profile</a>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Synergeio. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
