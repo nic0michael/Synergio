@@ -86,7 +86,7 @@
 
 <main>
     <div class="quick-links">
-        <a th:href="@{/}" class="btn-link">Add Records</a>	&nbsp; &nbsp;  
+        <a th:href="@{/}" class="btn-link">Add Service Records</a>	&nbsp; &nbsp;  
         <a th:href="@{/today}" class="btn-link">Due TODAY</a>	&nbsp; &nbsp; 	
         <a th:href="@{/10DAYS}" class="btn-link">Due in 10 Days</a> &nbsp; &nbsp;  
         <a th:href="@{/40DAYS}" class="btn-link">Due in 40 Days</a> &nbsp; &nbsp; <br><br>
@@ -95,7 +95,25 @@
         <a th:href="@{/customers}" class="btn-link">Cust Vehicles</a>	&nbsp; &nbsp; 
     </div>
 
-    <div class="grid-container">
+    <div class="grid-container">        
+        <section>
+            <h2>Customer Management</h2>
+            <ul>
+                <li><span><strong>Create Customer:</strong> Add new customer</span> <a th:href="@{/createcustomer}">Go to Page</a></li>
+                <li><span><strong>Edit Customer:</strong> Modify details</span> <a th:href="@{/editcustomer}">Go to Page</a></li>
+                <li><span><strong>View Customer Records:</strong> List all</span> <a th:href="@{/customerRecords}">Go to Page</a></li>
+            </ul>
+        </section>
+        
+        <section>
+            <h2>Vehicle Management</h2>
+            <ul>
+                <li><span><strong>Create Vehicle:</strong> Add new vehicle</span> <a th:href="@{/createvehicle}">Go to Page</a></li>
+                <li><span><strong>Edit Vehicle:</strong> Modify details</span> <a th:href="@{/editvehicle}">Go to Page</a></li>
+                <li><span><strong>View Vehicle Records:</strong> List all</span> <a th:href="@{/vehicleRecords}">Go to Page</a></li>
+            </ul>
+        </section>
+
         <section>
             <h2>Customer and Vehicle Quick Navigation</h2>
             <ul>
@@ -119,24 +137,6 @@
                 <li><span><strong>Due Today:</strong> Due or overdue</span> <a th:href="@{/today}">Go to Page</a></li>
                 <li><span><strong>Due Within 10 Days:</strong> Short term</span> <a th:href="@{/10DAYS}">Go to Page</a></li>
                 <li><span><strong>Due Within 40 Days:</strong> Long term</span> <a th:href="@{/40DAYS}">Go to Page</a></li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Customer Management</h2>
-            <ul>
-                <li><span><strong>Create Customer:</strong> Add new customer</span> <a th:href="@{/createcustomer}">Go to Page</a></li>
-                <li><span><strong>Edit Customer:</strong> Modify details</span> <a th:href="@{/editcustomer}">Go to Page</a></li>
-                <li><span><strong>View Customer Records:</strong> List all</span> <a th:href="@{/customerRecords}">Go to Page</a></li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Vehicle Management</h2>
-            <ul>
-                <li><span><strong>Create Vehicle:</strong> Add new vehicle</span> <a th:href="@{/createvehicle}">Go to Page</a></li>
-                <li><span><strong>Edit Vehicle:</strong> Modify details</span> <a th:href="@{/editvehicle}">Go to Page</a></li>
-                <li><span><strong>View Vehicle Records:</strong> List all</span> <a th:href="@{/vehicleRecords}">Go to Page</a></li>
             </ul>
         </section>
 

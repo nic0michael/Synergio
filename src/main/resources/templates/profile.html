@@ -6,108 +6,166 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            padding: 0;
-            margin: 0;
-        }
-        header, footer {
-            background-color: #004aad;
-            color: white;
-            padding: 1em;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
         }
         main {
-            max-width: 800px;
-            margin: 2em auto;
-            background: white;
-            padding: 2em;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .quick-links {
+            background: #fff;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        section {
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         h2 {
             color: #004aad;
-            text-align: center;
-            margin-bottom: 1.5em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
         }
-        .button-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5em;
-            margin-top: 2em;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-        .nav-button {
-            background-color: #004aad;
-            color: white;
-            border: none;
-            padding: 1.5em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: bold;
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li a {
+            color: #004aad;
             text-decoration: none;
-            text-align: center;
-            display: block;
-            transition: background-color 0.3s;
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: #e8f0fe;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
-        .nav-button:hover {
-            background-color: #003a8c;
+        li a:hover {
+            background-color: #d2e3fc;
         }
-        .nav-button.customer {
-            background-color: #28a745;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
         }
-        .nav-button.customer:hover {
-            background-color: #218838;
+        .btn-link {
+            color: #004aad;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #e8f0fe;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            display: inline-block;
         }
-        .nav-button.vehicle {
-            background-color: #17a2b8;
-        }
-        .nav-button.vehicle:hover {
-            background-color: #138496;
-        }
-        .nav-button.list {
-            background-color: #6c757d;
-        }
-        .nav-button.list:hover {
-            background-color: #5a6268;
+        .btn-link:hover {
+            background-color: #d2e3fc;
         }
     </style>
 </head>
 <body>
 <header>
-    <h1>Profile - Synergeio</h1>
-    <nav>
-        <a th:href="@{/}" style="color:white;">Home</a> |
-        <a th:href="@{/records}" style="color:white;">Service Records</a> |
-        <a th:href="@{/help}" style="color:white;">Help</a>
-    </nav>
+	<div style="font-size: 24px; font-weight: bold; color: #004aad; margin-bottom: 10px;" class="brand-title">Synergio</div>
+    <div style="background-color: #004aad; color: white; padding: 20px 0; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 2.5em;">Profile & Maintenance</h1>
+        <nav style="margin-top: 15px;">
+            <a th:href="@{/}" style="color: white; text-decoration: none; margin: 0 10px; font-weight: bold;">Form</a> |
+            <a th:href="@{/records}" style="color: white; text-decoration: none; margin: 0 10px; font-weight: bold;">View Records</a> |
+            <a th:href="@{/help}" style="color: white; text-decoration: none; margin: 0 10px; font-weight: bold;">Help</a>
+        </nav>
+    </div>
 </header>
 
 <main>
-    <h2>Quick Navigation</h2>
-    <p style="text-align: center; color: #666;">Select an action below to manage customers and vehicles</p>
-    
-    <div class="button-container">
-        <a th:href="@{/createcustomer}" class="nav-button customer">
-            Add New Customer
-        </a>
+    <div class="quick-links">
+        <a th:href="@{/createcustomer}" class="btn-link">New Customer</a> &nbsp; &nbsp;
+        <a th:href="@{/createvehicle}" class="btn-link">New Vehicle</a> &nbsp; &nbsp;
+        <a th:href="@{/customers}" class="btn-link">Customer Vehicles</a>
+    </div>
+
+    <div class="grid-container">
         
-        <a th:href="@{/customerRecords}" class="nav-button list">
-            List Customers
-        </a>
-        
-        <a th:href="@{/createvehicle}" class="nav-button vehicle">
-            Add New Vehicle
-        </a>
-        
-        <a th:href="@{/vehicleRecords}" class="nav-button list">
-            List Vehicles
-        </a>
+        <section>
+            <h2>Customer Management</h2>
+            <p>Manage your customer database. Add new profiles or view existing ones.</p>
+            <ul>
+                <li>
+                    <span><strong>Add New Customer:</strong> Register a new client</span> 
+                    <a th:href="@{/createcustomer}">Add</a>
+                </li>
+                <li>
+                    <span><strong>List Customers:</strong> View full directory</span> 
+                    <a th:href="@{/customerRecords}">View List</a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Vehicle Management</h2>
+            <p>Manage vehicle inventory and details independent of service records.</p>
+            <ul>
+                <li>
+                    <span><strong>Add New Vehicle:</strong> Register new car</span> 
+                    <a th:href="@{/createvehicle}">Add</a>
+                </li>
+                <li>
+                    <span><strong>List Vehicles:</strong> View full inventory</span> 
+                    <a th:href="@{/vehicleRecords}">View List</a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Relationships</h2>
+            <p>View which vehicles belong to which customers.</p>
+            <ul>
+                <li>
+                    <span><strong>Customer Vehicles:</strong> Linked view</span> 
+                    <a th:href="@{/customers}">Go to Page</a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Service Data</h2>
+            <p>Quick access to service history.</p>
+            <ul>
+                <li>
+                    <span><strong>Service Records:</strong> All maintenance logs</span> 
+                    <a th:href="@{/records}">View Records</a>
+                </li>
+            </ul>
+        </section>
+
     </div>
 </main>
 
-<footer>
-    <p>&copy; 2025 Synergeio Vehicle Service Station</p>
+<footer style="text-align: center; margin-top: 40px; color: #666; padding: 20px 0; border-top: 1px solid #eee;">
+    <p>&copy; 2025 Synergeio Service Station</p>
 </footer>
 </body>
 </html>
