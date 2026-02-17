@@ -84,6 +84,15 @@
 		
        
         <input type="hidden" th:field="*{recurringDate}" readonly>
+
+        
+        <label for="customerId">Choose a Customer:</label>
+        <select id="customerId" name="customerId" required>
+            <option value="" disabled selected>Select a customer...</option>
+            <option th:each="customer : ${customers}" 
+                    th:value="${customer.index}" 
+                    th:text="${customer.customerName}">Customer Name</option>
+        </select>
 		
 
         <label>Customer Name:</label>

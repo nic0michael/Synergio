@@ -92,6 +92,7 @@
                     <th>Reg Number</th>
                     <th>VIN</th>
                     <th>Colour</th>
+                    <th>Service This Vehicle</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,6 +101,13 @@
                     <td th:text="${vehicle.vehicleRegNumber}">ABC 123 GP</td>
                     <td th:text="${vehicle.vinNumber}">VIN123</td>
                     <td th:text="${vehicle.colour}">White</td>
+                    <td>
+                        <form th:action="@{/servicevehicle}" method="get">
+                            <input type="hidden" name="customerId" th:value="${customer.index}" />
+                            <input type="hidden" name="vehicleId" th:value="${vehicle.index}" />
+                            <button type="submit">Service Vehicle</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>

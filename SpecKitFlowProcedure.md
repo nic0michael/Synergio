@@ -24,7 +24,7 @@ specify init prompt-maker --ai copilot --script ps
 ```
 ---
 
-==================================================================
+==========================================================
 
 # 3. CODE GENERATION : PHASE 1 :REST Backend
 
