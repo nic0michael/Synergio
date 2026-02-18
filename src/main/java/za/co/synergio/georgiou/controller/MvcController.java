@@ -45,6 +45,66 @@ public class MvcController {
         return "form";
     }
 
+    @GetMapping("/servicevehicle")
+    public String createServiceByCustomerAndVehicle(
+            @RequestParam(value = "customerId", required = false) Integer customerId, 
+            @RequestParam(value = "vehicleId", required = false) Integer vehicleId, 
+            Model model) throws IOException {
+
+        log.info("createServiceByCustomerAndVehicle called with customerId: " + customerId + ", vehicleId: " + vehicleId);
+
+        if (customerId == null || vehicleId == null) {
+            log.error("createServiceByCustomerAndVehicle called with missing parameters");
+            return "redirect:/help";
+        }
+        
+        Customer customer = null;
+        List<Customer> customers = csvStorage.readAllCustomers();
+        for (Customer c : customers) {
+            if (c.getIndex() == customerId) {
+                customer = c;
+                break;
+            }
+        }
+        CustomerVehicle vehicle = null;
+        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        for (CustomerVehicle v : vehicles) {
+            if (v.getIndex() == vehicleId) {
+                vehicle =v;
+                break;
+            }
+        }
+
+        ServiceRecord record = new ServiceRecord();
+        record.setDate(LocalDate.now(ZoneOffset.UTC));
+        
+        if (customer != null) {
+            record.setCustomerName(customer.getCustomerName());
+            record.setCellphone(customer.getCellphone());
+            record.setCustomerAddress(customer.getCustomerAddress());
+        } else {
+            log.error("Customer not found for customerId: " + customerId);
+            return "redirect:/help";
+        }
+        
+        if (vehicle != null) {
+        	record.setVehicleRegNumber(vehicle.getVehicleRegNumber());
+        	record.setVehicleMakeAnModel(vehicle.getVehicleMakeAnModel());
+        	record.setColour(vehicle.getColour());
+        	record.setVinNumber(vehicle.getVinNumber());
+        } else {
+            log.error("Vehicle not found for vehicleId: " + vehicleId);
+            return "redirect:/help";
+        }
+        
+        model.addAttribute("serviceRecord", record);
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("vehicleId", vehicleId);
+
+        log.info("Returning form view for createServiceByCustomerAndVehicle");
+        return "form";
+    }
+
     @GetMapping("/editRecord")
     public String edit(@RequestParam("index") int index, Model model) throws IOException {
         log.info("form edit called");
@@ -446,6 +506,17 @@ public class MvcController {
             }
         }
         model.addAttribute("vehicles", vehicles);
+        
+        Customer customer = null;
+        List<Customer> customers = csvStorage.readAllCustomers();
+        for (Customer c : customers) {
+            if (c.getIndex() == customerId) {
+                customer = c;
+                break;
+            }
+        }
+        model.addAttribute("customer", customer);
+        
         return "displaycustvehicles"; 
     }
 
