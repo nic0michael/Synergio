@@ -35,7 +35,13 @@ public class MvcController {
         this.csvStorage = csvStorage;
     }
 
-    @GetMapping("/")
+@GetMapping("/")
+    public String help(Model model) {
+    	log.info("help method called");
+        return "help";
+    }
+
+    @GetMapping("/serviceform")
     public String form(Model model) {
     	log.info("form method called");
         LocalDate utcDate = LocalDate.now(ZoneOffset.UTC);
@@ -66,6 +72,7 @@ public class MvcController {
                 break;
             }
         }
+       
         CustomerVehicle vehicle = null;
         List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
         for (CustomerVehicle v : vehicles) {
@@ -372,10 +379,24 @@ public class MvcController {
         return "createvehicle";
     }
     
-    @GetMapping("/editvehicle")
-    public String editVehicle(Model model) {
-        log.info("editVehicle method called");
-        CustomerVehicle vehicle = new CustomerVehicle();
+    @GetMapping("/editthevehicle")
+    public String editVehicle(@RequestParam(value = "vehicleId", required = true) Integer vehicleId, Model model) throws IOException { // added IOException for csvStorage
+        log.info("editVehicle method called for vehicleId: " + vehicleId);
+        
+        CustomerVehicle vehicle = null;
+        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        for (CustomerVehicle v : vehicles) {
+            if (v.getIndex() == vehicleId) {
+                vehicle = v;
+                break;
+            }
+        }
+        
+        if (vehicle == null) {
+        	log.error("Vehicle not found with id: " + vehicleId);
+        	return "redirect:/help";
+        }
+        
         model.addAttribute("customerVehicle", vehicle);
         return "editvehicle";
     }
@@ -531,7 +552,6 @@ public class MvcController {
                 vehicles.add(vehicle);
             }
         }
-        model.addAttribute("vehicles", vehicles);
 
         Customer customer = null;
         List<Customer> customers = csvStorage.readAllCustomers();
@@ -541,6 +561,8 @@ public class MvcController {
                 break;
             }
         }
+        
+        model.addAttribute("vehicles", vehicles);
         model.addAttribute("customer", customer);
 
         return "displaycustvehicles"; 
