@@ -1,0 +1,6 @@
+-- Data migration from CSV
+INSERT INTO "CUSTOMER" ("id", "date", "customer_name", "cellphone", "customer_address", "state") VALUES (1, '2024-01-01', 'John Doe', '0821234567', '123 Main St', 0);
+INSERT INTO "CUSTOMER" ("id", "date", "customer_name", "cellphone", "customer_address", "state") VALUES (2, '2024-01-02', 'Jane Smith', '0827654321', '456 Elm St', 0);
+INSERT INTO "CUSTOMER_VEHICLE" ("id", "customer_id", "date", "customer_name", "cellphone", "customer_address", "vehicle_reg_number", "vehicle_make_model", "colour", "vin_number", "state") VALUES (1, 1, '2024-01-01', 'John Doe', '0821234567', '123 Main St', 'ABC 123 GP', 'Toyota Corolla', 'White', 'VIN1234567890', 0);
+INSERT INTO "CUSTOMER_VEHICLE" ("id", "customer_id", "date", "customer_name", "cellphone", "customer_address", "vehicle_reg_number", "vehicle_make_model", "colour", "vin_number", "state") VALUES (2, 1, '2024-01-01', 'John Doe', '0821234567', '123 Main St', 'XYZ 789 GP', 'Ford Ranger', 'Blue', 'VIN0987654321', 0);
+INSERT INTO "CUSTOMER_VEHICLE" ("id", "customer_id", "date", "customer_name", "cellphone", "customer_address", "vehicle_reg_number", "vehicle_make_model", "colour", "vin_number", "state") VALUES (3, 2, '2024-01-02', 'Jane Smith', '0827654321', '456 Elm St', 'DEF 456 GP', 'VW Polo', 'Red', 'VIN1122334455', 0);

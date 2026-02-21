@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "service-record")
+@Table(name = "SERVICE_RECORD")
 public class ServiceRecord {
 
     @Id
@@ -80,7 +80,7 @@ public class ServiceRecord {
     private String vehicleMakeAnModel;
 
     @ElementCollection
-    @CollectionTable(name = "service_record_jobs", joinColumns = @JoinColumn(name = "service_record_id"))
+    @CollectionTable(name = "SERVICE_RECORD_JOBS", joinColumns = @JoinColumn(name = "service_record_id"))
     @Column(name = "job_description")
     private List<String> jobsToDo;
 
