@@ -1,24 +1,47 @@
 package za.co.synergio.georgiou.model;
 
-import java.math.BigDecimal;
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "customer-vehicle")
 public class CustomerVehicle {
-	private int index;
-	private int customerId;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int index; //0=active 1=completed 3=deleted
+
+    @Column(name = "customer_id")
+    private int customerId;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "date")
     private LocalDate date;
-	
+    
+    @Column(name = "customer_name")
     private String customerName;
+
+    @Column(name = "cellphone")
     private String cellphone;
+
+    @Column(name = "customer_address")
     private String customerAddress;
+
+    @Column(name = "vehicle_reg_number")
     private String vehicleRegNumber;
+
+    @Column(name = "vehicle_make_model")
     private String vehicleMakeAnModel;
+
+    @Column(name = "colour")
     private String colour;
+
+    @Column(name = "vin_number")
     private String vinNumber;
+
+    @Column(name = "state")
     private int state; //0=active 1=completed 3=deleted
     
 
@@ -73,7 +96,7 @@ public class CustomerVehicle {
     
     @Override
     public String toString() {
-        return "ServiceRecord{" +
+        return "CustomerVehicle{" +
                 "index=" + index +
                 ", state=" + state +
                 ", date=" + date +

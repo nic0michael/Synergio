@@ -9,6 +9,7 @@ import za.co.synergio.georgiou.model.Customer;
 import za.co.synergio.georgiou.model.CustomerVehicle;
 import za.co.synergio.georgiou.model.ServiceRecord;
 import za.co.synergio.georgiou.storage.CsvStorage;
+import za.co.synergio.georgiou.storage.H2Storage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,11 +29,11 @@ public class MvcController {
 	
 	private static final Logger log = LoggerFactory.getLogger(MvcController.class);
 
-    private final CsvStorage csvStorage;
+    private final CsvStorage storage;
 
     @Autowired
-    public MvcController(CsvStorage csvStorage) {
-        this.csvStorage = csvStorage;
+    public MvcController(CsvStorage storage) {
+        this.storage = storage;
     }
 
 @GetMapping("/")
@@ -65,7 +66,7 @@ public class MvcController {
         }
         
         Customer customer = null;
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -74,7 +75,7 @@ public class MvcController {
         }
        
         CustomerVehicle vehicle = null;
-        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = storage.readAllVehicles();
         for (CustomerVehicle v : vehicles) {
             if (v.getIndex() == vehicleId) {
                 vehicle =v;
@@ -115,7 +116,7 @@ public class MvcController {
     @GetMapping("/editRecord")
     public String edit(@RequestParam("index") int index, Model model) throws IOException {
         log.info("form edit called");
-        List<ServiceRecord> records = csvStorage.readAll();
+        List<ServiceRecord> records = storage.readAll();
         ServiceRecord record = records.stream()
                 .filter(r -> r.getIndex() == index)
                 .findFirst()
@@ -137,13 +138,13 @@ public class MvcController {
     @GetMapping("/activateRecord") 
     public String activateRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = csvStorage.readAll();
+        List<ServiceRecord> allRecords = storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(0);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				csvStorage.update(serviceRecord);
+				storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -155,13 +156,13 @@ public class MvcController {
     @GetMapping("/completeRecord") 
     public String completeRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = csvStorage.readAll();
+        List<ServiceRecord> allRecords = storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(1);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				csvStorage.update(serviceRecord);
+				storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -173,13 +174,13 @@ public class MvcController {
     @GetMapping("/deleteRecord") 
     public String deleteRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = csvStorage.readAll();
+        List<ServiceRecord> allRecords = storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(3);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				csvStorage.update(serviceRecord);
+				storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -218,7 +219,7 @@ public class MvcController {
             serviceRecord.setRecurringDate(recurring);
         }
 
-        csvStorage.update(serviceRecord); // <-- call the update method
+        storage.update(serviceRecord); // <-- call the update method
 
         return "redirect:/";
     }
@@ -227,7 +228,7 @@ public class MvcController {
     @GetMapping("/publish") 
     public String publish(Model model) throws IOException {
     	log.info("records method called");
-        csvStorage.publish();
+        storage.publish();
         return "redirect:/";
     }
     
@@ -263,7 +264,7 @@ public class MvcController {
             serviceRecord.setRecurringDate(recurring);
         }
 
-        csvStorage.save(serviceRecord);
+        storage.save(serviceRecord);
         return "redirect:/";
     }
 
@@ -271,13 +272,13 @@ public class MvcController {
     @ResponseBody
     public List<ServiceRecord> apiRecords() throws IOException {
     	log.info("apiRecords method called");
-        return csvStorage.readAll();
+        return storage.readAll();
     }
 
     @GetMapping("/records")
     public String records(Model model) throws IOException {
     	log.info("records method called");
-        List<ServiceRecord> records = csvStorage.readAll();
+        List<ServiceRecord> records = storage.readAll();
 //        Collections.reverse(records);
         model.addAttribute("records", records);
         return "records";
@@ -286,18 +287,18 @@ public class MvcController {
     @GetMapping("/40DAYS")
     public String records40Days(Model model) throws IOException {
     	log.info("40days method called");
-        List<ServiceRecord> allRecords = csvStorage.readAll();
+        List<ServiceRecord> allRecords = storage.readAllDueIn40Days();
         
         // Filter records with daysLeft < 41
-        List<ServiceRecord> filtered = new ArrayList<>(
-        	    allRecords.stream()
-        	        .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() > 0)
-        	        .toList()
-        	);
+//        List<ServiceRecord> filtered = new ArrayList<>(
+//        	    allRecords.stream()
+//        	        .filter(r -> r.getDaysLeft() < 41 && r.getDaysLeft() > 0)
+//        	        .toList()
+//        	);
         // Reverse so newest records appear first
 //        Collections.reverse(filtered);
 
-        model.addAttribute("records", filtered);
+        model.addAttribute("records", allRecords);
         return "40days"; 
     }
     
@@ -305,19 +306,19 @@ public class MvcController {
     @GetMapping("/10DAYS")
     public String records10Days(Model model) throws IOException {
     	log.info("10days method called");
-        List<ServiceRecord> allRecords = csvStorage.readAll();
+        List<ServiceRecord> allRecords = storage.readAllDueIn10Days();
         
         // Filter records with daysLeft < 11
-        List<ServiceRecord> filtered = new ArrayList<>(
-        	    allRecords.stream()
-        	        .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() > 0)
-        	        .toList()
-        	);
+//        List<ServiceRecord> filtered = new ArrayList<>(
+//        	    allRecords.stream()
+//        	        .filter(r -> r.getDaysLeft() < 11 && r.getDaysLeft() > 0)
+//        	        .toList()
+//        	);
 
         // Reverse so newest records appear first
 //        Collections.reverse(filtered);
 
-        model.addAttribute("records", filtered);
+        model.addAttribute("records", allRecords);
         return "10days"; 
         
         
@@ -327,7 +328,7 @@ public class MvcController {
     @GetMapping("/today")
     public String recordsToday(Model model) throws IOException {
     	log.info("today method called");
-            List<ServiceRecord> allRecords = csvStorage.readAll();
+            List<ServiceRecord> allRecords = storage.readAll();
             
             // Filter records with daysLeft < 2
             List<ServiceRecord> filtered = allRecords.stream()
@@ -366,7 +367,7 @@ public class MvcController {
     @PostMapping("/saveCustomer")
     public String saveCustomer(@ModelAttribute Customer customer) throws IOException {
         log.info("saveCustomer method called");
-        csvStorage.saveCustomer(customer);
+        storage.saveCustomer(customer);
         log.info("saved Customer");
         return "redirect:/";
     }
@@ -384,7 +385,7 @@ public class MvcController {
         log.info("editVehicle method called for vehicleId: " + vehicleId);
         
         CustomerVehicle vehicle = null;
-        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = storage.readAllVehicles();
         for (CustomerVehicle v : vehicles) {
             if (v.getIndex() == vehicleId) {
                 vehicle = v;
@@ -404,7 +405,7 @@ public class MvcController {
     @PostMapping("/saveVehicle")
     public String saveVehicle(@ModelAttribute CustomerVehicle vehicle) throws IOException {
         log.info("saveVehicle method called");
-        csvStorage.saveVehicle(vehicle);
+        storage.saveVehicle(vehicle);
         log.info("saved Vehicle");
         return "redirect:/";
     }
@@ -412,7 +413,7 @@ public class MvcController {
     @GetMapping("/customerRecords")
     public String customerRecords(Model model) throws IOException {
         log.info("customerRecords method called");
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         model.addAttribute("customers", customers);
         return "recordsOfCustomers";
     }
@@ -420,7 +421,7 @@ public class MvcController {
     @GetMapping("/vehicleRecords")
     public String vehicleRecords(Model model) throws IOException {
         log.info("vehicleRecords method called");
-        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = storage.readAllVehicles();
         model.addAttribute("vehicles", vehicles);
         return "recordsOfVehicles";
     }
@@ -429,7 +430,7 @@ public class MvcController {
     @ResponseBody
     public List<Map<String, String>> listCustomerOptions() throws IOException {
         log.info("listCustomerOptions method called");
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         List<Map<String, String>> options = new ArrayList<>();
         
         for (Customer customer : customers) {
@@ -446,7 +447,7 @@ public class MvcController {
     @ResponseBody
     public List<Map<String, String>> listVehicleOptions() throws IOException {
         log.info("listVehicleOptions method called");
-        List<CustomerVehicle> vehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> vehicles = storage.readAllVehicles();
         List<Map<String, String>> options = new ArrayList<>();
         
         for (CustomerVehicle vehicle : vehicles) {
@@ -467,7 +468,7 @@ public class MvcController {
     @ResponseBody
     public Customer searchForCustomer(@RequestParam("index") int index) throws IOException {
         log.info("searchForCustomer method called with index: " + index);
-        return csvStorage.readAllCustomers().stream()
+        return storage.readAllCustomers().stream()
             .filter(c -> c.getIndex() == index)
             .findFirst()
             .orElse(null);
@@ -477,7 +478,7 @@ public class MvcController {
     @ResponseBody
     public CustomerVehicle searchForCustomerVehicle(@RequestParam("index") int index) throws IOException {
         log.info("searchForCustomerVehicle method called with index: " + index);
-        return csvStorage.readAllVehicles().stream()
+        return storage.readAllVehicles().stream()
             .filter(v -> v.getIndex() == index)
             .findFirst()
             .orElse(null);
@@ -492,7 +493,7 @@ public class MvcController {
     @GetMapping("/customers")
     public String getCustomers(Model model) throws IOException {
         log.info("getCustomers method called");
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         sortCustomersByName(customers);
         model.addAttribute("customers", customers);
         return "selectacustomer";
@@ -501,7 +502,7 @@ public class MvcController {
     @GetMapping("/getcustvehicles")
     public String getCustVehicles(Model model) throws IOException {
     	log.info("getCustVehicles method called");
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         sortCustomersByName(customers);
         model.addAttribute("customers", customers);
         return "getcustvehicles"; 
@@ -518,7 +519,7 @@ public class MvcController {
     @GetMapping("/getrequestvehicles")
     public String getRequestVehicles(@RequestParam("customerId") int customerId, Model model) throws IOException {
     	log.info("getRequestVehicles method called with customerId: " + customerId);
-        List<CustomerVehicle>allVehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle>allVehicles = storage.readAllVehicles();
         List<CustomerVehicle> vehicles = new ArrayList<>();
         model.addAttribute("vehicles", vehicles);
         for (CustomerVehicle vehicle : allVehicles) {
@@ -529,7 +530,7 @@ public class MvcController {
         model.addAttribute("vehicles", vehicles);
         
         Customer customer = null;
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -544,7 +545,7 @@ public class MvcController {
     @GetMapping("/customervehiclesbycust")
     public String getCustomerVehiclesByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
         log.info("Processing vehicle list request for customerId: " + customerId);
-        List<CustomerVehicle> allVehicles = csvStorage.readAllVehicles();
+        List<CustomerVehicle> allVehicles = storage.readAllVehicles();
         List<CustomerVehicle> vehicles = new ArrayList<>();
         
         for (CustomerVehicle vehicle : allVehicles) {
@@ -554,7 +555,7 @@ public class MvcController {
         }
 
         Customer customer = null;
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -572,7 +573,7 @@ public class MvcController {
     public String getCustomerByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
         log.info("Processing customer detail request for customerId: " + customerId);
         Customer customer = null;
-        List<Customer> customers = csvStorage.readAllCustomers();
+        List<Customer> customers = storage.readAllCustomers();
         for (Customer  cust : customers) {
             if(cust.getIndex()==customerId){
                customer = cust;

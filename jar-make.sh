@@ -1,3 +1,4 @@
 #!/bin/bash
-./gradlew build
+#./gradlew build
+./gradlew clean bootJar
 

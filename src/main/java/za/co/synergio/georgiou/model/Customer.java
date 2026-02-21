@@ -1,17 +1,32 @@
 package za.co.synergio.georgiou.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "customer")
 public class Customer {
-	private int index;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int index;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "date")
     private LocalDate date;
-	
+    
+    @Column(name = "customer_name")
     private String customerName;
+
+    @Column(name = "cellphone")
     private String cellphone;
+
+    @Column(name = "customer_address")
     private String customerAddress;
+
+    @Column(name = "state")
     private int state; //0=active 1=completed 3=deleted
     
 
@@ -48,7 +63,7 @@ public class Customer {
     
     @Override
     public String toString() {
-        return "ServiceRecord{" +
+        return "Customer{" +
                 "index=" + index +
                 ", state=" + state +
                 ", date=" + date +

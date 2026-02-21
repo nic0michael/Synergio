@@ -107,6 +107,8 @@ public class MvcControllerTest {
         @Override public List<CustomerVehicle> readAllVehicles() throws IOException { return new ArrayList<>(); }
         
         @Override public List<ServiceRecord> readAllDueIn40Days() throws IOException { return new ArrayList<>(); }
+
+        @Override public List<ServiceRecord> readAllDueIn10Days() throws IOException { return new ArrayList<>(); }
         
         @Override public List<CustomerVehicle> getCustomerVehicles(int customerId) throws IOException {
              List<CustomerVehicle> list = new ArrayList<>();

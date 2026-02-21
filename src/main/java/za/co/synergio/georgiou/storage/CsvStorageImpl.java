@@ -309,6 +309,14 @@ public class CsvStorageImpl implements CsvStorage {
     }
 
     @Override
+    public synchronized List<ServiceRecord> readAllDueIn10Days() throws IOException {
+        return readAll().stream()
+                .filter(r -> r.getDaysLeft() < 11)
+                .sorted((a, b) -> Integer.compare(a.getDaysLeft(), b.getDaysLeft()))
+                .toList();
+    }
+
+    @Override
     public synchronized List<ServiceRecord> readAllDueIn40Days() throws IOException {
         return readAll().stream()
                 .filter(r -> r.getDaysLeft() < 41)
