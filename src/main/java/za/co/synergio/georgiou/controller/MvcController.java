@@ -9,7 +9,7 @@ import za.co.synergio.georgiou.model.Customer;
 import za.co.synergio.georgiou.model.CustomerVehicle;
 import za.co.synergio.georgiou.model.ServiceRecord;
 import za.co.synergio.georgiou.storage.CsvStorage;
-import za.co.synergio.georgiou.storage.H2Storage;
+import za.co.synergio.georgiou.storage.H2StorageImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,10 +30,12 @@ public class MvcController {
 	private static final Logger log = LoggerFactory.getLogger(MvcController.class);
 
     private final CsvStorage storage;
+    private final H2StorageImpl h2Storage;
 
     @Autowired
-    public MvcController(CsvStorage storage) {
+    public MvcController(CsvStorage storage, H2StorageImpl h2Storage) {
         this.storage = storage;
+        this.h2Storage = h2Storage;
     }
 
 @GetMapping("/")
@@ -66,7 +68,7 @@ public class MvcController {
         }
         
         Customer customer = null;
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers(); // CHANGED
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -75,7 +77,7 @@ public class MvcController {
         }
        
         CustomerVehicle vehicle = null;
-        List<CustomerVehicle> vehicles = storage.readAllVehicles();
+        List<CustomerVehicle> vehicles = h2Storage.readAllVehicles();
         for (CustomerVehicle v : vehicles) {
             if (v.getIndex() == vehicleId) {
                 vehicle =v;
@@ -116,7 +118,7 @@ public class MvcController {
     @GetMapping("/editRecord")
     public String edit(@RequestParam("index") int index, Model model) throws IOException {
         log.info("form edit called");
-        List<ServiceRecord> records = storage.readAll();
+        List<ServiceRecord> records = h2Storage.readAll();
         ServiceRecord record = records.stream()
                 .filter(r -> r.getIndex() == index)
                 .findFirst()
@@ -138,13 +140,13 @@ public class MvcController {
     @GetMapping("/activateRecord") 
     public String activateRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = storage.readAll();
+        List<ServiceRecord> allRecords = h2Storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(0);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				storage.update(serviceRecord);
+				h2Storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -156,13 +158,13 @@ public class MvcController {
     @GetMapping("/completeRecord") 
     public String completeRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = storage.readAll();
+        List<ServiceRecord> allRecords = h2Storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(1);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				storage.update(serviceRecord);
+				h2Storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -174,13 +176,13 @@ public class MvcController {
     @GetMapping("/deleteRecord") 
     public String deleteRecord(@RequestParam("index") int index)  throws IOException {
     	log.info("deleteRecord called for index: " + index);
-        List<ServiceRecord> allRecords = storage.readAll();
+        List<ServiceRecord> allRecords = h2Storage.readAll();
         
         for (ServiceRecord serviceRecord : allRecords) {
 			if(serviceRecord.getIndex()== index) {
 				serviceRecord.setStatel(3);
 				log.info("Found and update record "+index + "\n"+serviceRecord);
-				storage.update(serviceRecord);
+				h2Storage.update(serviceRecord);
                 break;
 			}
 		}
@@ -219,7 +221,7 @@ public class MvcController {
             serviceRecord.setRecurringDate(recurring);
         }
 
-        storage.update(serviceRecord); // <-- call the update method
+        h2Storage.update(serviceRecord); // <-- call the update method
 
         return "redirect:/";
     }
@@ -264,7 +266,7 @@ public class MvcController {
             serviceRecord.setRecurringDate(recurring);
         }
 
-        storage.save(serviceRecord);
+        h2Storage.save(serviceRecord);
         return "redirect:/";
     }
 
@@ -272,13 +274,13 @@ public class MvcController {
     @ResponseBody
     public List<ServiceRecord> apiRecords() throws IOException {
     	log.info("apiRecords method called");
-        return storage.readAll();
+        return h2Storage.readAll();
     }
 
     @GetMapping("/records")
     public String records(Model model) throws IOException {
     	log.info("records method called");
-        List<ServiceRecord> records = storage.readAll();
+        List<ServiceRecord> records = h2Storage.readAll();
 //        Collections.reverse(records);
         model.addAttribute("records", records);
         return "records";
@@ -287,7 +289,7 @@ public class MvcController {
     @GetMapping("/40DAYS")
     public String records40Days(Model model) throws IOException {
     	log.info("40days method called");
-        List<ServiceRecord> allRecords = storage.readAllDueIn40Days();
+        List<ServiceRecord> allRecords = h2Storage.readAllDueIn40Days();
         
         // Filter records with daysLeft < 41
 //        List<ServiceRecord> filtered = new ArrayList<>(
@@ -306,7 +308,7 @@ public class MvcController {
     @GetMapping("/10DAYS")
     public String records10Days(Model model) throws IOException {
     	log.info("10days method called");
-        List<ServiceRecord> allRecords = storage.readAllDueIn10Days();
+        List<ServiceRecord> allRecords = h2Storage.readAllDueIn10Days();
         
         // Filter records with daysLeft < 11
 //        List<ServiceRecord> filtered = new ArrayList<>(
@@ -328,7 +330,7 @@ public class MvcController {
     @GetMapping("/today")
     public String recordsToday(Model model) throws IOException {
     	log.info("today method called");
-            List<ServiceRecord> allRecords = storage.readAll();
+            List<ServiceRecord> allRecords = h2Storage.readAll();
             
             // Filter records with daysLeft < 2
             List<ServiceRecord> filtered = allRecords.stream()
@@ -367,7 +369,7 @@ public class MvcController {
     @PostMapping("/saveCustomer")
     public String saveCustomer(@ModelAttribute Customer customer) throws IOException {
         log.info("saveCustomer method called");
-        storage.saveCustomer(customer);
+        h2Storage.saveCustomer(customer);
         log.info("saved Customer");
         return "redirect:/";
     }
@@ -385,7 +387,7 @@ public class MvcController {
         log.info("editVehicle method called for vehicleId: " + vehicleId);
         
         CustomerVehicle vehicle = null;
-        List<CustomerVehicle> vehicles = storage.readAllVehicles();
+        List<CustomerVehicle> vehicles = h2Storage.readAllVehicles();
         for (CustomerVehicle v : vehicles) {
             if (v.getIndex() == vehicleId) {
                 vehicle = v;
@@ -405,7 +407,7 @@ public class MvcController {
     @PostMapping("/saveVehicle")
     public String saveVehicle(@ModelAttribute CustomerVehicle vehicle) throws IOException {
         log.info("saveVehicle method called");
-        storage.saveVehicle(vehicle);
+        h2Storage.saveVehicle(vehicle);
         log.info("saved Vehicle");
         return "redirect:/";
     }
@@ -413,7 +415,7 @@ public class MvcController {
     @GetMapping("/customerRecords")
     public String customerRecords(Model model) throws IOException {
         log.info("customerRecords method called");
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         model.addAttribute("customers", customers);
         return "recordsOfCustomers";
     }
@@ -421,7 +423,7 @@ public class MvcController {
     @GetMapping("/vehicleRecords")
     public String vehicleRecords(Model model) throws IOException {
         log.info("vehicleRecords method called");
-        List<CustomerVehicle> vehicles = storage.readAllVehicles();
+        List<CustomerVehicle> vehicles = h2Storage.readAllVehicles();
         model.addAttribute("vehicles", vehicles);
         return "recordsOfVehicles";
     }
@@ -430,7 +432,7 @@ public class MvcController {
     @ResponseBody
     public List<Map<String, String>> listCustomerOptions() throws IOException {
         log.info("listCustomerOptions method called");
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         List<Map<String, String>> options = new ArrayList<>();
         
         for (Customer customer : customers) {
@@ -447,7 +449,7 @@ public class MvcController {
     @ResponseBody
     public List<Map<String, String>> listVehicleOptions() throws IOException {
         log.info("listVehicleOptions method called");
-        List<CustomerVehicle> vehicles = storage.readAllVehicles();
+        List<CustomerVehicle> vehicles = h2Storage.readAllVehicles();
         List<Map<String, String>> options = new ArrayList<>();
         
         for (CustomerVehicle vehicle : vehicles) {
@@ -468,7 +470,7 @@ public class MvcController {
     @ResponseBody
     public Customer searchForCustomer(@RequestParam("index") int index) throws IOException {
         log.info("searchForCustomer method called with index: " + index);
-        return storage.readAllCustomers().stream()
+        return h2Storage.readAllCustomers().stream()
             .filter(c -> c.getIndex() == index)
             .findFirst()
             .orElse(null);
@@ -478,7 +480,7 @@ public class MvcController {
     @ResponseBody
     public CustomerVehicle searchForCustomerVehicle(@RequestParam("index") int index) throws IOException {
         log.info("searchForCustomerVehicle method called with index: " + index);
-        return storage.readAllVehicles().stream()
+        return h2Storage.readAllVehicles().stream()
             .filter(v -> v.getIndex() == index)
             .findFirst()
             .orElse(null);
@@ -493,7 +495,7 @@ public class MvcController {
     @GetMapping("/customers")
     public String getCustomers(Model model) throws IOException {
         log.info("getCustomers method called");
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         sortCustomersByName(customers);
         model.addAttribute("customers", customers);
         return "selectacustomer";
@@ -502,7 +504,7 @@ public class MvcController {
     @GetMapping("/getcustvehicles")
     public String getCustVehicles(Model model) throws IOException {
     	log.info("getCustVehicles method called");
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         sortCustomersByName(customers);
         model.addAttribute("customers", customers);
         return "getcustvehicles"; 
@@ -519,7 +521,7 @@ public class MvcController {
     @GetMapping("/getrequestvehicles")
     public String getRequestVehicles(@RequestParam("customerId") int customerId, Model model) throws IOException {
     	log.info("getRequestVehicles method called with customerId: " + customerId);
-        List<CustomerVehicle>allVehicles = storage.readAllVehicles();
+        List<CustomerVehicle>allVehicles = h2Storage.readAllVehicles();
         List<CustomerVehicle> vehicles = new ArrayList<>();
         model.addAttribute("vehicles", vehicles);
         for (CustomerVehicle vehicle : allVehicles) {
@@ -530,7 +532,7 @@ public class MvcController {
         model.addAttribute("vehicles", vehicles);
         
         Customer customer = null;
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -545,7 +547,7 @@ public class MvcController {
     @GetMapping("/customervehiclesbycust")
     public String getCustomerVehiclesByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
         log.info("Processing vehicle list request for customerId: " + customerId);
-        List<CustomerVehicle> allVehicles = storage.readAllVehicles();
+        List<CustomerVehicle> allVehicles = h2Storage.readAllVehicles();
         List<CustomerVehicle> vehicles = new ArrayList<>();
         
         for (CustomerVehicle vehicle : allVehicles) {
@@ -555,7 +557,7 @@ public class MvcController {
         }
 
         Customer customer = null;
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         for (Customer c : customers) {
             if (c.getIndex() == customerId) {
                 customer = c;
@@ -573,7 +575,7 @@ public class MvcController {
     public String getCustomerByCustomer(@RequestParam("customerId") int customerId, Model model) throws IOException {
         log.info("Processing customer detail request for customerId: " + customerId);
         Customer customer = null;
-        List<Customer> customers = storage.readAllCustomers();
+        List<Customer> customers = h2Storage.readAllCustomers();
         for (Customer  cust : customers) {
             if(cust.getIndex()==customerId){
                customer = cust;

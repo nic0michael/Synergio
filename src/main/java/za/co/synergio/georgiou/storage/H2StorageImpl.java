@@ -18,13 +18,13 @@ import za.co.synergio.georgiou.repository.ServiceRecordRepository;
 @Service("h2Storage")
 @Primary
 //@Profile("h2") // Optional: Use profiles to switch between implementations if needed
-public class H2Storage implements CsvStorage {
+public class H2StorageImpl implements CsvStorage {
 
     private final CustomerRepository customerRepository;
     private final CustomerVehicleRepository customerVehicleRepository;
     private final ServiceRecordRepository serviceRecordRepository;
 
-    public H2Storage(CustomerRepository customerRepository, 
+    public H2StorageImpl(CustomerRepository customerRepository, 
                      CustomerVehicleRepository customerVehicleRepository, 
                      ServiceRecordRepository serviceRecordRepository) {
         this.customerRepository = customerRepository;
