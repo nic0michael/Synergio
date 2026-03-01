@@ -41,3 +41,5 @@ out/
 
 # But allow synergio.jar
 !synergio.jar
+
+data/

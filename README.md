@@ -9,6 +9,37 @@ A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service
 
 ---
 
+# **Quick Start**
+
+**Run these commands in Gitbash in the project folder**
+
+1. **Build the JAR file:**
+
+   ```bash
+   ./jar-make.sh
+   ```
+
+2. **Copy the JAR to the root folder:**
+   ```bash
+   ./jar-copy.sh
+   ```
+
+3. **Start the application:**
+   ```bash
+   ./start.sh
+   ```
+
+4. **Open the application in your browser:**
+   [http://localhost:8088/](http://localhost:8088/)
+
+5. **Open the H2 Database Console:**
+   [http://localhost:8088/h2-console/](http://localhost:8088/h2-console/)
+   
+   **Use this JDBC URL:**
+   `jdbc:h2:file:./data/database`
+
+---
+
 # **1. Running from the Published JAR File**
 
 ## **application.properties file content for Windows:**
