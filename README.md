@@ -9,7 +9,35 @@ A lightweight **Spring Boot (Gradle)** microservice for managing vehicle service
 
 ---
 
-# **Quick Start**
+# **Table of Contents**
+
+- [0. Quick Start](#0-quick-start)
+- [1. Running from the Published JAR File](#1-running-from-the-published-jar-file)
+  - [application.properties for Windows](#applicationproperties-file-content-for-windows)
+  - [application.properties for Linux/Mac](#here-is-the-linuxmac-version-of-applicationproperties-file)
+- [1.1 Running the Application on Windows, Linux, and macOS](#11-running-the-application-on-windows-linux-and-macos)
+  - [A. Running in Windows](#a-running-in-windows)
+  - [B. Running in Linux](#b-running-in-linux)
+  - [C. Running in macOS](#c-running-in-macos)
+- [2. Developer Instructions](#2-developer-instructions)
+  - [0. Install Java JDK 21](#0-install-java-jdk-21)
+  - [1. Project Structure](#1-project-structure)
+  - [2. Setting the Path to Write the CSV File](#2-setting-the-path-to-write-the-csv-file)
+  - [3. Creating and Copying the JAR File](#3-creating-and-copying-the-jar-file)
+  - [4. Running the JAR File You Built](#4-running-the-jar-file-you-built)
+  - [5. Dependencies Installation](#5-dependencies-installation)
+  - [6. CSV Persistence](#6-csv-persistence)
+  - [7. Run the App Locally](#7-run-the-app-locally)
+- [3. Deployment Instructions](#3-deployment-instructions)
+  - [Local JAR Deployment](#local-jar-deployment)
+- [4. User Instructions](#4-user-instructions)
+  - [Accessing the Application](#accessing-the-application)
+  - [Submitting Customer Requirements](#submitting-customer-requirements)
+  - [Viewing Records](#viewing-records)
+
+---
+
+# **0. Quick Start**
 
 **Run these commands in Gitbash in the project folder**
 
@@ -70,7 +98,7 @@ synergeio.index.file=index.counter
 
 ---
 
-# **Running the Application on Windows, Linux, and macOS**
+# **1.1 Running the Application on Windows, Linux, and macOS**
 
 This section explains how to run the Synergeio JAR file with an external `application.properties` file on all three major operating systems.
 
@@ -431,26 +459,48 @@ java -jar build/libs/synergeio-0.0.1-SNAPSHOT.jar
 
 # **4. User Instructions**
 
-### **Accessing the Application**
+### **1. Build, Run, and Access the Application**
 
-Open:
+**Run these commands in Gitbash in the project folder:**
 
-```
-http://localhost:8080
-```
+1. **Build the JAR file:**
+   ```bash
+   ./jar-make.sh
+   ```
 
-### **Submitting Customer Requirements**
+2. **Copy the JAR to the root folder:**
+   ```bash
+   ./jar-copy.sh
+   ```
+
+3. **Start the application:**
+   ```bash
+   ./start.sh
+   ```
+
+4. **Open the application in your browser:**
+   [http://localhost:8088/](http://localhost:8088/)
+
+5. **Open the H2 Database Console:**
+   [http://localhost:8088/h2-console/](http://localhost:8088/h2-console/)
+   
+   **Use this JDBC URL:**
+   `jdbc:h2:file:./data/database`
+
+### **2. Using the Application**
+
+#### **Submitting Customer Requirements**
 
 * Fill required fields
 * Choose document type + category
 * Press **Save Record**
 
-### **Viewing Records**
+#### **Viewing Records**
 
 * Records sorted newest first
 * Available in **View Records** tab
 
-### **CSV Updates**
+#### **CSV Updates**
 
 * Each submission immediately writes to CSV
 * CSV can be opened in Excel or text editor
