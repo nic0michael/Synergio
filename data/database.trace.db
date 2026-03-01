@@ -1,4 +1,0 @@
-2026-03-01 14:59:04.433184+02:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from CUSTOMER_VEHICLE\000d\000a[*]select * from SERVICE_RECORD"; SQL statement:
-select * from CUSTOMER_VEHICLE
-select * from SERVICE_RECORD [42000-224]
