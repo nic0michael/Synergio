@@ -38,8 +38,7 @@ out/
 
 # Ignore all JAR files
 *.jar
-
-# But allow synergio.jar
+!gradle/wrapper/gradle-wrapper.jar
 !synergio.jar
 
 data/
