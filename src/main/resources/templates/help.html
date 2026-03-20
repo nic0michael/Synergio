@@ -95,13 +95,23 @@
         <a th:href="@{/customers}" class="btn-link">Cust Vehicles</a>	&nbsp; &nbsp; 
     </div>
 
-    <div class="grid-container">        
+    <div class="grid-container">          
+        
+        <section>
+            <h2>Customer and Vehicle Quick Navigation</h2>
+            <ul>
+                <li><span><strong>List A Customers Vehicles:</strong> View vehicles</span> <a th:href="@{/customers}">Go to Page</a></li>
+                <li><span><strong>Profile:</strong> Full customer/vehicle hub</span> <a th:href="@{/profile}">Go to Page</a></li>
+            </ul>
+        </section>
+        
         <section>
             <h2>Customer Management</h2>
             <ul>
                 <li><span><strong>Create Customer:</strong> Add new customer</span> <a th:href="@{/createcustomer}">Go to Page</a></li>
-                <li><span><strong>Edit Customer:</strong> Modify details</span> <a th:href="@{/editcustomer}">Go to Page</a></li>
+                <li><span><strong>Edit Customer:</strong> Modify details</span> <a th:href="@{/customers}">Go to Page</a></li>
                 <li><span><strong>View Customer Records:</strong> List all</span> <a th:href="@{/customerRecords}">Go to Page</a></li>
+
             </ul>
         </section>
         
@@ -114,13 +124,6 @@
             </ul>
         </section>
 
-        <section>
-            <h2>Customer and Vehicle Quick Navigation</h2>
-            <ul>
-                <li><span><strong>List A Customers Vehicles:</strong> View vehicles</span> <a th:href="@{/customers}">Go to Page</a></li>
-                <li><span><strong>Profile:</strong> Full customer/vehicle hub</span> <a th:href="@{/profile}">Go to Page</a></li>
-            </ul>
-        </section>
 
         <section>
             <h2>Service Record Management</h2>

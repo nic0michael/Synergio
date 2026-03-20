@@ -359,11 +359,25 @@ public class MvcController {
     }
     
     @GetMapping("/editcustomer")
-    public String editCustomer(Model model) {
-        log.info("editCustomer method called");
-        Customer customer = new Customer();
+    public String editCustomer(@RequestParam("index") int index, Model model) throws IOException {
+        log.info("editCustomer method called: " + index);
+        
+        Customer customer = null;
+        List<Customer> customers = h2Storage.readAllCustomers(); // CHANGED
+        for (Customer c : customers) {
+            if (c.getIndex() == index) {
+                customer = c;
+                break;
+            }
+        }
+
+        if (customer == null) {
+            log.error("Customer not found with index: " + index);
+            return "createcustomer";
+        }
+
         model.addAttribute("customer", customer);
-        return "editcustomer";
+        return "editthecustomer";
     }
     
     @PostMapping("/saveCustomer")
