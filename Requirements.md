@@ -1200,6 +1200,30 @@ Status:
 TO DO
 ---
 
+#### 3.1.7 Add Publish Data to profile.html
+In `profile.html`, add a new div with heading "Save Data" containing a link to `/publish` labelled "Publish Data".
+
+Status:
+DONE
+---
+
+#### 3.1.8 Change /publish to perform a database dump via shell script
+Change the `@GetMapping("/publish")` method in `MvcController.java`:
+- Do NOT call `storage.publish()`
+- Instead, invoke a shell script that dumps the H2 database
+- The shell script must dump all tables as individual CSV files
+- Output folder is taken from the property `synergeio.folder.path=data/`
+- Each file is named `<TABLE_NAME>-YYYY-MM-dd.csv` (table name in upper case, date is the run date)
+- Tables to dump: `SERVICE_RECORD`, `CUSTOMER`, `CUSTOMER_VEHICLE`
+- Example output files:
+  - `data/SERVICE_RECORD-2026-05-14.csv`
+  - `data/CUSTOMER-2026-05-14.csv`
+  - `data/CUSTOMER_VEHICLE-2026-05-14.csv`
+
+Status:
+DONE
+---
+
 **Document Version:** 1.0  
 **Created:** December 4, 2025  
 **Purpose:** Complete technical specification to rebuild Synergeio Vehicle Service Station  

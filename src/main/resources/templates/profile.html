@@ -162,8 +162,19 @@
             <p>Quick access to service history.</p>
             <ul>
                 <li>
-                    <span><strong>Service Records:</strong> All maintenance logs</span> 
+                    <span><strong>Service Records:</strong> All maintenance logs</span>
                     <a th:href="@{/records}">View All Records</a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Save Data</h2>
+            <p>Export current service records to a published CSV file.</p>
+            <ul>
+                <li>
+                    <span><strong>Publish Data:</strong> Export records to Published.csv</span>
+                    <a th:href="@{/publish}">Publish Data</a>
                 </li>
             </ul>
         </section>

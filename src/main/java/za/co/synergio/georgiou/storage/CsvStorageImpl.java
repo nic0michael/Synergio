@@ -266,10 +266,8 @@ public class CsvStorageImpl implements CsvStorage {
 	@Override
 	public void publish() throws IOException {
         log.info("To Publish Records: "+ publishedPath);
-        
 
         try (BufferedWriter writer = Files.newBufferedWriter(publishedPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            
         	List<ServiceRecord> records = readAll();
             writer.write(CSV_HEADER);
             writer.newLine();
@@ -279,7 +277,10 @@ public class CsvStorageImpl implements CsvStorage {
                 writer.write(toCsvSave(r));
                 writer.newLine();
             }
-            log.info("Published records");
+            log.info("## File " + publishedPath + " was saved");
+        } catch (IOException e) {
+            log.error("## Failed to publish file " + publishedPath + ": " + e.getMessage(), e);
+            throw e;
         }
 	}
 

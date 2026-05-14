@@ -1,6 +1,7 @@
 package za.co.synergio.georgiou.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import za.co.synergio.georgiou.model.ServiceRecord;
 import za.co.synergio.georgiou.storage.CsvStorage;
 import za.co.synergio.georgiou.storage.H2StorageImpl;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +30,9 @@ import org.slf4j.LoggerFactory;
 public class MvcController {
 	
 	private static final Logger log = LoggerFactory.getLogger(MvcController.class);
+
+    @Value("${synergeio.folder.path}")
+    private String folderPath;
 
     private final CsvStorage storage;
     private final H2StorageImpl h2Storage;
@@ -227,10 +232,22 @@ public class MvcController {
     }
 
 
-    @GetMapping("/publish") 
+    @GetMapping("/publish")
     public String publish(Model model) throws IOException {
-    	log.info("records method called");
-        storage.publish();
+        log.info("publish method called");
+        String date = LocalDate.now(ZoneOffset.UTC).toString();
+        try {
+            ProcessBuilder pb = new ProcessBuilder("bash", "publish.sh");
+            pb.directory(new File("."));
+            pb.redirectErrorStream(true);
+            int exitCode = pb.start().waitFor();
+            log.info("## File " + folderPath + "SERVICE_RECORD-" + date + ".csv was saved (exit code: " + exitCode + ")");
+            log.info("## File " + folderPath + "CUSTOMER-" + date + ".csv was saved");
+            log.info("## File " + folderPath + "CUSTOMER_VEHICLE-" + date + ".csv was saved");
+        } catch (Exception e) {
+            log.error("## Failed to publish database dump to " + folderPath + ": " + e.getMessage(), e);
+            throw new IOException(e);
+        }
         return "redirect:/";
     }
     

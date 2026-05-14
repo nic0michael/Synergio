@@ -1,0 +1,4 @@
+-- Template reference: date is substituted dynamically by publish.sh
+-- CALL CSVWRITE('./data/SERVICE_RECORD-YYYY-MM-dd.csv', 'SELECT * FROM SERVICE_RECORD');
+-- CALL CSVWRITE('./data/CUSTOMER-YYYY-MM-dd.csv', 'SELECT * FROM CUSTOMER');
+-- CALL CSVWRITE('./data/CUSTOMER_VEHICLE-YYYY-MM-dd.csv', 'SELECT * FROM CUSTOMER_VEHICLE');
